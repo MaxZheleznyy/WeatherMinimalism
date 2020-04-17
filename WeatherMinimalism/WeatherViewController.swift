@@ -10,6 +10,8 @@ import UIKit
 
 class WeatherViewController: UIViewController {
     
+    let viewModel = WeatherViewModel()
+    
     let selectedLocation: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -87,6 +89,12 @@ class WeatherViewController: UIViewController {
         
         hideNavigationBar()
         setupViews()
+        
+        if let city = UserDefaults.standard.string(forKey: "SelectedLocation") {
+            loadDataUsing(city: city)
+        } else {
+            loadDataUsing(city: "New York")
+        }
     }
     
     func hideNavigationBar() {
@@ -140,6 +148,26 @@ class WeatherViewController: UIViewController {
         maxTemp.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
         maxTemp.heightAnchor.constraint(equalToConstant: 20).isActive = true
         maxTemp.widthAnchor.constraint(equalToConstant: 100).isActive = true
+    }
+    
+    func loadDataUsing(city: String) {
+        viewModel.fetchCurrentSpecificCityWeather(city: city) { weather in
+             let formatter = DateFormatter()
+             formatter.dateFormat = "dd MMM yyyy"
+             let stringDate = formatter.string(from: Date(timeIntervalSince1970: TimeInterval(weather.dt)))
+             
+             DispatchQueue.main.async {
+                 self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
+                 self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
+                 self.tempDescription.text = weather.weather[0].description
+                 self.currentTime.text = stringDate
+                 self.minTemp.text = ("Min: " + String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
+                 self.maxTemp.text = ("Max: " + String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
+                 self.tempIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
+                
+                 UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
+             }
+         }
     }
 }
 

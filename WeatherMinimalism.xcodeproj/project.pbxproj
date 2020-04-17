@@ -14,6 +14,8 @@
 		5080A7622440FC5000003BF1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5080A7602440FC5000003BF1 /* LaunchScreen.storyboard */; };
 		5080A76A244100A500003BF1 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A769244100A500003BF1 /* WeatherViewModel.swift */; };
 		5080A76C244101D300003BF1 /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A76B244101D300003BF1 /* CurrentWeather.swift */; };
+		509E59BE244A3614000791C3 /* FloatExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59BD244A3614000791C3 /* FloatExtension.swift */; };
+		509E59C0244A3699000791C3 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59BF244A3699000791C3 /* UIImageViewExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		5080A7632440FC5000003BF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5080A769244100A500003BF1 /* WeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
 		5080A76B244101D300003BF1 /* CurrentWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
+		509E59BD244A3614000791C3 /* FloatExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatExtension.swift; sourceTree = "<group>"; };
+		509E59BF244A3699000791C3 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 				5080A7592440FC5000003BF1 /* WeatherViewController.swift */,
 				5080A769244100A500003BF1 /* WeatherViewModel.swift */,
 				5080A76B244101D300003BF1 /* CurrentWeather.swift */,
+				509E59BD244A3614000791C3 /* FloatExtension.swift */,
+				509E59BF244A3699000791C3 /* UIImageViewExtension.swift */,
 				5080A75E2440FC5000003BF1 /* Assets.xcassets */,
 				5080A7602440FC5000003BF1 /* LaunchScreen.storyboard */,
 				5080A7632440FC5000003BF1 /* Info.plist */,
@@ -141,7 +147,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5080A76A244100A500003BF1 /* WeatherViewModel.swift in Sources */,
+				509E59C0244A3699000791C3 /* UIImageViewExtension.swift in Sources */,
 				5080A76C244101D300003BF1 /* CurrentWeather.swift in Sources */,
+				509E59BE244A3614000791C3 /* FloatExtension.swift in Sources */,
 				5080A75A2440FC5000003BF1 /* WeatherViewController.swift in Sources */,
 				5080A7562440FC5000003BF1 /* AppDelegate.swift in Sources */,
 				5080A7582440FC5000003BF1 /* SceneDelegate.swift in Sources */,
