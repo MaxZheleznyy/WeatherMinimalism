@@ -231,7 +231,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
         manager.delegate = nil
         
-        let location = locations[0].coordinate
+        guard let location = locations[safe: 0]?.coordinate else { return }
         loadDataUsing(lat: location.latitude.description, lon: location.longitude.description)
     }
 }
