@@ -87,22 +87,22 @@ class WeatherViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         
-        hideNavigationBar()
+        configureNavigationBar()
         setupViews()
-        
-        if let city = UserDefaults.standard.string(forKey: "SelectedLocation") {
-            loadDataUsing(city: city)
-        } else {
-            loadDataUsing(city: "New York")
-        }
+        loadDataUsing(city: getCityFromUserDefaults())
     }
     
-    func hideNavigationBar() {
+    func configureNavigationBar() {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         navigationItem.backBarButtonItem = UIBarButtonItem(
         title: "", style: .plain, target: nil, action: nil)
+        
+        self.navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton)),
+            UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
+        ]
     }
     
     func setupViews() {
@@ -150,6 +150,14 @@ class WeatherViewController: UIViewController {
         maxTemp.widthAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
+    func getCityFromUserDefaults() -> String {
+        if let city = UserDefaults.standard.string(forKey: "SelectedLocation") {
+            return city
+        } else {
+            return "New York"
+        }
+    }
+    
     func loadDataUsing(city: String) {
         viewModel.fetchCurrentSpecificCityWeather(city: city) { weather in
              let formatter = DateFormatter()
@@ -168,6 +176,32 @@ class WeatherViewController: UIViewController {
                  UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
              }
          }
+    }
+    
+    @objc func handleAddPlaceButton() {
+        let alertController = UIAlertController(title: "Change City", message: "", preferredStyle: .alert)
+         alertController.addTextField { (textField : UITextField!) -> Void in
+             textField.placeholder = "City Name"
+         }
+         let saveAction = UIAlertAction(title: "Change", style: .default, handler: { alert -> Void in
+             let firstTextField = alertController.textFields![0] as UITextField
+            guard let cityname = firstTextField.text else { return }
+            self.loadDataUsing(city: cityname)
+         })
+        
+         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
+            print("Cancel")
+         })
+      
+
+         alertController.addAction(saveAction)
+         alertController.addAction(cancelAction)
+
+         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc func handleRefresh() {
+        loadDataUsing(city: getCityFromUserDefaults())
     }
 }
 
