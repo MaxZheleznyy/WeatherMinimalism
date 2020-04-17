@@ -11,7 +11,7 @@ import Foundation
 struct WeatherViewModel {
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     
-    func fetchCurrentSpecificCityWeather(city: String, completion: @escaping (WeatherModel) -> ()) {
+    func fetchWeatherUsing(city: String, completion: @escaping (WeatherModel) -> ()) {
         let formattedCity = city.replacingOccurrences(of: " ", with: "+")
         let apiURL = "http://api.openweathermap.org/data/2.5/weather?q=\(formattedCity)&appid=\(apiKey)"
 

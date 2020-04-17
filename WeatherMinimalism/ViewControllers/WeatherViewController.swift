@@ -170,7 +170,7 @@ class WeatherViewController: UIViewController {
     }
     
     func loadDataUsing(city: String) {
-        viewModel.fetchCurrentSpecificCityWeather(city: city) { [weak self] weather in
+        viewModel.fetchWeatherUsing(city: city) { [weak self] weather in
              self?.updateUIWith(weather: weather)
          }
     }
