@@ -10,6 +10,7 @@ import UIKit
 
 class WeatherViewController: UIViewController {
     
+    //MARK: - Contants
     let viewModel = WeatherViewModel()
     
     let selectedLocation: UILabel = {
@@ -82,6 +83,7 @@ class WeatherViewController: UIViewController {
         return label
     }()
 
+    //MARK: - Setup
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -150,6 +152,7 @@ class WeatherViewController: UIViewController {
         maxTemp.widthAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
+    //MARK: - Actions
     func getCityFromUserDefaults() -> String {
         if let city = UserDefaults.standard.string(forKey: "SelectedLocation") {
             return city
