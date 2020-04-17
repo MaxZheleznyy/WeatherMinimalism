@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherViewController: UIViewController {
     
     //MARK: - Contants
     let viewModel = WeatherViewModel()
+    
+    var locationManager = CLLocationManager()
     
     let selectedLocation: UILabel = {
        let label = UILabel()
@@ -89,6 +92,11 @@ class WeatherViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
         configureNavigationBar()
         setupViews()
         loadDataUsing(city: getCityFromUserDefaults())
@@ -162,23 +170,33 @@ class WeatherViewController: UIViewController {
     }
     
     func loadDataUsing(city: String) {
-        viewModel.fetchCurrentSpecificCityWeather(city: city) { weather in
-             let formatter = DateFormatter()
-             formatter.dateFormat = "dd MMM yyyy"
-             let stringDate = formatter.string(from: Date(timeIntervalSince1970: TimeInterval(weather.dt)))
-             
-             DispatchQueue.main.async {
-                 self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
-                 self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
-                 self.tempDescription.text = weather.weather[0].description
-                 self.currentTime.text = stringDate
-                 self.minTemp.text = ("Min: " + String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
-                 self.maxTemp.text = ("Max: " + String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
-                 self.tempIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
-                
-                 UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
-             }
+        viewModel.fetchCurrentSpecificCityWeather(city: city) { [weak self] weather in
+             self?.updateUIWith(weather: weather)
          }
+    }
+    
+    func loadDataUsing(lat: String, lon: String) {
+        viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
+            self?.updateUIWith(weather: weather)
+        }
+    }
+    
+    func updateUIWith(weather: WeatherModel) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM yyyy"
+        let stringDate = formatter.string(from: Date(timeIntervalSince1970: TimeInterval(weather.dt)))
+        
+        DispatchQueue.main.async {
+            self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
+            self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
+            self.tempDescription.text = weather.weather[0].description
+            self.currentTime.text = stringDate
+            self.minTemp.text = ("Min: " + String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
+            self.maxTemp.text = ("Max: " + String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
+            self.tempIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
+           
+            UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
+        }
     }
     
     @objc func handleAddPlaceButton() {
@@ -208,3 +226,12 @@ class WeatherViewController: UIViewController {
     }
 }
 
+extension WeatherViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        manager.stopUpdatingLocation()
+        manager.delegate = nil
+        
+        let location = locations[0].coordinate
+        loadDataUsing(lat: location.latitude.description, lon: location.longitude.description)
+    }
+}
