@@ -85,7 +85,16 @@ class WeatherViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         
+        hideNavigationBar()
         setupViews()
+    }
+    
+    func hideNavigationBar() {
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        navigationItem.backBarButtonItem = UIBarButtonItem(
+        title: "", style: .plain, target: nil, action: nil)
     }
     
     func setupViews() {
