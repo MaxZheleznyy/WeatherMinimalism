@@ -16,6 +16,8 @@ class WeatherViewController: UIViewController {
     
     var locationManager = CLLocationManager()
     
+    let spinnerView = SpinnerViewController()
+    
     let selectedLocation: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -170,12 +172,14 @@ class WeatherViewController: UIViewController {
     }
     
     func loadDataUsing(city: String) {
+        showSpinner()
         viewModel.fetchWeatherUsing(city: city) { [weak self] weather in
              self?.updateUIWith(weather: weather)
          }
     }
     
     func loadDataUsing(lat: String, lon: String) {
+        showSpinner()
         viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
             self?.updateUIWith(weather: weather)
         }
@@ -195,8 +199,26 @@ class WeatherViewController: UIViewController {
             self.maxTemp.text = ("Max: " + String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
             self.tempIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
            
+            self.dismissSpinner()
             UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
         }
+    }
+    
+    private func showSpinner() {
+        addChild(spinnerView)
+        spinnerView.view.frame = view.frame
+        view.addSubview(spinnerView.view)
+        spinnerView.didMove(toParent: self)
+        
+        self.navigationItem.toggleNavBarButtons(isEnabled: false)
+    }
+    
+    private func dismissSpinner() {
+        spinnerView.willMove(toParent: nil)
+        spinnerView.view.removeFromSuperview()
+        spinnerView.removeFromParent()
+        
+        self.navigationItem.toggleNavBarButtons(isEnabled: true)
     }
     
     @objc func handleAddPlaceButton() {
