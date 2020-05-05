@@ -122,7 +122,6 @@ class WeatherViewController: UIViewController {
         view.addSubview(tempLabel)
         view.addSubview(tempIcon)
         view.addSubview(tempDescription)
-        view.addSubview(currentTime)
         view.addSubview(minTemp)
         view.addSubview(maxTemp)
         
@@ -130,11 +129,6 @@ class WeatherViewController: UIViewController {
         selectedLocation.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
         selectedLocation.heightAnchor.constraint(equalToConstant: 70).isActive = true
         selectedLocation.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
-        
-        currentTime.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 4).isActive = true
-        currentTime.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        currentTime.heightAnchor.constraint(equalToConstant: 10).isActive = true
-        currentTime.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
         
         tempLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20).isActive = true
         tempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
@@ -186,15 +180,10 @@ class WeatherViewController: UIViewController {
     }
     
     func updateUIWith(weather: WeatherModel) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM yyyy"
-        let stringDate = formatter.string(from: Date(timeIntervalSince1970: TimeInterval(weather.dt)))
-        
         DispatchQueue.main.async {
             self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
             self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
             self.tempDescription.text = weather.weather[0].description
-            self.currentTime.text = stringDate
             self.minTemp.text = ("Min: " + String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
             self.maxTemp.text = ("Max: " + String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
             self.tempIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
