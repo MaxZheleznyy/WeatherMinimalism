@@ -81,6 +81,7 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = .systemBackground
         
         locationManager.delegate = self
@@ -88,22 +89,19 @@ class WeatherViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        configureNavigationBar()
+        configureBottomToolBar()
         setupViews()
         loadDataUsing(city: getCityFromUserDefaults())
     }
     
-    func configureNavigationBar() {
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        navigationItem.backBarButtonItem = UIBarButtonItem(
-        title: "", style: .plain, target: nil, action: nil)
+    private func configureBottomToolBar() {
+        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton))
+        let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
         
-        self.navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton)),
-            UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
-        ]
+        toolbarItems = [plusButton, spacer, refreshButton]
+        
+        navigationController?.setToolbarHidden(false, animated: false)
     }
     
     func setupViews() {
@@ -190,16 +188,12 @@ class WeatherViewController: UIViewController {
         spinnerView.view.frame = view.frame
         view.addSubview(spinnerView.view)
         spinnerView.didMove(toParent: self)
-        
-        self.navigationItem.toggleNavBarButtons(isEnabled: false)
     }
     
     private func dismissSpinner() {
         spinnerView.willMove(toParent: nil)
         spinnerView.view.removeFromSuperview()
         spinnerView.removeFromParent()
-        
-        self.navigationItem.toggleNavBarButtons(isEnabled: true)
     }
     
     @objc func handleAddPlaceButton() {
