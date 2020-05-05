@@ -18,8 +18,15 @@ class WeatherViewController: UIViewController {
     
     let spinnerView = SpinnerViewController()
     
+    let headerContainerView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let selectedLocation: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "...Location"
         label.textAlignment = .center
@@ -30,7 +37,7 @@ class WeatherViewController: UIViewController {
     }()
     
     let tempLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "°C"
         label.textColor = .label
@@ -40,7 +47,7 @@ class WeatherViewController: UIViewController {
     }()
     
     let tempDescription: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +58,7 @@ class WeatherViewController: UIViewController {
     }()
     
     let minTemp: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "  °C"
         label.textAlignment = .left
@@ -61,7 +68,7 @@ class WeatherViewController: UIViewController {
     }()
     
     let maxTemp: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "  °C"
         label.textAlignment = .left
@@ -100,28 +107,34 @@ class WeatherViewController: UIViewController {
     }
     
     func setupViews() {
-        view.addSubview(selectedLocation)
-        view.addSubview(tempLabel)
-        view.addSubview(tempDescription)
+        view.addSubview(headerContainerView)
+        headerContainerView.addSubview(selectedLocation)
+        headerContainerView.addSubview(tempLabel)
+        headerContainerView.addSubview(tempDescription)
         view.addSubview(minTemp)
         view.addSubview(maxTemp)
         
-        selectedLocation.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        selectedLocation.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        selectedLocation.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
+        headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        headerContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        headerContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        selectedLocation.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 20).isActive = true
+        selectedLocation.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18).isActive = true
+        selectedLocation.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18).isActive = true
         selectedLocation.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        
+
         tempLabel.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 20).isActive = true
-        tempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        tempLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
+        tempLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18).isActive = true
+        tempLabel.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18).isActive = true
         tempLabel.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        
+
         tempDescription.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 12.5).isActive = true
-        tempDescription.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        tempDescription.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
+        tempDescription.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18).isActive = true
+        tempDescription.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18).isActive = true
+        tempDescription.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8).isActive = true
         tempDescription.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
-        minTemp.topAnchor.constraint(equalTo: tempDescription.bottomAnchor, constant: 80).isActive = true
+        minTemp.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: 80).isActive = true
         minTemp.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
         minTemp.heightAnchor.constraint(equalToConstant: 20).isActive = true
         minTemp.widthAnchor.constraint(equalToConstant: 100).isActive = true
