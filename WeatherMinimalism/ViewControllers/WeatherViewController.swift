@@ -50,15 +50,6 @@ class WeatherViewController: UIViewController {
         return label
     }()
     
-    let tempIcon: UIImageView = {
-       let img = UIImageView()
-        img.image = UIImage(systemName: "cloud.fill")
-        img.contentMode = .scaleAspectFit
-        img.translatesAutoresizingMaskIntoConstraints = false
-        img.tintColor = .gray
-        return img
-    }()
-    
     let minTemp: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -111,7 +102,6 @@ class WeatherViewController: UIViewController {
     func setupViews() {
         view.addSubview(selectedLocation)
         view.addSubview(tempLabel)
-        view.addSubview(tempIcon)
         view.addSubview(tempDescription)
         view.addSubview(minTemp)
         view.addSubview(maxTemp)
@@ -126,17 +116,12 @@ class WeatherViewController: UIViewController {
         tempLabel.heightAnchor.constraint(equalToConstant: 70).isActive = true
         tempLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
         
-        tempIcon.topAnchor.constraint(equalTo: tempLabel.bottomAnchor).isActive = true
-        tempIcon.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        tempIcon.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        tempIcon.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
         tempDescription.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 12.5).isActive = true
-        tempDescription.leadingAnchor.constraint(equalTo: tempIcon.trailingAnchor, constant: 8).isActive = true
+        tempDescription.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
+        tempDescription.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 18).isActive = true
         tempDescription.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        tempDescription.widthAnchor.constraint(equalToConstant: 250).isActive = true
 
-        minTemp.topAnchor.constraint(equalTo: tempIcon.bottomAnchor, constant: 80).isActive = true
+        minTemp.topAnchor.constraint(equalTo: tempDescription.bottomAnchor, constant: 80).isActive = true
         minTemp.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
         minTemp.heightAnchor.constraint(equalToConstant: 20).isActive = true
         minTemp.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -177,7 +162,6 @@ class WeatherViewController: UIViewController {
             self.tempDescription.text = weather.weather[0].description
             self.minTemp.text = ("Min: " + String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
             self.maxTemp.text = ("Max: " + String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
-            self.tempIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weather.weather[0].icon)@2x.png")
            
             self.dismissSpinner()
             UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
