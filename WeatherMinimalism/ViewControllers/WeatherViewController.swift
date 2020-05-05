@@ -108,17 +108,17 @@ class WeatherViewController: UIViewController {
         
         selectedLocation.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         selectedLocation.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        selectedLocation.heightAnchor.constraint(equalToConstant: 70).isActive = true
         selectedLocation.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
+        selectedLocation.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
-        tempLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20).isActive = true
+        tempLabel.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 20).isActive = true
         tempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
+        tempLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
         tempLabel.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        tempLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
         
         tempDescription.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 12.5).isActive = true
         tempDescription.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        tempDescription.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 18).isActive = true
+        tempDescription.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
         tempDescription.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
         minTemp.topAnchor.constraint(equalTo: tempDescription.bottomAnchor, constant: 80).isActive = true
