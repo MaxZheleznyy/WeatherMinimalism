@@ -29,16 +29,6 @@ class WeatherViewController: UIViewController {
         return label
     }()
     
-    let currentTime: UILabel = {
-       let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "00 January 0000"
-        label.textAlignment = .left
-        label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 10, weight: .heavy)
-        return label
-    }()
-    
     let tempLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
