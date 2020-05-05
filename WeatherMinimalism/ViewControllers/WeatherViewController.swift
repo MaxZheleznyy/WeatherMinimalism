@@ -18,11 +18,26 @@ class WeatherViewController: UIViewController {
     
     let spinnerView = SpinnerViewController()
     
-    let headerContainerView : UIView = {
+    let headerContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .red
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
         return view
+    }()
+    
+    let mainContentScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    let contentMainStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 20
+        return stackView
     }()
     
     let selectedLocation: UILabel = {
@@ -50,7 +65,6 @@ class WeatherViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 14, weight: .light)
@@ -94,6 +108,11 @@ class WeatherViewController: UIViewController {
         loadDataUsing(city: getCityFromUserDefaults())
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        print("🐶")
+        print(mainContentScrollView.frame.height)
+    }
+    
     private func configureBottomToolBar() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton))
@@ -109,13 +128,14 @@ class WeatherViewController: UIViewController {
         headerContainerView.addSubview(selectedLocation)
         headerContainerView.addSubview(tempLabel)
         headerContainerView.addSubview(tempDescription)
-        view.addSubview(minTemp)
-        view.addSubview(maxTemp)
+        
+        view.addSubview(mainContentScrollView)
+        mainContentScrollView.addSubview(contentMainStackView)
         
         let constraints = [
             headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
             selectedLocation.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 20),
             selectedLocation.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
@@ -132,19 +152,25 @@ class WeatherViewController: UIViewController {
             tempDescription.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
             tempDescription.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8),
             tempDescription.heightAnchor.constraint(equalToConstant: 20),
-
-            minTemp.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: 80),
-            minTemp.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            minTemp.heightAnchor.constraint(equalToConstant: 20),
-            minTemp.widthAnchor.constraint(equalToConstant: 100),
             
-            maxTemp.topAnchor.constraint(equalTo: minTemp.bottomAnchor),
-            maxTemp.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18),
-            maxTemp.heightAnchor.constraint(equalToConstant: 20),
-            maxTemp.widthAnchor.constraint(equalToConstant: 100)
+            mainContentScrollView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
+            mainContentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainContentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            mainContentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            contentMainStackView.topAnchor.constraint(equalTo: mainContentScrollView.topAnchor, constant: 20),
+            contentMainStackView.leadingAnchor.constraint(equalTo: mainContentScrollView.leadingAnchor, constant: 10),
+            contentMainStackView.trailingAnchor.constraint(equalTo: mainContentScrollView.trailingAnchor, constant: -10),
+            contentMainStackView.bottomAnchor.constraint(equalTo: mainContentScrollView.bottomAnchor, constant: -20),
+            contentMainStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20)
         ]
         
         NSLayoutConstraint.activate(constraints)
+        
+        let viewsToAdd = [minTemp, maxTemp]
+        for view in viewsToAdd {
+            contentMainStackView.addArrangedSubview(view)
+        }
     }
     
     //MARK: - Actions
