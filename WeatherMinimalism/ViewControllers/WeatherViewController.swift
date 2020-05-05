@@ -22,7 +22,7 @@ class WeatherViewController: UIViewController {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "...Location"
-        label.textAlignment = .left
+        label.textAlignment = .center
         label.textColor = .label
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 38, weight: .heavy)
@@ -34,7 +34,7 @@ class WeatherViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "°C"
         label.textColor = .label
-        label.textAlignment = .left
+        label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 60, weight: .heavy)
         return label
     }()
@@ -44,11 +44,12 @@ class WeatherViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
+        label.textAlignment = .center
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 14, weight: .light)
         return label
     }()
+    
     let tempIcon: UIImageView = {
        let img = UIImageView()
         img.image = UIImage(systemName: "cloud.fill")
