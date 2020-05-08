@@ -54,8 +54,8 @@ class WeatherViewController: UIViewController {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.spacing = 2000
+        stackView.alignment = .fill
+        stackView.spacing = 10
         return stackView
     }()
     
@@ -70,15 +70,6 @@ class WeatherViewController: UIViewController {
         return label
     }()
     
-    let tempLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "°C"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 60, weight: .heavy)
-        return label
-    }()
-    
     let tempDescription: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -89,10 +80,26 @@ class WeatherViewController: UIViewController {
         return label
     }()
     
-    let minTemp: UILabel = {
+    let tempLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "  °C"
+        label.text = "°C"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 60, weight: .heavy)
+        return label
+    }()
+    
+    let minMaxTempContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let dayOfTheWeekLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Update me!"
         label.textAlignment = .left
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
@@ -103,8 +110,18 @@ class WeatherViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "  °C"
-        label.textAlignment = .left
+        label.textAlignment = .right
         label.textColor = .label
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        return label
+    }()
+    
+    let minTemp: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "  °C"
+        label.textAlignment = .right
+        label.textColor = .secondaryLabel
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         return label
     }()
@@ -149,7 +166,7 @@ class WeatherViewController: UIViewController {
         
         headerContainerViewHeight = headerContainerView.heightAnchor.constraint(equalToConstant: 250)
         
-        let constraints = [
+        let mainConstraints = [
             headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             headerContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -173,23 +190,48 @@ class WeatherViewController: UIViewController {
             mainContentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainContentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            contentMainStackView.topAnchor.constraint(equalTo: mainContentScrollView.topAnchor, constant: 20),
-            contentMainStackView.leadingAnchor.constraint(equalTo: mainContentScrollView.leadingAnchor, constant: 10),
-            contentMainStackView.trailingAnchor.constraint(equalTo: mainContentScrollView.trailingAnchor, constant: -10),
-            contentMainStackView.bottomAnchor.constraint(equalTo: mainContentScrollView.bottomAnchor, constant: -20),
-            contentMainStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20)
+            contentMainStackView.topAnchor.constraint(equalTo: mainContentScrollView.topAnchor, constant: 10),
+            contentMainStackView.leadingAnchor.constraint(equalTo: mainContentScrollView.leadingAnchor, constant: 0),
+            contentMainStackView.trailingAnchor.constraint(equalTo: mainContentScrollView.trailingAnchor, constant: 0),
+            contentMainStackView.bottomAnchor.constraint(equalTo: mainContentScrollView.bottomAnchor, constant: 0),
+            contentMainStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0)
         ]
-        
-        NSLayoutConstraint.activate(constraints)
         
         selectedLocation.setContentHuggingPriority(.defaultHigh, for: .vertical)
         tempDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
         tempLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
         
-        let viewsToAdd = [minTemp, maxTemp]
-        for view in viewsToAdd {
-            contentMainStackView.addArrangedSubview(view)
-        }
+        minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
+        minMaxTempContainerView.addSubview(maxTemp)
+        minMaxTempContainerView.addSubview(minTemp)
+        
+        let minMaxViewConstrainsts = [
+            minMaxTempContainerView.widthAnchor.constraint(equalTo: contentMainStackView.widthAnchor),
+            
+            dayOfTheWeekLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
+            dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 8),
+            dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            dayOfTheWeekLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
+            
+            maxTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
+            maxTemp.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 20),
+            maxTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            maxTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
+            
+            minTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
+            minTemp.leadingAnchor.constraint(equalTo: maxTemp.trailingAnchor, constant: 8),
+            minTemp.trailingAnchor.constraint(equalTo: minMaxTempContainerView.trailingAnchor, constant: -8),
+            minTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            minTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor)
+        ]
+        
+        maxTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        minTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
+        contentMainStackView.addSubview(minMaxTempContainerView)
+        
+        let everyConstraintsArray = mainConstraints + minMaxViewConstrainsts
+        NSLayoutConstraint.activate(everyConstraintsArray)
     }
     
     //MARK: - Actions
@@ -220,8 +262,8 @@ class WeatherViewController: UIViewController {
             self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
             self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
             self.tempDescription.text = weather.weather[0].description
-            self.minTemp.text = ("Min: " + String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
-            self.maxTemp.text = ("Max: " + String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
+            self.minTemp.text = (String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
+            self.maxTemp.text = (String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
            
             self.dismissSpinner()
             UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
