@@ -18,6 +18,20 @@ class WeatherViewController: UIViewController {
     
     let spinnerView = SpinnerViewController()
     
+    var headerContainerViewHeight: NSLayoutConstraint?
+    var headerHeightToUse: CGFloat = 250 {
+        didSet {
+            if headerHeightToUse >= 250 {
+                headerContainerViewHeight?.constant = 250
+            } else if headerHeightToUse <= 50 {
+                headerContainerViewHeight?.constant = 50
+            } else {
+                headerContainerViewHeight?.constant = headerHeightToUse
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     let headerContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -36,7 +50,7 @@ class WeatherViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 20
+        stackView.spacing = 2000
         return stackView
     }()
     
@@ -108,11 +122,6 @@ class WeatherViewController: UIViewController {
         loadDataUsing(city: getCityFromUserDefaults())
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        print("🐶")
-        print(mainContentScrollView.frame.height)
-    }
-    
     private func configureBottomToolBar() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton))
@@ -130,28 +139,30 @@ class WeatherViewController: UIViewController {
         headerContainerView.addSubview(tempDescription)
         
         view.addSubview(mainContentScrollView)
+        mainContentScrollView.delegate = self
+        
         mainContentScrollView.addSubview(contentMainStackView)
+        
+        headerContainerViewHeight = headerContainerView.heightAnchor.constraint(equalToConstant: 250)
         
         let constraints = [
             headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             headerContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            headerContainerViewHeight!,
             
             selectedLocation.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 20),
             selectedLocation.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
             selectedLocation.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-            selectedLocation.heightAnchor.constraint(equalToConstant: 70),
 
             tempLabel.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 20),
             tempLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
             tempLabel.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-            tempLabel.heightAnchor.constraint(equalToConstant: 70),
 
             tempDescription.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 12.5),
             tempDescription.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
             tempDescription.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
             tempDescription.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8),
-            tempDescription.heightAnchor.constraint(equalToConstant: 20),
             
             mainContentScrollView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
             mainContentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -256,5 +267,24 @@ extension WeatherViewController: CLLocationManagerDelegate {
         
         guard let location = locations[safe: 0]?.coordinate else { return }
         loadDataUsing(lat: location.latitude.description, lon: location.longitude.description)
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+extension WeatherViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let y: CGFloat = scrollView.contentOffset.y
+        
+        let newHeaderViewHeight: CGFloat = headerHeightToUse - y
+        
+        headerHeightToUse = newHeaderViewHeight
+        if newHeaderViewHeight > 250.0 {
+            headerHeightToUse = 250
+        } else if newHeaderViewHeight < 50.0 {
+            headerHeightToUse = 50
+        } else {
+            headerHeightToUse = newHeaderViewHeight
+            scrollView.contentOffset.y = 0
+        }
     }
 }
