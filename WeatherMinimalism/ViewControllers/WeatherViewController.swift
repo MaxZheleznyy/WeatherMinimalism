@@ -76,7 +76,7 @@ class WeatherViewController: UIViewController {
         label.text = "..."
         label.textAlignment = .center
         label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
     
@@ -102,7 +102,7 @@ class WeatherViewController: UIViewController {
         label.text = "Update me!"
         label.textAlignment = .left
         label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
     
@@ -112,7 +112,7 @@ class WeatherViewController: UIViewController {
         label.text = "  °C"
         label.textAlignment = .right
         label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
     
@@ -122,7 +122,7 @@ class WeatherViewController: UIViewController {
         label.text = "  °C"
         label.textAlignment = .right
         label.textColor = .secondaryLabel
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
 
