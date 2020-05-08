@@ -50,7 +50,7 @@ class WeatherViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 20
+        stackView.spacing = 2000
         return stackView
     }()
     
@@ -154,15 +154,15 @@ class WeatherViewController: UIViewController {
             selectedLocation.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 20),
             selectedLocation.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
             selectedLocation.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-
-            tempLabel.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 20),
-            tempLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
-            tempLabel.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-
-            tempDescription.topAnchor.constraint(equalTo: tempLabel.bottomAnchor, constant: 12.5),
+            
+            tempDescription.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 0),
             tempDescription.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
             tempDescription.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-            tempDescription.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8),
+
+            tempLabel.topAnchor.constraint(equalTo: tempDescription.bottomAnchor, constant: 0),
+            tempLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
+            tempLabel.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
+            tempLabel.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8),
             
             mainContentScrollView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
             mainContentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
