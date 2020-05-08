@@ -219,7 +219,7 @@ class WeatherViewController: UIViewController {
             minMaxTempContainerView.widthAnchor.constraint(equalTo: contentMainStackView.widthAnchor),
             
             dayOfTheWeekLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
-            dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 8),
+            dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 16),
             dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
             dayOfTheWeekLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
             
@@ -235,7 +235,7 @@ class WeatherViewController: UIViewController {
             
             minTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             minTemp.leadingAnchor.constraint(equalTo: maxTemp.trailingAnchor, constant: 8),
-            minTemp.trailingAnchor.constraint(equalTo: minMaxTempContainerView.trailingAnchor, constant: -8),
+            minTemp.trailingAnchor.constraint(equalTo: minMaxTempContainerView.trailingAnchor, constant: -16),
             minTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
             minTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor)
         ]
