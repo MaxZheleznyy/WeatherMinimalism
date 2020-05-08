@@ -14,11 +14,12 @@ class WeatherViewController: UIViewController {
     //MARK: - Contants
     let viewModel = WeatherViewModel()
     
+    let futureWeatherCVCellIdentifier = "FutureWeatherCVCell"
+    
     var locationManager = CLLocationManager()
     
-    let spinnerView = SpinnerViewController()
-    
     var headerContainerViewHeight: NSLayoutConstraint?
+    
     var headerHeightToUse: CGFloat = 250 {
         didSet {
             if headerHeightToUse >= 250 {
@@ -36,6 +37,8 @@ class WeatherViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
+    
+    let spinnerView = SpinnerViewController()
     
     let headerContainerView: UIView = {
         let view = UIView()
@@ -135,6 +138,21 @@ class WeatherViewController: UIViewController {
         return label
     }()
 
+    let futureWeatherCollectionView: UICollectionView = {
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .blue
+        collectionView.allowsSelection = false
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.contentInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
+        return collectionView
+    }()
+
     //MARK: - Setup
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -163,14 +181,12 @@ class WeatherViewController: UIViewController {
     }
     
     func setupViews() {
-        let mainViewConstraints = configureMainView()
-        let minMaxViewConstraints = configureMinMaxTempView()
-        
-        let everyConstraintsArray = mainViewConstraints + minMaxViewConstraints
-        NSLayoutConstraint.activate(everyConstraintsArray)
+        configureMainView()
+        configureMinMaxTempView()
+        configureCollectionView()
     }
     
-    func configureMainView() -> [NSLayoutConstraint] {
+    func configureMainView() {
         view.addSubview(headerContainerView)
         headerContainerView.addSubview(selectedLocation)
         headerContainerView.addSubview(tempLabel)
@@ -218,10 +234,10 @@ class WeatherViewController: UIViewController {
         tempDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
         tempLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
         
-        return mainConstraints
+        NSLayoutConstraint.activate(mainConstraints)
     }
     
-    func configureMinMaxTempView() -> [NSLayoutConstraint] {
+    func configureMinMaxTempView() {
         minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
         minMaxTempContainerView.addSubview(todayLabel)
         minMaxTempContainerView.addSubview(maxTemp)
@@ -257,9 +273,23 @@ class WeatherViewController: UIViewController {
         maxTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
         minTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
-        contentMainStackView.addSubview(minMaxTempContainerView)
+        contentMainStackView.addArrangedSubview(minMaxTempContainerView)
         
-        return minMaxViewConstrainsts
+        NSLayoutConstraint.activate(minMaxViewConstrainsts)
+    }
+    
+    func configureCollectionView() {
+        futureWeatherCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: futureWeatherCVCellIdentifier)
+        futureWeatherCollectionView.dataSource = self
+        futureWeatherCollectionView.delegate = self
+        
+        contentMainStackView.addArrangedSubview(futureWeatherCollectionView)
+        
+        let futureWeatherCollectionViewConstrainsts = [
+            futureWeatherCollectionView.heightAnchor.constraint(equalToConstant: 100)
+        ]
+        
+        NSLayoutConstraint.activate(futureWeatherCollectionViewConstrainsts)
     }
     
     //MARK: - Actions
@@ -366,5 +396,29 @@ extension WeatherViewController: UIScrollViewDelegate {
             headerHeightToUse = newHeaderViewHeight
             scrollView.contentOffset.y = 0
         }
+    }
+}
+
+extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 9
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: futureWeatherCVCellIdentifier, for: indexPath)
+        cell.backgroundColor = .yellow
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("User tapped on item \(indexPath.row)")
+    }
+}
+
+extension WeatherViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let futureWeatherCVInset = collectionView.contentInset
+        let cellHeight = collectionView.bounds.height - futureWeatherCVInset.bottom - futureWeatherCVInset.top
+        return CGSize(width: 50, height: cellHeight)
     }
 }
