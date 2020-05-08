@@ -23,10 +23,15 @@ class WeatherViewController: UIViewController {
         didSet {
             if headerHeightToUse >= 250 {
                 headerContainerViewHeight?.constant = 250
-            } else if headerHeightToUse <= 50 {
-                headerContainerViewHeight?.constant = 50
+                tempLabel.textColor = UIColor.label.withAlphaComponent(1.0)
+            } else if headerHeightToUse <= 90 {
+                headerContainerViewHeight?.constant = 90
+                tempLabel.textColor = UIColor.label.withAlphaComponent(0.0)
             } else {
                 headerContainerViewHeight?.constant = headerHeightToUse
+                
+                let alphaPercentToUse = (headerHeightToUse - 100) / 100
+                tempLabel.textColor = UIColor.label.withAlphaComponent(alphaPercentToUse)
             }
             self.view.layoutIfNeeded()
         }
@@ -69,7 +74,6 @@ class WeatherViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "°C"
-        label.textColor = .label
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 60, weight: .heavy)
         return label
@@ -159,7 +163,7 @@ class WeatherViewController: UIViewController {
             tempDescription.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
             tempDescription.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
 
-            tempLabel.topAnchor.constraint(equalTo: tempDescription.bottomAnchor, constant: 0),
+            tempLabel.topAnchor.constraint(lessThanOrEqualTo: tempDescription.bottomAnchor, constant: 0),
             tempLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
             tempLabel.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
             tempLabel.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8),
@@ -284,8 +288,8 @@ extension WeatherViewController: UIScrollViewDelegate {
         headerHeightToUse = newHeaderViewHeight
         if newHeaderViewHeight > 250.0 {
             headerHeightToUse = 250
-        } else if newHeaderViewHeight < 50.0 {
-            headerHeightToUse = 50
+        } else if newHeaderViewHeight < 90.0 {
+            headerHeightToUse = 90
         } else {
             headerHeightToUse = newHeaderViewHeight
             scrollView.contentOffset.y = 0
