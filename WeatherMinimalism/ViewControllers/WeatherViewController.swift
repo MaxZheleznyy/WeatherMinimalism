@@ -99,10 +99,19 @@ class WeatherViewController: UIViewController {
     let dayOfTheWeekLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Update me!"
         label.textAlignment = .left
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        return label
+    }()
+    
+    let todayLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "TODAY"
+        label.textAlignment = .left
+        label.textColor = .label
+        label.font = UIFont.systemFont(ofSize: 16, weight: .light)
         return label
     }()
     
@@ -202,6 +211,7 @@ class WeatherViewController: UIViewController {
         tempLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
         
         minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
+        minMaxTempContainerView.addSubview(todayLabel)
         minMaxTempContainerView.addSubview(maxTemp)
         minMaxTempContainerView.addSubview(minTemp)
         
@@ -213,8 +223,13 @@ class WeatherViewController: UIViewController {
             dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
             dayOfTheWeekLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
             
+            todayLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
+            todayLabel.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 8),
+            todayLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            todayLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
+            
             maxTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
-            maxTemp.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 20),
+            maxTemp.leadingAnchor.constraint(equalTo: todayLabel.trailingAnchor, constant: 20),
             maxTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
             maxTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
             
@@ -225,6 +240,8 @@ class WeatherViewController: UIViewController {
             minTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor)
         ]
         
+        dayOfTheWeekLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        todayLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         maxTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
         minTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
         
