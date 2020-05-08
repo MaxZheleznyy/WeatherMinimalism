@@ -178,6 +178,10 @@ class WeatherViewController: UIViewController {
         
         NSLayoutConstraint.activate(constraints)
         
+        selectedLocation.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        tempDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        tempLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+        
         let viewsToAdd = [minTemp, maxTemp]
         for view in viewsToAdd {
             contentMainStackView.addArrangedSubview(view)
