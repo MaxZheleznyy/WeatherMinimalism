@@ -18,6 +18,7 @@
 		509E59C0244A3699000791C3 /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59BF244A3699000791C3 /* UIImageViewExtension.swift */; };
 		509E59C7244A633A000791C3 /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59C6244A633A000791C3 /* CollectionExtension.swift */; };
 		509E59C9244A66C2000791C3 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59C8244A66C2000791C3 /* SpinnerViewController.swift */; };
+		50D2AF5B2465D873007638AF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D2AF5A2465D873007638AF /* DateExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		509E59BF244A3699000791C3 /* UIImageViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 		509E59C6244A633A000791C3 /* CollectionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtension.swift; sourceTree = "<group>"; };
 		509E59C8244A66C2000791C3 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
+		50D2AF5A2465D873007638AF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				509E59C6244A633A000791C3 /* CollectionExtension.swift */,
+				50D2AF5A2465D873007638AF /* DateExtension.swift */,
 				509E59BD244A3614000791C3 /* FloatExtension.swift */,
 				509E59BF244A3699000791C3 /* UIImageViewExtension.swift */,
 			);
@@ -193,6 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5080A76A244100A500003BF1 /* WeatherViewModel.swift in Sources */,
+				50D2AF5B2465D873007638AF /* DateExtension.swift in Sources */,
 				509E59C0244A3699000791C3 /* UIImageViewExtension.swift in Sources */,
 				5080A76C244101D300003BF1 /* CurrentWeather.swift in Sources */,
 				509E59BE244A3614000791C3 /* FloatExtension.swift in Sources */,

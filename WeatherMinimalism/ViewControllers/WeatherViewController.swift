@@ -259,9 +259,11 @@ class WeatherViewController: UIViewController {
     
     func updateUIWith(weather: WeatherModel) {
         DispatchQueue.main.async {
-            self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
             self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
             self.tempDescription.text = weather.weather[0].description
+            self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
+            
+            self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
             self.minTemp.text = (String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
             self.maxTemp.text = (String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
            
