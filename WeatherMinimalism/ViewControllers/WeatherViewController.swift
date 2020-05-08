@@ -163,6 +163,14 @@ class WeatherViewController: UIViewController {
     }
     
     func setupViews() {
+        let mainViewConstraints = configureMainView()
+        let minMaxViewConstraints = configureMinMaxTempView()
+        
+        let everyConstraintsArray = mainViewConstraints + minMaxViewConstraints
+        NSLayoutConstraint.activate(everyConstraintsArray)
+    }
+    
+    func configureMainView() -> [NSLayoutConstraint] {
         view.addSubview(headerContainerView)
         headerContainerView.addSubview(selectedLocation)
         headerContainerView.addSubview(tempLabel)
@@ -210,6 +218,10 @@ class WeatherViewController: UIViewController {
         tempDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
         tempLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
         
+        return mainConstraints
+    }
+    
+    func configureMinMaxTempView() -> [NSLayoutConstraint] {
         minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
         minMaxTempContainerView.addSubview(todayLabel)
         minMaxTempContainerView.addSubview(maxTemp)
@@ -247,8 +259,7 @@ class WeatherViewController: UIViewController {
         
         contentMainStackView.addSubview(minMaxTempContainerView)
         
-        let everyConstraintsArray = mainConstraints + minMaxViewConstrainsts
-        NSLayoutConstraint.activate(everyConstraintsArray)
+        return minMaxViewConstrainsts
     }
     
     //MARK: - Actions
