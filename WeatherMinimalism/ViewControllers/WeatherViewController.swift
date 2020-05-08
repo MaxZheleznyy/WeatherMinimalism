@@ -50,7 +50,7 @@ class WeatherViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 2000
+        stackView.spacing = 20
         return stackView
     }()
     
