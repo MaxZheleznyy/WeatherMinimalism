@@ -279,7 +279,7 @@ class WeatherViewController: UIViewController {
     }
     
     func configureCollectionView() {
-        futureWeatherCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: futureWeatherCVCellIdentifier)
+        futureWeatherCollectionView.register(FutureWeatherCVCell.self, forCellWithReuseIdentifier: FutureWeatherCVCell.identifier)
         futureWeatherCollectionView.dataSource = self
         futureWeatherCollectionView.delegate = self
         
@@ -324,6 +324,8 @@ class WeatherViewController: UIViewController {
             self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
             self.minTemp.text = (String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
             self.maxTemp.text = (String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
+            
+            self.futureWeatherCollectionView.reloadData()
            
             self.dismissSpinner()
             UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
@@ -401,12 +403,18 @@ extension WeatherViewController: UIScrollViewDelegate {
 
 extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 9
+        return viewModel.publicWeatherData?.weather.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: futureWeatherCVCellIdentifier, for: indexPath)
-        cell.backgroundColor = .yellow
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FutureWeatherCVCell.identifier, for: indexPath) as! FutureWeatherCVCell
+        
+        if let weatherData = viewModel.publicWeatherData?.weather[safe: indexPath.row] {
+            cell.timeLabel.text = weatherData.main
+            cell.weatherIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weatherData.icon)@2x.png")
+            cell.temperatureLabel.text = weatherData.description
+        }
+        
         return cell
     }
     

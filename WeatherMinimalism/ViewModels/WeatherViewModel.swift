@@ -8,8 +8,16 @@
 
 import Foundation
 
-struct WeatherViewModel {
+class WeatherViewModel {
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
+    
+    private var privateWeatherData: WeatherModel?
+    
+    var publicWeatherData: WeatherModel? {
+        get {
+            return privateWeatherData
+        }
+    }
     
     func fetchWeatherUsing(city: String, completion: @escaping (WeatherModel) -> ()) {
         let formattedCity = city.replacingOccurrences(of: " ", with: "+")
@@ -18,10 +26,11 @@ struct WeatherViewModel {
         guard let url = URL(string: apiURL) else { fatalError() }
                      
         let urlRequest = URLRequest(url: url)
-        URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+        URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
         guard let data = data else { return }
             do {
                 let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
+                self?.privateWeatherData = currentWeather
                 completion(currentWeather)
             } catch {
                  print(error)
@@ -36,10 +45,11 @@ struct WeatherViewModel {
         guard let url = URL(string: API_URL) else { fatalError() }
         
         let urlRequest = URLRequest(url: url)
-        URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+        URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
             guard let data = data else { return }
             do {
                 let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
+                self?.privateWeatherData = currentWeather
                 completion(currentWeather)
             } catch {
                 print(error)
