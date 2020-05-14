@@ -38,6 +38,7 @@ class WeatherViewController: UIViewController {
         }
     }
     
+    //MARK: - UI
     let spinnerView = SpinnerViewController()
     
     let headerContainerView: UIView = {
@@ -376,16 +377,7 @@ class WeatherViewController: UIViewController {
     }
 }
 
-extension WeatherViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        manager.stopUpdatingLocation()
-        manager.delegate = nil
-        
-        guard let location = locations[safe: 0]?.coordinate else { return }
-        loadDataUsing(lat: location.latitude.description, lon: location.longitude.description)
-    }
-}
-
+// MARK: - Extensions
 // MARK: - UIScrollViewDelegate
 extension WeatherViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -405,6 +397,7 @@ extension WeatherViewController: UIScrollViewDelegate {
     }
 }
 
+// MARK: - UICollectionView
 extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.publicWeatherData?.hourlyWeather?.count ?? 0
@@ -439,5 +432,16 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout {
         let cellHeight = collectionView.bounds.height - futureWeatherCVInset.bottom - futureWeatherCVInset.top
         
         return CGSize(width: 50, height: cellHeight)
+    }
+}
+
+// MARK: - CLLocationManagerDelegate
+extension WeatherViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        manager.stopUpdatingLocation()
+        manager.delegate = nil
+        
+        guard let location = locations[safe: 0]?.coordinate else { return }
+        loadDataUsing(lat: location.latitude.description, lon: location.longitude.description)
     }
 }
