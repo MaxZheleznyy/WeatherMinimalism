@@ -304,7 +304,7 @@ class WeatherViewController: UIViewController {
     func loadDataUsing(city: String) {
         showSpinner()
         viewModel.fetchWeatherUsing(city: city) { [weak self] weather in
-             self?.updateUIWith(weather: weather)
+            self?.updateUIWith(weather: weather)
          }
     }
     
@@ -315,20 +315,21 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    func updateUIWith(weather: WeatherModel) {
+    func updateUIWith(weather: Forecast) {
+        print("Ready to update UI!")
         DispatchQueue.main.async {
-            self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
-            self.tempDescription.text = weather.weather[0].description
-            self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
-            
-            self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
-            self.minTemp.text = (String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
-            self.maxTemp.text = (String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
-            
-            self.futureWeatherCollectionView.reloadData()
-           
+//            self.selectedLocation.text = "\(weather.name ?? "") , \(weather.sys.country ?? "")"
+//            self.tempDescription.text = weather.weather[0].description
+//            self.tempLabel.text = (String(weather.main.temp.kelvinToCeliusConverter()) + "°C")
+//
+//            self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
+//            self.minTemp.text = (String(weather.main.temp_min.kelvinToCeliusConverter()) + "°C" )
+//            self.maxTemp.text = (String(weather.main.temp_max.kelvinToCeliusConverter()) + "°C" )
+//
+//            self.futureWeatherCollectionView.reloadData()
+//
             self.dismissSpinner()
-            UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
+//            UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
         }
     }
     
@@ -403,17 +404,20 @@ extension WeatherViewController: UIScrollViewDelegate {
 
 extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.publicWeatherData?.weather.count ?? 0
+//        return viewModel.publicWeatherData?.weather.count ?? 0
+        return 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FutureWeatherCVCell.identifier, for: indexPath) as! FutureWeatherCVCell
         
-        if let weatherData = viewModel.publicWeatherData?.weather[safe: indexPath.row] {
-            cell.timeLabel.text = weatherData.main
-            cell.weatherIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weatherData.icon)@2x.png")
-            cell.temperatureLabel.text = weatherData.description
-        }
+//        if let weatherData = viewModel.publicWeatherData?.weather[safe: indexPath.row] {
+//            cell.timeLabel.text = weatherData.main
+//            cell.weatherIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weatherData.icon)@2x.png")
+//            cell.temperatureLabel.text = weatherData.description
+//        }
+        
+        cell.timeLabel.text = "Hello 👋"
         
         return cell
     }
