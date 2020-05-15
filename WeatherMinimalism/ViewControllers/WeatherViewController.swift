@@ -166,7 +166,10 @@ class WeatherViewController: UIViewController {
         
         configureBottomToolBar()
         setupViews()
-        loadDataUsing(city: getCityFromUserDefaults())
+        
+        if let location = viewModel.getCityFromUserDefauts() {
+            loadDataUsing(lat: String(location.lat), lon: String(location.long))
+        }
     }
     
     private func configureBottomToolBar() {
@@ -292,18 +295,11 @@ class WeatherViewController: UIViewController {
     }
     
     //MARK: - Actions
-    func getCityFromUserDefaults() -> String {
-        if let city = UserDefaults.standard.string(forKey: "SelectedLocation") {
-            return city
-        } else {
-            return "New York"
-        }
-    }
-    
     func loadDataUsing(city: String) {
         showSpinner()
-        if let correctLocation = viewModel.returnLocationFromJSONFile(cityName: city), let nonEmptyLat = correctLocation.lat, let nonEmptyLong = correctLocation.long {
-            viewModel.fetchWeatherUsing(lat: String(nonEmptyLat), lon: String(nonEmptyLong)) { [weak self] weather in
+        if let location = viewModel.returnLocationFromJSONFile(cityName: city) {
+            viewModel.fetchWeatherUsing(lat: String(location.lat), lon: String(location.long)) { [weak self] weather in
+                self?.viewModel.saveNewCityToUserDefaults(location: location)
                 self?.updateUIWith(weather: weather)
             }
         } else {
@@ -335,9 +331,8 @@ class WeatherViewController: UIViewController {
             }
             
             self.futureWeatherCollectionView.reloadData()
-
+            
             self.dismissSpinner()
-//            UserDefaults.standard.set("\(weather.name ?? "")", forKey: "SelectedLocation")
         }
     }
     
@@ -377,7 +372,9 @@ class WeatherViewController: UIViewController {
     }
     
     @objc func handleRefresh() {
-        loadDataUsing(city: getCityFromUserDefaults())
+        if let location = viewModel.getCityFromUserDefauts() {
+            loadDataUsing(lat: String(location.lat), lon: String(location.long))
+        }
     }
 }
 

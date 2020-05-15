@@ -9,12 +9,12 @@
 import Foundation
 
 struct Location: Codable {
-    let id: Int?
-    let name: String?
-    let state: String?
-    let country: String?
-    let lat: Double?
-    let long: Double?
+    let id: Int
+    let name: String
+    let state: String
+    let country: String
+    let lat: Double
+    let long: Double
     
     enum CodingKeys: String, CodingKey {
         case id, name, state, country, lat, coord

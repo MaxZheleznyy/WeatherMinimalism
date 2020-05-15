@@ -46,7 +46,7 @@ class WeatherViewModel {
                 // Getting data from JSON file using the file URL
                 let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
                 let availableLocationsArray = try JSONDecoder().decode([Location].self, from: data)
-                if let possibleCity = availableLocationsArray.first(where: { $0.name?.contains(cityName) ?? false }) {
+                if let possibleCity = availableLocationsArray.first(where: { $0.name.contains(cityName) }) {
                     return possibleCity
                 }
             } catch {
