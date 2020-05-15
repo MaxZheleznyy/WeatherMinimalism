@@ -57,6 +57,7 @@ class FutureWeatherCVCell: UICollectionViewCell {
             weatherIcon.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 4),
             weatherIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
             weatherIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            weatherIcon.heightAnchor.constraint(equalToConstant: 38),
             
             temperatureLabel.topAnchor.constraint(equalTo: weatherIcon.bottomAnchor, constant: 4),
             temperatureLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

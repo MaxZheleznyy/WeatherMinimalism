@@ -41,7 +41,7 @@ class WeatherViewModel {
     }
     
     func fetchWeatherUsing(lat: String, lon: String, completion: @escaping (Forecast) -> ()) {
-        let apiURL = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(lon)&exclude=minutely,hourly&units=metric&appid=\(apiKey)"
+        let apiURL = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(lon)&exclude=minutely&units=metric&appid=\(apiKey)"
 
         guard let url = URL(string: apiURL) else { fatalError() }
 
