@@ -431,7 +431,7 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout {
         let futureWeatherCVInset = collectionView.contentInset
         let cellHeight = collectionView.bounds.height - futureWeatherCVInset.bottom - futureWeatherCVInset.top
         
-        return CGSize(width: 50, height: cellHeight)
+        return CGSize(width: 80, height: cellHeight)
     }
 }
 

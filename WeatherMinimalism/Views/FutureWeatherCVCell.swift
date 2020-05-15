@@ -27,6 +27,7 @@ class FutureWeatherCVCell: UICollectionViewCell {
     let weatherIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
