@@ -14,11 +14,13 @@ struct Forecast: Decodable {
     let long: Double?
     let currentWeather: WeatherForTimeSlice?
     let hourlyWeather: [WeatherForTimeSlice]?
+    let dailyWeather: [WeatherForDaily]?
     
     enum CodingKeys: String, CodingKey {
         case lat, long
         case timezone = "timezone"
         case currentWeather = "current"
         case hourlyWeather = "hourly"
+        case dailyWeather = "daily"
     }
 }

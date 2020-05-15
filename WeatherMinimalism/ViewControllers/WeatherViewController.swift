@@ -14,8 +14,6 @@ class WeatherViewController: UIViewController {
     //MARK: - Contants
     let viewModel = WeatherViewModel()
     
-    let futureWeatherCVCellIdentifier = "FutureWeatherCVCell"
-    
     var locationManager = CLLocationManager()
     
     var headerContainerViewHeight: NSLayoutConstraint?
@@ -327,9 +325,11 @@ class WeatherViewController: UIViewController {
 
             self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
             //TODO implement daily weather object to get min max
-            self.minTemp.text = "Min temp"
-            self.maxTemp.text = "Max temp"
-//
+            if let minTemp = weather.dailyWeather?.first?.dailyTemperature?.min, let maxTemp = weather.dailyWeather?.first?.dailyTemperature?.max {
+                self.minTemp.text = String(format:"%.1f", minTemp) + " °C"
+                self.maxTemp.text = String(format:"%.1f", maxTemp) + " °C"
+            }
+            
             self.futureWeatherCollectionView.reloadData()
 
             self.dismissSpinner()

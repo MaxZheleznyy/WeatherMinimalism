@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50039035246DF0AD00B13C5E /* DailyTemperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50039034246DF0AD00B13C5E /* DailyTemperature.swift */; };
+		50039037246F033E00B13C5E /* WeatherForDaily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50039036246F033E00B13C5E /* WeatherForDaily.swift */; };
 		5006E99C246A2F1C00480341 /* WeatherForTimeSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5006E99B246A2F1C00480341 /* WeatherForTimeSlice.swift */; };
 		5006E99E246A303200480341 /* WeatherDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5006E99D246A303200480341 /* WeatherDetails.swift */; };
 		503944152466125A00B1BBD1 /* FutureWeatherCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503944142466125A00B1BBD1 /* FutureWeatherCVCell.swift */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		50039034246DF0AD00B13C5E /* DailyTemperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTemperature.swift; sourceTree = "<group>"; };
+		50039036246F033E00B13C5E /* WeatherForDaily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForDaily.swift; sourceTree = "<group>"; };
 		5006E99B246A2F1C00480341 /* WeatherForTimeSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForTimeSlice.swift; sourceTree = "<group>"; };
 		5006E99D246A303200480341 /* WeatherDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDetails.swift; sourceTree = "<group>"; };
 		503944142466125A00B1BBD1 /* FutureWeatherCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureWeatherCVCell.swift; sourceTree = "<group>"; };
@@ -108,7 +112,9 @@
 			children = (
 				5080A76B244101D300003BF1 /* Forecast.swift */,
 				5006E99B246A2F1C00480341 /* WeatherForTimeSlice.swift */,
+				50039036246F033E00B13C5E /* WeatherForDaily.swift */,
 				5006E99D246A303200480341 /* WeatherDetails.swift */,
+				50039034246DF0AD00B13C5E /* DailyTemperature.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -212,6 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50039035246DF0AD00B13C5E /* DailyTemperature.swift in Sources */,
 				5080A76A244100A500003BF1 /* WeatherViewModel.swift in Sources */,
 				50D2AF5B2465D873007638AF /* DateExtension.swift in Sources */,
 				509E59C0244A3699000791C3 /* UIImageViewExtension.swift in Sources */,
@@ -220,6 +227,7 @@
 				5080A75A2440FC5000003BF1 /* WeatherViewController.swift in Sources */,
 				509E59C7244A633A000791C3 /* CollectionExtension.swift in Sources */,
 				5080A7562440FC5000003BF1 /* AppDelegate.swift in Sources */,
+				50039037246F033E00B13C5E /* WeatherForDaily.swift in Sources */,
 				5006E99E246A303200480341 /* WeatherDetails.swift in Sources */,
 				509E59C9244A66C2000791C3 /* SpinnerViewController.swift in Sources */,
 				503944152466125A00B1BBD1 /* FutureWeatherCVCell.swift in Sources */,
