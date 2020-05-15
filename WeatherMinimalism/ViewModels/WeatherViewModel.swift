@@ -19,27 +19,6 @@ class WeatherViewModel {
         }
     }
     
-    func fetchWeatherUsing(city: String, completion: @escaping (Forecast) -> ()) {
-//        let formattedCity = city.replacingOccurrences(of: " ", with: "+")
-        //TODO add dictionary of cities. Right now just using New York location
-        let apiURL = "https://api.openweathermap.org/data/2.5/onecall?lat=48.1371&lon=11.5754&exclude=minutely&units=metric&appid=\(apiKey)"
-
-        guard let url = URL(string: apiURL) else { fatalError() }
-                     
-        let urlRequest = URLRequest(url: url)
-        URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
-        guard let data = data else { return }
-            do {
-                let currentWeather = try JSONDecoder().decode(Forecast.self, from: data)
-                self?.privateWeatherData = currentWeather
-                completion(currentWeather)
-            } catch {
-                 print(error)
-            }
-
-        }.resume()
-    }
-    
     func fetchWeatherUsing(lat: String, lon: String, completion: @escaping (Forecast) -> ()) {
         let apiURL = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(lon)&exclude=minutely&units=metric&appid=\(apiKey)"
 
@@ -56,5 +35,23 @@ class WeatherViewModel {
                 print(error)
             }
         }.resume()
+    }
+    
+    func returnLocationFromJSONFile(cityName: String) -> Location? {
+        if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
+            do {
+                let fileUrl = URL(fileURLWithPath: path)
+                // Getting data from JSON file using the file URL
+                let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
+                let availableLocationsArray = try JSONDecoder().decode([Location].self, from: data)
+                if let possibleCity = availableLocationsArray.first(where: { $0.name?.contains(cityName) ?? false }) {
+                    return possibleCity
+                }
+            } catch {
+                print("Can't decode city.list.json file data")
+                return nil
+            }
+        }
+        return nil
     }
 }

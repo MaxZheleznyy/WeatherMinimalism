@@ -302,9 +302,13 @@ class WeatherViewController: UIViewController {
     
     func loadDataUsing(city: String) {
         showSpinner()
-        viewModel.fetchWeatherUsing(city: city) { [weak self] weather in
-            self?.updateUIWith(weather: weather)
-         }
+        if let correctLocation = viewModel.returnLocationFromJSONFile(cityName: city), let nonEmptyLat = correctLocation.lat, let nonEmptyLong = correctLocation.long {
+            viewModel.fetchWeatherUsing(lat: String(nonEmptyLat), lon: String(nonEmptyLong)) { [weak self] weather in
+                self?.updateUIWith(weather: weather)
+            }
+        } else {
+            dismissSpinner()
+        }
     }
     
     func loadDataUsing(lat: String, lon: String) {
