@@ -12,6 +12,8 @@ class WeatherViewModel {
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     
     private var privateWeatherData: Forecast?
+    private let defaults = UserDefaults.standard
+    private let storedLocationKey = "StoredLocation"
     
     var publicWeatherData: Forecast? {
         get {
@@ -52,6 +54,24 @@ class WeatherViewModel {
                 return nil
             }
         }
+        return nil
+    }
+    
+    func saveNewCityToUserDefaults(location: Location) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(location) {
+            defaults.set(encoded, forKey: storedLocationKey)
+        }
+    }
+    
+    func getCityFromUserDefauts() -> Location? {
+        if let savedLocation = defaults.object(forKey: storedLocationKey) as? Data {
+            let decoder = JSONDecoder()
+            if let loadedLocation = try? decoder.decode(Location.self, from: savedLocation) {
+                return loadedLocation
+            }
+        }
+        
         return nil
     }
 }
