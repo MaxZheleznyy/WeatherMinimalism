@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Location: Decodable {
+struct Location: Codable {
     let id: Int?
     let name: String?
     let state: String?
@@ -20,7 +20,10 @@ struct Location: Decodable {
         case id, name, state, country, lat, coord
         case long = "lon"
     }
-    
+}
+
+// MARK: - Decodable
+extension Location {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -32,5 +35,17 @@ struct Location: Decodable {
         let coord = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .coord)
         lat = try coord.decode(Double.self, forKey: .lat)
         long = try coord.decode(Double.self, forKey: .long)
+    }
+}
+// MARK: - Encodable
+extension Location {
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(state, forKey: .state)
+        try container.encode(country, forKey: .country)
+        try container.encode(lat, forKey: .lat)
+        try container.encode(long, forKey: .long)
     }
 }
