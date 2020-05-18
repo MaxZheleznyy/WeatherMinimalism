@@ -45,7 +45,9 @@ extension Location {
         try container.encode(name, forKey: .name)
         try container.encode(state, forKey: .state)
         try container.encode(country, forKey: .country)
-        try container.encode(lat, forKey: .lat)
-        try container.encode(long, forKey: .long)
+        
+        var coord = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .coord)
+        try coord.encode(lat, forKey: .lat)
+        try coord.encode(long, forKey: .long)
     }
 }
