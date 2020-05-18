@@ -85,7 +85,7 @@ class WeatherViewController: UIViewController {
     let tempLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "°C"
+        label.text = "°"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 60, weight: .heavy)
         return label
@@ -120,7 +120,6 @@ class WeatherViewController: UIViewController {
     let maxTemp: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "  °C"
         label.textAlignment = .right
         label.textColor = .label
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -130,7 +129,6 @@ class WeatherViewController: UIViewController {
     let minTemp: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "  °C"
         label.textAlignment = .right
         label.textColor = .secondaryLabel
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -332,14 +330,14 @@ class WeatherViewController: UIViewController {
             
             self.tempDescription.text = weather.currentWeather?.weatherDetails?.first?.description
             if let nonEmtyTemp = weather.currentWeather?.temperature {
-                self.tempLabel.text = String(format:"%.1f", nonEmtyTemp) + " °C"
+                self.tempLabel.text = String(format:"%.0f", nonEmtyTemp) + "°"
             }
 
             self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
             //TODO implement daily weather object to get min max
             if let minTemp = weather.dailyWeather?.first?.dailyTemperature?.min, let maxTemp = weather.dailyWeather?.first?.dailyTemperature?.max {
-                self.minTemp.text = String(format:"%.1f", minTemp) + " °C"
-                self.maxTemp.text = String(format:"%.1f", maxTemp) + " °C"
+                self.minTemp.text = String(format:"%.0f", minTemp) + "°"
+                self.maxTemp.text = String(format:"%.0f", maxTemp) + "°"
             }
             
             self.futureWeatherCollectionView.reloadData()
@@ -427,7 +425,7 @@ extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDel
             }
             
             if let nonEmptyTemp = weatherData.temperature {
-                cell.temperatureLabel.text = String(format:"%.1f", nonEmptyTemp) + " °C"
+                cell.temperatureLabel.text = String(format:"%.0f", nonEmptyTemp) + "°"
             }
         }
         
