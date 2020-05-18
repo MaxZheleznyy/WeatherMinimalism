@@ -322,7 +322,14 @@ class WeatherViewController: UIViewController {
     func updateUIWith(weather: Forecast) {
         print("Ready to update UI!")
         DispatchQueue.main.async {
-            self.selectedLocation.text = "Your city here"
+            if let cityFromUD = self.viewModel.getCityFromUserDefauts() {
+                var finalString = cityFromUD.name.capitalized
+                if cityFromUD.state != "" {
+                    finalString += ", \(cityFromUD.state.uppercased())"
+                }
+                self.selectedLocation.text = finalString
+            }
+            
             self.tempDescription.text = weather.currentWeather?.weatherDetails?.first?.description
             if let nonEmtyTemp = weather.currentWeather?.temperature {
                 self.tempLabel.text = String(format:"%.1f", nonEmtyTemp) + " °C"
