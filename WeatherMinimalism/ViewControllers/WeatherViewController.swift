@@ -168,7 +168,7 @@ class WeatherViewController: UIViewController {
         setupViews()
         
         if let location = viewModel.getCityFromUserDefauts() {
-            loadDataUsing(lat: String(location.lat), lon: String(location.long))
+            loadDataUsing(lat: location.lat, lon: location.long)
         }
     }
     
@@ -298,7 +298,7 @@ class WeatherViewController: UIViewController {
     func loadDataUsing(city: String) {
         showSpinner()
         if let location = viewModel.returnLocationFromJSONFile(cityName: city) {
-            viewModel.fetchWeatherUsing(lat: String(location.lat), lon: String(location.long)) { [weak self] weather in
+            viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
                 self?.viewModel.saveNewCityToUserDefaults(location: location)
                 self?.updateUIWith(weather: weather)
             }
@@ -307,8 +307,13 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    func loadDataUsing(lat: String, lon: String) {
+    func loadDataUsing(lat: Double, lon: Double) {
         showSpinner()
+        
+        if let nonEmptyLocationFromJSON = viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
+            viewModel.saveNewCityToUserDefaults(location: nonEmptyLocationFromJSON)
+        }
+        
         viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
             self?.updateUIWith(weather: weather)
         }
@@ -373,7 +378,7 @@ class WeatherViewController: UIViewController {
     
     @objc func handleRefresh() {
         if let location = viewModel.getCityFromUserDefauts() {
-            loadDataUsing(lat: String(location.lat), lon: String(location.long))
+            loadDataUsing(lat: location.lat, lon: location.long)
         }
     }
 }
@@ -443,6 +448,6 @@ extension WeatherViewController: CLLocationManagerDelegate {
         manager.delegate = nil
         
         guard let location = locations[safe: 0]?.coordinate else { return }
-        loadDataUsing(lat: location.latitude.description, lon: location.longitude.description)
+        loadDataUsing(lat: location.latitude, lon: location.longitude)
     }
 }

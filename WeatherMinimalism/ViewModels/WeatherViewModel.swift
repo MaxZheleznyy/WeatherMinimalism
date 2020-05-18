@@ -21,7 +21,7 @@ class WeatherViewModel {
         }
     }
     
-    func fetchWeatherUsing(lat: String, lon: String, completion: @escaping (Forecast) -> ()) {
+    func fetchWeatherUsing(lat: Double, lon: Double, completion: @escaping (Forecast) -> ()) {
         let apiURL = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(lon)&exclude=minutely&units=metric&appid=\(apiKey)"
 
         guard let url = URL(string: apiURL) else { fatalError() }
@@ -48,6 +48,26 @@ class WeatherViewModel {
                 let availableLocationsArray = try JSONDecoder().decode([Location].self, from: data)
                 if let possibleCity = availableLocationsArray.first(where: { $0.name.contains(cityName) }) {
                     return possibleCity
+                }
+            } catch {
+                print("Can't decode city.list.json file data")
+                return nil
+            }
+        }
+        return nil
+    }
+    
+    func returnLocationFromJSONFile(lat: Double, long: Double) -> Location? {
+        if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
+            do {
+                let fileUrl = URL(fileURLWithPath: path)
+                // Getting data from JSON file using the file URL
+                let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
+                let availableLocationsArray = try JSONDecoder().decode([Location].self, from: data)
+                
+                let possibleCitiesArray = availableLocationsArray.filter({ ($0.lat.returnAsOneDigitPrecision == lat.returnAsOneDigitPrecision) && ($0.long.returnAsOneDigitPrecision == long.returnAsOneDigitPrecision) })
+                if let firstCity = possibleCitiesArray.first {
+                    return firstCity
                 }
             } catch {
                 print("Can't decode city.list.json file data")
