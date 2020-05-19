@@ -164,10 +164,7 @@ class WeatherViewController: UIViewController {
         
         configureBottomToolBar()
         setupViews()
-        
-        if let location = viewModel.getCityFromUserDefauts() {
-            loadDataUsing(lat: location.lat, lon: location.long)
-        }
+        selectRoadToMakeInitialCall()
     }
     
     private func configureBottomToolBar() {
@@ -292,6 +289,26 @@ class WeatherViewController: UIViewController {
         NSLayoutConstraint.activate(futureWeatherCollectionViewConstrainsts)
     }
     
+    private func selectRoadToMakeInitialCall() {
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            case .authorizedAlways, .authorizedWhenInUse:
+                //will get data from didUpdateLocations method
+                showSpinner()
+                return
+            default:
+                //do not have location services, so let's check user defaults
+                break
+            }
+        }
+        
+        if let location = viewModel.getCityFromUserDefauts() {
+            loadDataUsing(lat: location.lat, lon: location.long)
+        } else {
+            showAlertForAddCity(title: "Add Your City", message: "In order to get weather conditions you need to type a city name", actionText: "Add")
+        }
+    }
+    
     //MARK: - Actions
     func loadDataUsing(city: String) {
         showSpinner()
@@ -307,7 +324,6 @@ class WeatherViewController: UIViewController {
     
     func loadDataUsing(lat: Double, lon: Double) {
         showSpinner()
-        
         if let nonEmptyLocationFromJSON = viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
             viewModel.saveNewCityToUserDefaults(location: nonEmptyLocationFromJSON)
         }
@@ -360,25 +376,33 @@ class WeatherViewController: UIViewController {
     }
     
     @objc func handleAddPlaceButton() {
-        let alertController = UIAlertController(title: "Change City", message: "", preferredStyle: .alert)
-         alertController.addTextField { (textField : UITextField!) -> Void in
-             textField.placeholder = "City Name"
-         }
-         let saveAction = UIAlertAction(title: "Change", style: .default, handler: { alert -> Void in
-             let firstTextField = alertController.textFields![0] as UITextField
-            guard let cityname = firstTextField.text else { return }
-            self.loadDataUsing(city: cityname)
-         })
+        showAlertForAddCity(title: nil, message: nil, actionText: nil)
+    }
+    
+    private func showAlertForAddCity(title: String?, message: String?, actionText: String?) {
+        let titleToUse = title ?? "Change City"
+        let messageToUse = message ?? ""
+        let actionTextToUse = actionText ?? "Change"
         
-         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
-            print("Cancel")
-         })
-      
+        let alertController = UIAlertController(title: titleToUse, message: messageToUse, preferredStyle: .alert)
+           alertController.addTextField { (textField : UITextField!) -> Void in
+               textField.placeholder = "City Name"
+           }
+           let saveAction = UIAlertAction(title: actionTextToUse, style: .default, handler: { alert -> Void in
+               let firstTextField = alertController.textFields![0] as UITextField
+              guard let cityname = firstTextField.text else { return }
+              self.loadDataUsing(city: cityname)
+           })
+          
+           let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
+              print("Cancel")
+           })
+        
 
-         alertController.addAction(saveAction)
-         alertController.addAction(cancelAction)
+           alertController.addAction(saveAction)
+           alertController.addAction(cancelAction)
 
-         self.present(alertController, animated: true, completion: nil)
+           self.present(alertController, animated: true, completion: nil)
     }
     
     @objc func handleRefresh() {
