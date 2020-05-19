@@ -312,7 +312,14 @@ class WeatherViewController: UIViewController {
     //MARK: - Actions
     func loadDataUsing(city: String) {
         showSpinner()
-        if let location = viewModel.returnLocationFromJSONFile(cityName: city) {
+        
+        if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), city == locationFromUserDefaults.name {
+            print("🐶")
+            viewModel.fetchWeatherUsing(lat: locationFromUserDefaults.lat, lon: locationFromUserDefaults.long) { [weak self] weather in
+                self?.updateUIWith(weather: weather)
+            }
+        } else if let location = viewModel.returnLocationFromJSONFile(cityName: city) {
+            print("⛔️")
             viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
                 self?.viewModel.saveNewCityToUserDefaults(location: location)
                 self?.updateUIWith(weather: weather)
@@ -326,6 +333,7 @@ class WeatherViewController: UIViewController {
         showSpinner()
         
         if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), lat.returnAsOneDigitPrecision == locationFromUserDefaults.lat.returnAsOneDigitPrecision && lon.returnAsOneDigitPrecision == locationFromUserDefaults.long.returnAsOneDigitPrecision {
+            
             viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
             }
