@@ -87,7 +87,7 @@ class WeatherViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "°"
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 60, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 80, weight: .medium)
         return label
     }()
     
