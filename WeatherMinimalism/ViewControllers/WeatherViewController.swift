@@ -324,7 +324,15 @@ class WeatherViewController: UIViewController {
     
     func loadDataUsing(lat: Double, lon: Double) {
         showSpinner()
-        if let nonEmptyLocationFromJSON = viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
+        
+        if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), lat.returnAsOneDigitPrecision == locationFromUserDefaults.lat.returnAsOneDigitPrecision && lon.returnAsOneDigitPrecision == locationFromUserDefaults.long.returnAsOneDigitPrecision {
+            viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
+                self?.updateUIWith(weather: weather)
+            }
+            
+            return
+            
+        } else if let nonEmptyLocationFromJSON = viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
             viewModel.saveNewCityToUserDefaults(location: nonEmptyLocationFromJSON)
         }
         
