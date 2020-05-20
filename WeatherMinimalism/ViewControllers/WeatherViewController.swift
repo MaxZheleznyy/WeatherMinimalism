@@ -314,18 +314,23 @@ class WeatherViewController: UIViewController {
         showSpinner()
         
         if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), city == locationFromUserDefaults.name {
-            print("🐶")
+            
             viewModel.fetchWeatherUsing(lat: locationFromUserDefaults.lat, lon: locationFromUserDefaults.long) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
             }
-        } else if let location = viewModel.returnLocationFromJSONFile(cityName: city) {
-            print("⛔️")
-            viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
-                self?.viewModel.saveNewCityToUserDefaults(location: location)
-                self?.updateUIWith(weather: weather)
+            return
+            
+        }
+        
+        DispatchQueue.main.async {
+            if let location = self.viewModel.returnLocationFromJSONFile(cityName: city) {
+                self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
+                    self?.viewModel.saveNewCityToUserDefaults(location: location)
+                    self?.updateUIWith(weather: weather)
+                }
+            } else {
+                self.dismissSpinner()
             }
-        } else {
-            dismissSpinner()
         }
     }
     
@@ -337,15 +342,18 @@ class WeatherViewController: UIViewController {
             viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
             }
-            
             return
             
-        } else if let nonEmptyLocationFromJSON = viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
-            viewModel.saveNewCityToUserDefaults(location: nonEmptyLocationFromJSON)
         }
         
-        viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
-            self?.updateUIWith(weather: weather)
+        DispatchQueue.main.async {
+            if let nonEmptyLocationFromJSON = self.viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
+                self.viewModel.saveNewCityToUserDefaults(location: nonEmptyLocationFromJSON)
+            }
+            
+            self.viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
+                self?.updateUIWith(weather: weather)
+            }
         }
     }
     
