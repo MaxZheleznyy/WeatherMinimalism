@@ -313,7 +313,7 @@ class WeatherViewController: UIViewController {
     func loadDataUsing(city: String) {
         showSpinner()
         
-        if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), city == locationFromUserDefaults.name {
+        if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), city.capitalized == locationFromUserDefaults.name.capitalized {
             
             viewModel.fetchWeatherUsing(lat: locationFromUserDefaults.lat, lon: locationFromUserDefaults.long) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
