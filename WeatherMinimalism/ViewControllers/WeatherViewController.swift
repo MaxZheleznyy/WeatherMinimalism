@@ -149,6 +149,16 @@ class WeatherViewController: UIViewController {
         collectionView.contentInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
         return collectionView
     }()
+    
+    let dailyForecastForWeekStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        return stackView
+    }()
+    
 
     //MARK: - Setup
     override func viewDidLoad() {
@@ -181,6 +191,8 @@ class WeatherViewController: UIViewController {
         configureMainView()
         configureMinMaxTempView()
         configureCollectionView()
+        
+        self.contentMainStackView.addArrangedSubview(dailyForecastForWeekStackView)
     }
     
     func configureMainView() {
@@ -374,7 +386,6 @@ class WeatherViewController: UIViewController {
             }
 
             self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
-            //TODO implement daily weather object to get min max
             if let minTemp = weather.dailyWeather?.first?.dailyTemperature?.min, let maxTemp = weather.dailyWeather?.first?.dailyTemperature?.max {
                 self.minTemp.text = String(format:"%.0f", minTemp) + "°"
                 self.maxTemp.text = String(format:"%.0f", maxTemp) + "°"
@@ -382,7 +393,26 @@ class WeatherViewController: UIViewController {
             
             self.futureWeatherCollectionView.reloadData()
             
+            self.fillUpWeeklyForecastStackView()
+            
             self.dismissSpinner()
+        }
+    }
+    
+    private func fillUpWeeklyForecastStackView() {
+        guard let nonEmptyDailyWeather = viewModel.publicWeatherData?.dailyWeather else { return }
+        
+        for weather in nonEmptyDailyWeather {
+            if let weatherIcon = weather.weatherDetails?.first?.icon, let maxTemp = weather.dailyTemperature?.max, let minTemp = weather.dailyTemperature?.min {
+                let dailyWeatherView = DailyForecastForWeekView(frame: CGRect.zero)
+                
+                dailyWeatherView.dayOfTheWeekLabel.text = "Add function to calculate day of the week"
+                dailyWeatherView.weatherForDayImageView.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weatherIcon)@2x.png")
+                dailyWeatherView.maxTempLabel.text = String(format:"%.0f", maxTemp)
+                dailyWeatherView.minTemp.text = String(format:"%.0f", minTemp)
+                
+                self.dailyForecastForWeekStackView.addArrangedSubview(dailyWeatherView)
+            }
         }
     }
     
