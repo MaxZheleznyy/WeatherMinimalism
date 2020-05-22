@@ -400,6 +400,7 @@ class WeatherViewController: UIViewController {
     
     private func fillUpMinMaxTempContainerView(dailyTemperature: DailyTemperature?) {
         self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
+        
         if let minTemp = dailyTemperature?.min, let maxTemp = dailyTemperature?.max {
             self.minTemp.text = String(format:"%.0f", minTemp) + "°"
             self.maxTemp.text = String(format:"%.0f", maxTemp) + "°"
@@ -409,11 +410,13 @@ class WeatherViewController: UIViewController {
     private func fillUpWeeklyForecastStackView() {
         guard let nonEmptyDailyWeather = viewModel.publicWeatherData?.dailyWeather else { return }
         
-        for weather in nonEmptyDailyWeather {
+        let weekdaysArray = Date().daysOfWeekArray()
+        
+        for (index, weather) in nonEmptyDailyWeather.enumerated() {
             if let weatherIcon = weather.weatherDetails?.first?.icon, let maxTemp = weather.dailyTemperature?.max, let minTemp = weather.dailyTemperature?.min {
                 let dailyWeatherView = DailyForecastForWeekView(frame: CGRect.zero)
                 
-                dailyWeatherView.dayOfTheWeekLabel.text = "Add function to calculate day of the week"
+                dailyWeatherView.dayOfTheWeekLabel.text = weekdaysArray[safe: index] as? String
                 dailyWeatherView.weatherForDayImageView.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weatherIcon)@2x.png")
                 dailyWeatherView.maxTempLabel.text = String(format:"%.0f", maxTemp)
                 dailyWeatherView.minTemp.text = String(format:"%.0f", minTemp)
