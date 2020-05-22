@@ -370,32 +370,39 @@ class WeatherViewController: UIViewController {
     }
     
     func updateUIWith(weather: Forecast) {
-        print("Ready to update UI!")
         DispatchQueue.main.async {
-            if let cityFromUD = self.viewModel.getCityFromUserDefauts() {
-                var finalString = cityFromUD.name.capitalized
-                if cityFromUD.state != "" {
-                    finalString += ", \(cityFromUD.state.uppercased())"
-                }
-                self.selectedLocation.text = finalString
-            }
+            self.fillUpHeaderContainerView(currentWeather: weather.currentWeather)
             
-            self.tempDescription.text = weather.currentWeather?.weatherDetails?.first?.description
-            if let nonEmtyTemp = weather.currentWeather?.temperature {
-                self.tempLabel.text = String(format:"%.0f", nonEmtyTemp) + "°"
-            }
-
-            self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
-            if let minTemp = weather.dailyWeather?.first?.dailyTemperature?.min, let maxTemp = weather.dailyWeather?.first?.dailyTemperature?.max {
-                self.minTemp.text = String(format:"%.0f", minTemp) + "°"
-                self.maxTemp.text = String(format:"%.0f", maxTemp) + "°"
-            }
+            self.fillUpMinMaxTempContainerView(dailyTemperature: weather.dailyWeather?.first?.dailyTemperature)
             
             self.futureWeatherCollectionView.reloadData()
             
             self.fillUpWeeklyForecastStackView()
             
             self.dismissSpinner()
+        }
+    }
+    
+    private func fillUpHeaderContainerView(currentWeather: WeatherForTimeSlice?) {
+        if let cityFromUD = self.viewModel.getCityFromUserDefauts() {
+            var finalString = cityFromUD.name.capitalized
+            if cityFromUD.state != "" {
+                finalString += ", \(cityFromUD.state.uppercased())"
+            }
+            self.selectedLocation.text = finalString
+        }
+        
+        self.tempDescription.text = currentWeather?.weatherDetails?.first?.description
+        if let nonEmtyTemp = currentWeather?.temperature {
+            self.tempLabel.text = String(format:"%.0f", nonEmtyTemp) + "°"
+        }
+    }
+    
+    private func fillUpMinMaxTempContainerView(dailyTemperature: DailyTemperature?) {
+        self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
+        if let minTemp = dailyTemperature?.min, let maxTemp = dailyTemperature?.max {
+            self.minTemp.text = String(format:"%.0f", minTemp) + "°"
+            self.maxTemp.text = String(format:"%.0f", maxTemp) + "°"
         }
     }
     
