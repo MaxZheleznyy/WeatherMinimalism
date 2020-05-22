@@ -11,8 +11,6 @@ import UIKit
 class FutureWeatherCVCell: UICollectionViewCell {
 
     static var identifier = "FutureWeatherCVCell"
-
-    weak var textLabel: UILabel!
     
     let timeLabel: UILabel = {
         let label = UILabel()
@@ -76,6 +74,6 @@ class FutureWeatherCVCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        
+        //TODO add reuse elements
     }
 }

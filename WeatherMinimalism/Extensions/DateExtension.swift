@@ -9,9 +9,25 @@
 import Foundation
 
 extension Date {
-    func dayOfWeekByString() -> String? {
+    func dayOfWeekByString(specificDate: Date? = nil) -> String? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
-        return dateFormatter.string(from: self).capitalized
+        
+        if let nonEmptySpecificDate = specificDate {
+            return dateFormatter.string(from: nonEmptySpecificDate).capitalized
+        } else {
+            return dateFormatter.string(from: self).capitalized
+        }
+    }
+    
+    func daysOfWeekArray() -> [String?] {
+        var arrayOfWeekdays: [String?] = []
+        
+        for number in 1...8 {
+            let modifiedDate = Calendar.current.date(byAdding: .day, value: number, to: self)
+            arrayOfWeekdays.append(dayOfWeekByString(specificDate: modifiedDate))
+        }
+        
+        return arrayOfWeekdays
     }
 }
