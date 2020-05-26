@@ -26,7 +26,14 @@ class SpinnerViewController: UIViewController {
 
     override func loadView() {
         view = UIView()
-        self.view.backgroundColor = UIColor(white: 0, alpha: 0.95)
+        
+        let blurEffect = UIBlurEffect.init(style: .regular)
+        let visualEffect = UIVisualEffectView.init(effect: blurEffect)
+        let bluredView = UIVisualEffectView.init(effect: blurEffect)
+        bluredView.contentView.addSubview(visualEffect)
+        visualEffect.frame = UIScreen.main.bounds
+        bluredView.frame = UIScreen.main.bounds
+        view.insertSubview(bluredView, at: 0)
 
         self.view.addSubview(containerView)
         self.view.addSubview(spinner)
