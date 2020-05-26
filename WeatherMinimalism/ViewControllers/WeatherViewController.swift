@@ -184,7 +184,7 @@ class WeatherViewController: UIViewController {
         
         toolbarItems = [plusButton, spacer, refreshButton]
         
-        navigationController?.setToolbarHidden(false, animated: false)
+        toggleToolbarHidden(isHidden: false)
     }
     
     func setupViews() {
@@ -426,7 +426,13 @@ class WeatherViewController: UIViewController {
         }
     }
     
+    private func toggleToolbarHidden(isHidden: Bool) {
+        navigationController?.setToolbarHidden(isHidden, animated: false)
+    }
+    
     private func showSpinner() {
+        toggleToolbarHidden(isHidden: true)
+        
         addChild(spinnerView)
         spinnerView.view.frame = view.frame
         view.addSubview(spinnerView.view)
@@ -434,6 +440,8 @@ class WeatherViewController: UIViewController {
     }
     
     private func dismissSpinner() {
+        toggleToolbarHidden(isHidden: false)
+
         spinnerView.willMove(toParent: nil)
         spinnerView.view.removeFromSuperview()
         spinnerView.removeFromParent()
