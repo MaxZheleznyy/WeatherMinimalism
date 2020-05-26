@@ -38,13 +38,18 @@ class SpinnerViewController: UIViewController {
         self.view.addSubview(containerView)
         self.view.addSubview(spinner)
 
-        containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        containerView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        containerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        containerView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        let spinnerViewConstraints = [
+            containerView.heightAnchor.constraint(equalToConstant: 50),
+            containerView.widthAnchor.constraint(equalToConstant: 50),
+            containerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
 
-        spinner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+            spinner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(spinnerViewConstraints)
+        
         spinner.startAnimating()
     }
 }
