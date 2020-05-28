@@ -30,4 +30,29 @@ extension Date {
         
         return arrayOfWeekdays
     }
+    
+    func next24Hours() -> [String] {
+        var hoursArray: [String] = []
+        let currentHour = Calendar.current.component(.hour, from: self)
+        
+        for todayNextHour in currentHour...24 {
+            if todayNextHour == currentHour {
+                hoursArray.append("Now")
+            } else if todayNextHour == 24 {
+                hoursArray.append("00")
+            } else {
+                hoursArray.append(String(todayNextHour))
+            }
+        }
+        
+        for tommorowHour in 01...currentHour {
+            if tommorowHour < 10 {
+                hoursArray.append("0" + String(tommorowHour))
+            } else {
+                hoursArray.append(String(tommorowHour))
+            }
+        }
+        
+        return hoursArray
+    }
 }

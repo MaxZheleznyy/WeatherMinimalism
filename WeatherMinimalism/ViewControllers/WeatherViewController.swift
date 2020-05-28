@@ -14,6 +14,8 @@ class WeatherViewController: UIViewController {
     //MARK: - Contants
     let viewModel = WeatherViewModel()
     
+    var next24HoursArray: [String] = []
+    
     var locationManager = CLLocationManager()
     
     var headerContainerViewHeight: NSLayoutConstraint?
@@ -181,6 +183,8 @@ class WeatherViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
+        
+        next24HoursArray = Date().next24Hours()
         
         configureBottomToolBar()
         setupViews()
@@ -542,14 +546,19 @@ extension WeatherViewController: UIScrollViewDelegate {
 // MARK: - UICollectionView
 extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.publicWeatherData?.hourlyWeather?.count ?? 0
+        return viewModel.publicWeatherData?.publicHourlyWeather.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayHourlyWeatherCVCell.identifier, for: indexPath) as! TodayHourlyWeatherCVCell
         
-        if let weatherData = viewModel.publicWeatherData?.hourlyWeather?[safe: indexPath.row], let weatherDataDetails = weatherData.weatherDetails?.first {
-            cell.timeLabel.text = weatherDataDetails.description
+        if let weatherData = viewModel.publicWeatherData?.publicHourlyWeather[safe: indexPath.row], let weatherDataDetails = weatherData.weatherDetails?.first {
+            
+            if let hourForCell = next24HoursArray[safe: indexPath.row] {
+                cell.timeLabel.text = hourForCell
+            } else {
+                cell.timeLabel.text = weatherDataDetails.description
+            }
             
             if let nonEmptyIcon = weatherDataDetails.icon {
                 cell.weatherIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(nonEmptyIcon)@2x.png")
