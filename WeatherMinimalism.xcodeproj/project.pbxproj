@@ -13,7 +13,8 @@
 		5003903B246F09F800B13C5E /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5003903A246F09F800B13C5E /* Location.swift */; };
 		5006E99C246A2F1C00480341 /* WeatherForTimeSlice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5006E99B246A2F1C00480341 /* WeatherForTimeSlice.swift */; };
 		5006E99E246A303200480341 /* WeatherDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5006E99D246A303200480341 /* WeatherDetails.swift */; };
-		503944152466125A00B1BBD1 /* FutureWeatherCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503944142466125A00B1BBD1 /* FutureWeatherCVCell.swift */; };
+		5021854C24805AF500E64D30 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5021854B24805AF500E64D30 /* UIViewExtension.swift */; };
+		503944152466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */; };
 		5080A7562440FC5000003BF1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A7552440FC5000003BF1 /* AppDelegate.swift */; };
 		5080A7582440FC5000003BF1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A7572440FC5000003BF1 /* SceneDelegate.swift */; };
 		5080A75A2440FC5000003BF1 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A7592440FC5000003BF1 /* WeatherViewController.swift */; };
@@ -37,7 +38,8 @@
 		5003903A246F09F800B13C5E /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		5006E99B246A2F1C00480341 /* WeatherForTimeSlice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForTimeSlice.swift; sourceTree = "<group>"; };
 		5006E99D246A303200480341 /* WeatherDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDetails.swift; sourceTree = "<group>"; };
-		503944142466125A00B1BBD1 /* FutureWeatherCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FutureWeatherCVCell.swift; sourceTree = "<group>"; };
+		5021854B24805AF500E64D30 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayHourlyWeatherCVCell.swift; sourceTree = "<group>"; };
 		5080A7522440FC5000003BF1 /* WeatherMinimalism.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherMinimalism.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5080A7552440FC5000003BF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5080A7572440FC5000003BF1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,7 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				50830CDA24787D3100E5CE1B /* DailyForecastForWeekView.swift */,
-				503944142466125A00B1BBD1 /* FutureWeatherCVCell.swift */,
+				503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -113,6 +115,7 @@
 				50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */,
 				509E59BD244A3614000791C3 /* FloatExtension.swift */,
 				509E59BF244A3699000791C3 /* UIImageViewExtension.swift */,
+				5021854B24805AF500E64D30 /* UIViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -244,8 +247,9 @@
 				5080A7562440FC5000003BF1 /* AppDelegate.swift in Sources */,
 				50039037246F033E00B13C5E /* WeatherForDaily.swift in Sources */,
 				5006E99E246A303200480341 /* WeatherDetails.swift in Sources */,
+				5021854C24805AF500E64D30 /* UIViewExtension.swift in Sources */,
 				509E59C9244A66C2000791C3 /* SpinnerViewController.swift in Sources */,
-				503944152466125A00B1BBD1 /* FutureWeatherCVCell.swift in Sources */,
+				503944152466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift in Sources */,
 				5006E99C246A2F1C00480341 /* WeatherForTimeSlice.swift in Sources */,
 				5080A7582440FC5000003BF1 /* SceneDelegate.swift in Sources */,
 				50830CDB24787D3100E5CE1B /* DailyForecastForWeekView.swift in Sources */,

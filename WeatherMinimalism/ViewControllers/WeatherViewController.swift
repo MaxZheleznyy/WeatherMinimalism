@@ -39,13 +39,6 @@ class WeatherViewController: UIViewController {
     //MARK: - UI
     let spinnerView = SpinnerViewController()
     
-    let headerContainerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .red
-        return view
-    }()
-    
     let mainContentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,6 +52,12 @@ class WeatherViewController: UIViewController {
         stackView.alignment = .fill
         stackView.spacing = 10
         return stackView
+    }()
+    
+    let headerContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     let selectedLocation: UILabel = {
@@ -94,7 +93,6 @@ class WeatherViewController: UIViewController {
     let minMaxTempContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
         return view
     }()
     
@@ -134,20 +132,32 @@ class WeatherViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
+    
+    let todayHourlyWeatherCVContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
-    let futureWeatherCollectionView: UICollectionView = {
+    let todayHourlyWeatherCollectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .blue
+        collectionView.backgroundColor = .clear
         collectionView.allowsSelection = false
         collectionView.alwaysBounceHorizontal = true
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.contentInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
         return collectionView
+    }()
+    
+    let dailyForecastForWeekSVContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     let dailyForecastForWeekStackView: UIStackView = {
@@ -184,6 +194,9 @@ class WeatherViewController: UIViewController {
         
         toolbarItems = [plusButton, spacer, refreshButton]
         
+        navigationController?.toolbar.barTintColor = .systemBackground
+        navigationController?.toolbar.isTranslucent = false
+        
         toggleToolbarHidden(isHidden: false)
     }
     
@@ -191,12 +204,12 @@ class WeatherViewController: UIViewController {
         configureMainView()
         configureMinMaxTempView()
         configureCollectionView()
-        
-        self.contentMainStackView.addArrangedSubview(dailyForecastForWeekStackView)
+        configureDailyForecastForWeek()
     }
     
     func configureMainView() {
         view.addSubview(headerContainerView)
+        
         headerContainerView.addSubview(selectedLocation)
         headerContainerView.addSubview(tempLabel)
         headerContainerView.addSubview(tempDescription)
@@ -247,40 +260,36 @@ class WeatherViewController: UIViewController {
     }
     
     func configureMinMaxTempView() {
+        let bottomDividerView = minMaxTempContainerView.addBottomDividerView()
+        
         minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
         minMaxTempContainerView.addSubview(todayLabel)
         minMaxTempContainerView.addSubview(maxTemp)
         minMaxTempContainerView.addSubview(minTemp)
         
         let minMaxViewConstrainsts = [
-            minMaxTempContainerView.widthAnchor.constraint(equalTo: contentMainStackView.widthAnchor),
-            
             dayOfTheWeekLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 16),
-            dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            dayOfTheWeekLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
+            dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
             
             todayLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             todayLabel.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 8),
-            todayLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            todayLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
+            todayLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
             
             maxTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             maxTemp.leadingAnchor.constraint(equalTo: todayLabel.trailingAnchor, constant: 20),
-            maxTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            maxTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
+            maxTemp.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
             
             minTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             minTemp.leadingAnchor.constraint(equalTo: maxTemp.trailingAnchor, constant: 8),
             minTemp.trailingAnchor.constraint(equalTo: minMaxTempContainerView.trailingAnchor, constant: -16),
-            minTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            minTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor)
+            minTemp.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
         ]
         
         dayOfTheWeekLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         todayLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         maxTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        minTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        minTemp.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         contentMainStackView.addArrangedSubview(minMaxTempContainerView)
         
@@ -288,17 +297,43 @@ class WeatherViewController: UIViewController {
     }
     
     func configureCollectionView() {
-        futureWeatherCollectionView.register(FutureWeatherCVCell.self, forCellWithReuseIdentifier: FutureWeatherCVCell.identifier)
-        futureWeatherCollectionView.dataSource = self
-        futureWeatherCollectionView.delegate = self
+        let bottomDividerView = todayHourlyWeatherCVContainer.addBottomDividerView()
         
-        contentMainStackView.addArrangedSubview(futureWeatherCollectionView)
+        todayHourlyWeatherCollectionView.register(TodayHourlyWeatherCVCell.self, forCellWithReuseIdentifier: TodayHourlyWeatherCVCell.identifier)
+        todayHourlyWeatherCollectionView.dataSource = self
+        todayHourlyWeatherCollectionView.delegate = self
         
-        let futureWeatherCollectionViewConstrainsts = [
-            futureWeatherCollectionView.heightAnchor.constraint(equalToConstant: 100)
+        todayHourlyWeatherCVContainer.addSubview(todayHourlyWeatherCollectionView)
+        
+        contentMainStackView.addArrangedSubview(todayHourlyWeatherCVContainer)
+        
+        let todayHourlyWeatherCollectionViewConstrainsts = [
+            todayHourlyWeatherCVContainer.heightAnchor.constraint(equalToConstant: 110),
+            
+            todayHourlyWeatherCollectionView.topAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.topAnchor),
+            todayHourlyWeatherCollectionView.leadingAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.leadingAnchor),
+            todayHourlyWeatherCollectionView.trailingAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.trailingAnchor),
+            todayHourlyWeatherCollectionView.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
         ]
         
-        NSLayoutConstraint.activate(futureWeatherCollectionViewConstrainsts)
+        NSLayoutConstraint.activate(todayHourlyWeatherCollectionViewConstrainsts)
+    }
+    
+    func configureDailyForecastForWeek() {
+        
+        let bottomDividerView = dailyForecastForWeekSVContainer.addBottomDividerView()
+        dailyForecastForWeekSVContainer.addSubview(dailyForecastForWeekStackView)
+        
+        let dailyForecastForWeekConstraints = [
+            dailyForecastForWeekStackView.topAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.topAnchor),
+            dailyForecastForWeekStackView.leadingAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.leadingAnchor),
+            dailyForecastForWeekStackView.trailingAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.trailingAnchor),
+            dailyForecastForWeekStackView.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
+        ]
+        
+        NSLayoutConstraint.activate(dailyForecastForWeekConstraints)
+        
+        self.contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
     }
     
     private func selectRoadToMakeInitialCall() {
@@ -375,7 +410,7 @@ class WeatherViewController: UIViewController {
             
             self.fillUpMinMaxTempContainerView(dailyTemperature: weather.dailyWeather?.first?.dailyTemperature)
             
-            self.futureWeatherCollectionView.reloadData()
+            self.todayHourlyWeatherCollectionView.reloadData()
             
             self.fillUpWeeklyForecastStackView()
             
@@ -511,7 +546,7 @@ extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FutureWeatherCVCell.identifier, for: indexPath) as! FutureWeatherCVCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayHourlyWeatherCVCell.identifier, for: indexPath) as! TodayHourlyWeatherCVCell
         
         if let weatherData = viewModel.publicWeatherData?.hourlyWeather?[safe: indexPath.row], let weatherDataDetails = weatherData.weatherDetails?.first {
             cell.timeLabel.text = weatherDataDetails.description
@@ -535,8 +570,8 @@ extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDel
 
 extension WeatherViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let futureWeatherCVInset = collectionView.contentInset
-        let cellHeight = collectionView.bounds.height - futureWeatherCVInset.bottom - futureWeatherCVInset.top
+        let todayHourlyWeatherCVInset = collectionView.contentInset
+        let cellHeight = collectionView.bounds.height - todayHourlyWeatherCVInset.bottom - todayHourlyWeatherCVInset.top
         
         return CGSize(width: 80, height: cellHeight)
     }

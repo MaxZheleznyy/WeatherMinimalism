@@ -48,6 +48,7 @@ class DailyForecastForWeekView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         
         self.addSubview(dayOfTheWeekLabel)
@@ -74,9 +75,16 @@ class DailyForecastForWeekView: UIView {
         ]
         
         dayOfTheWeekLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        dayOfTheWeekLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
         weatherForDayImageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        weatherForDayImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        
         maxTempLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        minTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        maxTempLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
+        minTemp.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        minTemp.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
         NSLayoutConstraint.activate(contentConstraints)
     }
