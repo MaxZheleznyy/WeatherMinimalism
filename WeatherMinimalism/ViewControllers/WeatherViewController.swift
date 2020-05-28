@@ -249,6 +249,9 @@ class WeatherViewController: UIViewController {
     }
     
     func configureMinMaxTempView() {
+        
+        let bottomDividerView = minMaxTempContainerView.addBottomDividerView()
+        
         minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
         minMaxTempContainerView.addSubview(todayLabel)
         minMaxTempContainerView.addSubview(maxTemp)
@@ -259,20 +262,20 @@ class WeatherViewController: UIViewController {
             
             dayOfTheWeekLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 16),
-            dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
             
             todayLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             todayLabel.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 8),
-            todayLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            todayLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
             
             maxTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             maxTemp.leadingAnchor.constraint(equalTo: todayLabel.trailingAnchor, constant: 20),
-            maxTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            maxTemp.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
             
             minTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             minTemp.leadingAnchor.constraint(equalTo: maxTemp.trailingAnchor, constant: 8),
             minTemp.trailingAnchor.constraint(equalTo: minMaxTempContainerView.trailingAnchor, constant: -16),
-            minTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
+            minTemp.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
         ]
         
         dayOfTheWeekLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
