@@ -42,7 +42,7 @@ class WeatherViewController: UIViewController {
     let headerContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .red
+//        view.backgroundColor = .red
         return view
     }()
     
@@ -141,7 +141,7 @@ class WeatherViewController: UIViewController {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .blue
+        collectionView.backgroundColor = .clear
         collectionView.allowsSelection = false
         collectionView.alwaysBounceHorizontal = true
         collectionView.showsVerticalScrollIndicator = false

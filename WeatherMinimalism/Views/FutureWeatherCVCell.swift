@@ -42,7 +42,7 @@ class FutureWeatherCVCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.contentView.backgroundColor = .green
+//        self.contentView.backgroundColor = .green
         
         contentView.addSubview(timeLabel)
         contentView.addSubview(weatherIcon)
