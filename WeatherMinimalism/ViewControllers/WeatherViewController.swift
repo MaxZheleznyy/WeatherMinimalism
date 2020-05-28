@@ -183,6 +183,9 @@ class WeatherViewController: UIViewController {
         
         toolbarItems = [plusButton, spacer, refreshButton]
         
+        navigationController?.toolbar.barTintColor = .systemBackground
+        navigationController?.toolbar.isTranslucent = false
+        
         toggleToolbarHidden(isHidden: false)
     }
     
