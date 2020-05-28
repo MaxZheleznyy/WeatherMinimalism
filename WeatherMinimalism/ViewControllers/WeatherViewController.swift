@@ -174,6 +174,10 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let next = Date().next24Hours()
+        print("🐶")
+        print(next)
+        
         navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = .systemBackground
         
