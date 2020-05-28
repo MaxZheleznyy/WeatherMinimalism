@@ -42,6 +42,8 @@ class FutureWeatherCVCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
         contentView.addSubview(timeLabel)
         contentView.addSubview(weatherIcon)
         contentView.addSubview(temperatureLabel)
@@ -61,6 +63,15 @@ class FutureWeatherCVCell: UICollectionViewCell {
             temperatureLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             temperatureLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4)
         ]
+        
+        timeLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        timeLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        
+        weatherIcon.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        weatherIcon.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        
+        temperatureLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+        temperatureLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         
         NSLayoutConstraint.activate(contentConstraints)
     }

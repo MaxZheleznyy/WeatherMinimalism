@@ -257,29 +257,25 @@ class WeatherViewController: UIViewController {
             dayOfTheWeekLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 16),
             dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            dayOfTheWeekLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
             
             todayLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             todayLabel.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 8),
             todayLabel.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            todayLabel.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
             
             maxTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             maxTemp.leadingAnchor.constraint(equalTo: todayLabel.trailingAnchor, constant: 20),
             maxTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            maxTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor),
             
             minTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             minTemp.leadingAnchor.constraint(equalTo: maxTemp.trailingAnchor, constant: 8),
             minTemp.trailingAnchor.constraint(equalTo: minMaxTempContainerView.trailingAnchor, constant: -16),
             minTemp.bottomAnchor.constraint(equalTo: minMaxTempContainerView.bottomAnchor),
-            minTemp.centerYAnchor.constraint(equalTo: minMaxTempContainerView.centerYAnchor)
         ]
         
         dayOfTheWeekLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         todayLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         maxTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        minTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        minTemp.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         contentMainStackView.addArrangedSubview(minMaxTempContainerView)
         
