@@ -33,10 +33,13 @@ extension Date {
     
     func next24Hours() -> [String] {
         var hoursArray: [String] = []
-        let nextHour = Calendar.current.component(.hour, from: self) + 1
+        let currentHour = Calendar.current.component(.hour, from: self)
+        let nextHour = currentHour + 1
         
-        for todayNextHour in nextHour...24 {
-            if todayNextHour == 24 {
+        for todayNextHour in currentHour...24 {
+            if todayNextHour == currentHour {
+                hoursArray.append("Now")
+            } else if todayNextHour == 24 {
                 hoursArray.append("00")
             } else {
                 hoursArray.append(String(todayNextHour))
