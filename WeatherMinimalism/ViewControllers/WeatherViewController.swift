@@ -39,12 +39,6 @@ class WeatherViewController: UIViewController {
     //MARK: - UI
     let spinnerView = SpinnerViewController()
     
-    let headerContainerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     let mainContentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,6 +52,12 @@ class WeatherViewController: UIViewController {
         stackView.alignment = .fill
         stackView.spacing = 10
         return stackView
+    }()
+    
+    let headerContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     let selectedLocation: UILabel = {
@@ -93,7 +93,6 @@ class WeatherViewController: UIViewController {
     let minMaxTempContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
         return view
     }()
     
@@ -133,8 +132,14 @@ class WeatherViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         return label
     }()
+    
+    let todayHourlyWeatherCVContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
-    let futureWeatherCollectionView: UICollectionView = {
+    let todayHourlyWeatherCollectionView: UICollectionView = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         
@@ -289,17 +294,26 @@ class WeatherViewController: UIViewController {
     }
     
     func configureCollectionView() {
-        futureWeatherCollectionView.register(FutureWeatherCVCell.self, forCellWithReuseIdentifier: FutureWeatherCVCell.identifier)
-        futureWeatherCollectionView.dataSource = self
-        futureWeatherCollectionView.delegate = self
+        todayHourlyWeatherCollectionView.register(TodayHourlyWeatherCVCell.self, forCellWithReuseIdentifier: TodayHourlyWeatherCVCell.identifier)
+        todayHourlyWeatherCollectionView.dataSource = self
+        todayHourlyWeatherCollectionView.delegate = self
         
-        contentMainStackView.addArrangedSubview(futureWeatherCollectionView)
+        let bottomDividerView = todayHourlyWeatherCVContainer.addBottomDividerView()
         
-        let futureWeatherCollectionViewConstrainsts = [
-            futureWeatherCollectionView.heightAnchor.constraint(equalToConstant: 100)
+        todayHourlyWeatherCVContainer.addSubview(todayHourlyWeatherCollectionView)
+        
+        contentMainStackView.addArrangedSubview(todayHourlyWeatherCVContainer)
+        
+        let todayHourlyWeatherCollectionViewConstrainsts = [
+            todayHourlyWeatherCVContainer.heightAnchor.constraint(equalToConstant: 110),
+            
+            todayHourlyWeatherCollectionView.topAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.topAnchor),
+            todayHourlyWeatherCollectionView.leadingAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.leadingAnchor),
+            todayHourlyWeatherCollectionView.trailingAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.trailingAnchor),
+            todayHourlyWeatherCollectionView.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
         ]
         
-        NSLayoutConstraint.activate(futureWeatherCollectionViewConstrainsts)
+        NSLayoutConstraint.activate(todayHourlyWeatherCollectionViewConstrainsts)
     }
     
     private func selectRoadToMakeInitialCall() {
@@ -376,7 +390,7 @@ class WeatherViewController: UIViewController {
             
             self.fillUpMinMaxTempContainerView(dailyTemperature: weather.dailyWeather?.first?.dailyTemperature)
             
-            self.futureWeatherCollectionView.reloadData()
+            self.todayHourlyWeatherCollectionView.reloadData()
             
             self.fillUpWeeklyForecastStackView()
             
@@ -512,7 +526,7 @@ extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDel
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FutureWeatherCVCell.identifier, for: indexPath) as! FutureWeatherCVCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TodayHourlyWeatherCVCell.identifier, for: indexPath) as! TodayHourlyWeatherCVCell
         
         if let weatherData = viewModel.publicWeatherData?.hourlyWeather?[safe: indexPath.row], let weatherDataDetails = weatherData.weatherDetails?.first {
             cell.timeLabel.text = weatherDataDetails.description
@@ -536,8 +550,8 @@ extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDel
 
 extension WeatherViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let futureWeatherCVInset = collectionView.contentInset
-        let cellHeight = collectionView.bounds.height - futureWeatherCVInset.bottom - futureWeatherCVInset.top
+        let todayHourlyWeatherCVInset = collectionView.contentInset
+        let cellHeight = collectionView.bounds.height - todayHourlyWeatherCVInset.bottom - todayHourlyWeatherCVInset.top
         
         return CGSize(width: 80, height: cellHeight)
     }

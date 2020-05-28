@@ -1,5 +1,5 @@
 //
-//  FutureWeatherCVCell.swift
+//  TodayHourlyWeatherCVCell.swift
 //  WeatherMinimalism
 //
 //  Created by Maxim Zheleznyy on 5/8/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FutureWeatherCVCell: UICollectionViewCell {
+class TodayHourlyWeatherCVCell: UICollectionViewCell {
 
     static var identifier = "FutureWeatherCVCell"
     
