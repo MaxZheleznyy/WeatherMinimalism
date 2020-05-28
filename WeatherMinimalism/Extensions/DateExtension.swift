@@ -34,7 +34,6 @@ extension Date {
     func next24Hours() -> [String] {
         var hoursArray: [String] = []
         let currentHour = Calendar.current.component(.hour, from: self)
-        let nextHour = currentHour + 1
         
         for todayNextHour in currentHour...24 {
             if todayNextHour == currentHour {
@@ -46,7 +45,7 @@ extension Date {
             }
         }
         
-        for tommorowHour in 01..<nextHour {
+        for tommorowHour in 01...currentHour {
             if tommorowHour < 10 {
                 hoursArray.append("0" + String(tommorowHour))
             } else {
