@@ -209,6 +209,7 @@ class WeatherViewController: UIViewController {
     
     func configureMainView() {
         view.addSubview(headerContainerView)
+        
         headerContainerView.addSubview(selectedLocation)
         headerContainerView.addSubview(tempLabel)
         headerContainerView.addSubview(tempDescription)
@@ -259,7 +260,6 @@ class WeatherViewController: UIViewController {
     }
     
     func configureMinMaxTempView() {
-        
         let bottomDividerView = minMaxTempContainerView.addBottomDividerView()
         
         minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
@@ -268,8 +268,6 @@ class WeatherViewController: UIViewController {
         minMaxTempContainerView.addSubview(minTemp)
         
         let minMaxViewConstrainsts = [
-            minMaxTempContainerView.widthAnchor.constraint(equalTo: contentMainStackView.widthAnchor),
-            
             dayOfTheWeekLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
             dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 16),
             dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
@@ -299,11 +297,11 @@ class WeatherViewController: UIViewController {
     }
     
     func configureCollectionView() {
+        let bottomDividerView = todayHourlyWeatherCVContainer.addBottomDividerView()
+        
         todayHourlyWeatherCollectionView.register(TodayHourlyWeatherCVCell.self, forCellWithReuseIdentifier: TodayHourlyWeatherCVCell.identifier)
         todayHourlyWeatherCollectionView.dataSource = self
         todayHourlyWeatherCollectionView.delegate = self
-        
-        let bottomDividerView = todayHourlyWeatherCVContainer.addBottomDividerView()
         
         todayHourlyWeatherCVContainer.addSubview(todayHourlyWeatherCollectionView)
         
