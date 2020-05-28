@@ -42,7 +42,6 @@ class WeatherViewController: UIViewController {
     let headerContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = .red
         return view
     }()
     
