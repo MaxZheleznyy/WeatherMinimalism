@@ -154,6 +154,12 @@ class WeatherViewController: UIViewController {
         return collectionView
     }()
     
+    let dailyForecastForWeekSVContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let dailyForecastForWeekStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -198,8 +204,7 @@ class WeatherViewController: UIViewController {
         configureMainView()
         configureMinMaxTempView()
         configureCollectionView()
-        
-        self.contentMainStackView.addArrangedSubview(dailyForecastForWeekStackView)
+        configureDailyForecastForWeek()
     }
     
     func configureMainView() {
@@ -314,6 +319,23 @@ class WeatherViewController: UIViewController {
         ]
         
         NSLayoutConstraint.activate(todayHourlyWeatherCollectionViewConstrainsts)
+    }
+    
+    func configureDailyForecastForWeek() {
+        
+        let bottomDividerView = dailyForecastForWeekSVContainer.addBottomDividerView()
+        dailyForecastForWeekSVContainer.addSubview(dailyForecastForWeekStackView)
+        
+        let dailyForecastForWeekConstraints = [
+            dailyForecastForWeekStackView.topAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.topAnchor),
+            dailyForecastForWeekStackView.leadingAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.leadingAnchor),
+            dailyForecastForWeekStackView.trailingAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.trailingAnchor),
+            dailyForecastForWeekStackView.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
+        ]
+        
+        NSLayoutConstraint.activate(dailyForecastForWeekConstraints)
+        
+        self.contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
     }
     
     private func selectRoadToMakeInitialCall() {
