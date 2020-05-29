@@ -507,7 +507,7 @@ class WeatherViewController: UIViewController {
         let minTemp = nonEmptyWeather.dailyTemperature?.min ?? 0
         let currentWeatherDescription = nonEmptyWeather.weatherDetails?.first?.detailedDescription ?? ""
 
-        let finalText = "Today: \(currentWeatherDescription.lowercased()). The high will be \(String(format: "%.0f", maxTemp))°. The low will be \(String(format: "%.0f", minTemp))°"
+        let finalText = "Today: \(currentWeatherDescription.lowercased()). The high will be \(String(format: "%.0f", maxTemp))°. The low will be \(String(format: "%.0f", minTemp))°."
         currentDayOverviewLabel.text = finalText
     }
     
