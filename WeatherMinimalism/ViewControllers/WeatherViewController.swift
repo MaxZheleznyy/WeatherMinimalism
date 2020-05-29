@@ -451,6 +451,8 @@ class WeatherViewController: UIViewController {
             
             self.fillUpWeeklyForecastStackView()
             
+            self.fillUpCurrentDayOverview()
+            
             self.dismissSpinner()
         }
     }
@@ -466,7 +468,7 @@ class WeatherViewController: UIViewController {
         
         self.tempDescription.text = currentWeather?.weatherDetails?.first?.description
         if let nonEmtyTemp = currentWeather?.temperature {
-            self.tempLabel.text = String(format:"%.0f", nonEmtyTemp) + "°"
+            self.tempLabel.text = String(format: "%.0f", nonEmtyTemp) + "°"
         }
     }
     
@@ -474,8 +476,8 @@ class WeatherViewController: UIViewController {
         self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
         
         if let minTemp = dailyTemperature?.min, let maxTemp = dailyTemperature?.max {
-            self.minTemp.text = String(format:"%.0f", minTemp) + "°"
-            self.maxTemp.text = String(format:"%.0f", maxTemp) + "°"
+            self.minTemp.text = String(format: "%.0f", minTemp) + "°"
+            self.maxTemp.text = String(format: "%.0f", maxTemp) + "°"
         }
     }
     
@@ -490,12 +492,23 @@ class WeatherViewController: UIViewController {
                 
                 dailyWeatherView.dayOfTheWeekLabel.text = weekdaysArray[safe: index] as? String
                 dailyWeatherView.weatherForDayImageView.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(weatherIcon)@2x.png")
-                dailyWeatherView.maxTempLabel.text = String(format:"%.0f", maxTemp)
-                dailyWeatherView.minTemp.text = String(format:"%.0f", minTemp)
+                dailyWeatherView.maxTempLabel.text = String(format: "%.0f", maxTemp)
+                dailyWeatherView.minTemp.text = String(format: "%.0f", minTemp)
                 
                 self.dailyForecastForWeekStackView.addArrangedSubview(dailyWeatherView)
             }
         }
+    }
+    
+    private func fillUpCurrentDayOverview() {
+        guard let nonEmptyWeather = viewModel.publicWeatherData?.dailyWeather?.first else { return }
+        
+        let maxTemp = nonEmptyWeather.dailyTemperature?.max ?? 0
+        let minTemp = nonEmptyWeather.dailyTemperature?.min ?? 0
+        let currentWeatherDescription = nonEmptyWeather.weatherDetails?.first?.detailedDescription ?? ""
+
+        let finalText = "Today: \(currentWeatherDescription.lowercased()). The high will be \(String(format: "%.0f", maxTemp))°. The low will be \(String(format: "%.0f", minTemp))°"
+        currentDayOverviewLabel.text = finalText
     }
     
     private func toggleToolbarHidden(isHidden: Bool) {
@@ -598,7 +611,7 @@ extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDel
             }
             
             if let nonEmptyTemp = weatherData.temperature {
-                cell.temperatureLabel.text = String(format:"%.0f", nonEmptyTemp) + "°"
+                cell.temperatureLabel.text = String(format: "%.0f", nonEmptyTemp) + "°"
             }
         }
         
