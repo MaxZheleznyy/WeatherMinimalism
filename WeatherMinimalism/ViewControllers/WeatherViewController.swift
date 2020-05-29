@@ -171,6 +171,22 @@ class WeatherViewController: UIViewController {
         return stackView
     }()
     
+    let currentDayOverviewContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let currentDayOverviewLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        label.textColor = .label
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.numberOfLines = 0
+        return label
+    }()
+    
 
     //MARK: - Setup
     override func viewDidLoad() {
@@ -209,6 +225,23 @@ class WeatherViewController: UIViewController {
         configureMinMaxTempView()
         configureCollectionView()
         configureDailyForecastForWeek()
+        configureCurrentDayOverview()
+    }
+    
+    func configureCurrentDayOverview() {
+        currentDayOverviewContainer.addSubview(currentDayOverviewLabel)
+        let bottomDividerView = currentDayOverviewContainer.addBottomDividerView()
+        
+        contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
+        
+        let currentDayOverviewConstraints = [
+            currentDayOverviewLabel.topAnchor.constraint(equalTo: currentDayOverviewContainer.topAnchor, constant: 8),
+            currentDayOverviewLabel.leadingAnchor.constraint(equalTo: currentDayOverviewContainer.leadingAnchor, constant: 16),
+            currentDayOverviewLabel.trailingAnchor.constraint(equalTo: currentDayOverviewContainer.trailingAnchor, constant: -16),
+            currentDayOverviewLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -16)
+        ]
+        
+        NSLayoutConstraint.activate(currentDayOverviewConstraints)
     }
     
     func configureMainView() {
