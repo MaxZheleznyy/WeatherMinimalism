@@ -82,13 +82,13 @@
 		503944162466126000B1BBD1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				50830CDA24787D3100E5CE1B /* DailyForecastForWeekView.swift */,
-				5077007624872E8300CB1250 /* HeaderContainerView.swift */,
-				507700782487333300CB1250 /* MinMaxContainerView.swift */,
-				5077007A2487358C00CB1250 /* TodayHourlyWeatherCVView.swift */,
-				509D922E2487FFDC00B059BC /* DailyForecastForWeekSVView.swift */,
 				509D9230248810E900B059BC /* CurrentDayOverviewView.swift */,
+				509D922E2487FFDC00B059BC /* DailyForecastForWeekSVView.swift */,
+				50830CDA24787D3100E5CE1B /* DailyForecastForWeekView.swift */,
+				507700782487333300CB1250 /* MinMaxContainerView.swift */,
+				5077007624872E8300CB1250 /* HeaderContainerView.swift */,
 				503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */,
+				5077007A2487358C00CB1250 /* TodayHourlyWeatherCVView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
