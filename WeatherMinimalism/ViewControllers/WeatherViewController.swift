@@ -47,6 +47,8 @@ class WeatherViewController: UIViewController {
     
     let todayHourlyWeatherCVContainer = TodayHourlyWeatherCVView()
     
+    let dailyForecastForWeekSVContainer = DailyForecastForWeekSVView()
+    
     let mainContentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,21 +61,6 @@ class WeatherViewController: UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.spacing = 10
-        return stackView
-    }()
-    
-    let dailyForecastForWeekSVContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let dailyForecastForWeekStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.distribution = .fill
-        stackView.alignment = .fill
         return stackView
     }()
     
@@ -177,19 +164,6 @@ class WeatherViewController: UIViewController {
     }
     
     func configureDailyForecastForWeek() {
-        
-        let bottomDividerView = dailyForecastForWeekSVContainer.addBottomDividerView()
-        dailyForecastForWeekSVContainer.addSubview(dailyForecastForWeekStackView)
-        
-        let dailyForecastForWeekConstraints = [
-            dailyForecastForWeekStackView.topAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.topAnchor),
-            dailyForecastForWeekStackView.leadingAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.leadingAnchor),
-            dailyForecastForWeekStackView.trailingAnchor.constraint(equalTo: dailyForecastForWeekSVContainer.trailingAnchor),
-            dailyForecastForWeekStackView.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
-        ]
-        
-        NSLayoutConstraint.activate(dailyForecastForWeekConstraints)
-        
         self.contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
     }
     
@@ -331,7 +305,7 @@ class WeatherViewController: UIViewController {
                 dailyWeatherView.maxTempLabel.text = String(format: "%.0f", maxTemp)
                 dailyWeatherView.minTemp.text = String(format: "%.0f", minTemp)
                 
-                self.dailyForecastForWeekStackView.addArrangedSubview(dailyWeatherView)
+                dailyForecastForWeekSVContainer.dailyForecastForWeekStackView.addArrangedSubview(dailyWeatherView)
             }
         }
     }
