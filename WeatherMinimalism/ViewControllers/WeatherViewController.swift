@@ -34,7 +34,7 @@ class WeatherViewController: UIViewController {
                 let alphaPercentToUse = (headerHeightToUse - 100) / 100
                 headerContainerView.tempLabel.textColor = UIColor.label.withAlphaComponent(alphaPercentToUse)
             }
-            self.view.layoutIfNeeded()
+            view.layoutIfNeeded()
         }
     }
     
@@ -101,10 +101,16 @@ class WeatherViewController: UIViewController {
     
     func setupViews() {
         configureMainView()
-        configureMinMaxTempView()
-        configureCollectionView()
-        configureDailyForecastForWeek()
-        configureCurrentDayOverview()
+        
+        contentMainStackView.addArrangedSubview(minMaxTempContainerView)
+        
+        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.dataSource = self
+        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.delegate = self
+        contentMainStackView.addArrangedSubview(todayHourlyWeatherCVContainer)
+        
+        contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
+        
+        contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
     }
     
     func configureMainView() {
@@ -136,25 +142,6 @@ class WeatherViewController: UIViewController {
         ]
         
         NSLayoutConstraint.activate(mainConstraints)
-    }
-    
-    func configureMinMaxTempView() {
-        contentMainStackView.addArrangedSubview(minMaxTempContainerView)
-    }
-    
-    func configureCollectionView() {
-        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.dataSource = self
-        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.delegate = self
-        
-        contentMainStackView.addArrangedSubview(todayHourlyWeatherCVContainer)
-    }
-    
-    func configureDailyForecastForWeek() {
-        self.contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
-    }
-    
-    func configureCurrentDayOverview() {
-        contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
     }
     
     private func selectRoadToMakeInitialCall() {
@@ -242,7 +229,7 @@ class WeatherViewController: UIViewController {
     }
     
     private func fillUpHeaderContainerView(currentWeather: WeatherForTimeSlice?) {
-        if let cityFromUD = self.viewModel.getCityFromUserDefauts() {
+        if let cityFromUD = viewModel.getCityFromUserDefauts() {
             var finalString = cityFromUD.name.capitalized
             if cityFromUD.state != "" {
                 finalString += ", \(cityFromUD.state.uppercased())"
@@ -328,22 +315,24 @@ class WeatherViewController: UIViewController {
         let alertController = UIAlertController(title: titleToUse, message: messageToUse, preferredStyle: .alert)
            alertController.addTextField { (textField : UITextField!) -> Void in
                textField.placeholder = "City Name"
-           }
-           let saveAction = UIAlertAction(title: actionTextToUse, style: .default, handler: { alert -> Void in
-               let firstTextField = alertController.textFields![0] as UITextField
-              guard let cityname = firstTextField.text else { return }
-              self.loadDataUsing(city: cityname)
-           })
-          
-           let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
-              print("Cancel")
-           })
+        }
         
+        let saveAction = UIAlertAction(title: actionTextToUse, style: .default, handler: { alert -> Void in
+            let firstTextField = alertController.textFields![0] as UITextField
+            guard let cityname = firstTextField.text else { return }
+            
+            self.loadDataUsing(city: cityname)
+        })
+          
+       let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
+          print("Cancel")
+       })
+    
 
-           alertController.addAction(saveAction)
-           alertController.addAction(cancelAction)
+       alertController.addAction(saveAction)
+       alertController.addAction(cancelAction)
 
-           self.present(alertController, animated: true, completion: nil)
+       present(alertController, animated: true, completion: nil)
     }
     
     @objc func handleRefresh() {
