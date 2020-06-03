@@ -51,6 +51,8 @@ class WeatherViewController: UIViewController {
     
     let currentDayOverviewContainer = CurrentDayOverviewView()
     
+    let todayDetailedOverviewContainer = TodayDetailedOverviewView()
+    
     let mainContentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -65,8 +67,6 @@ class WeatherViewController: UIViewController {
         stackView.spacing = 10
         return stackView
     }()
-    
-    let todayDetailedOverviewContainer = TodayDetailedOverviewView()
 
     //MARK: - Setup
     override func viewDidLoad() {

@@ -88,18 +88,66 @@
 		503944162466126000B1BBD1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				509D9230248810E900B059BC /* CurrentDayOverviewView.swift */,
-				509D922E2487FFDC00B059BC /* DailyForecastForWeekSVView.swift */,
-				50830CDA24787D3100E5CE1B /* DailyForecastForWeekView.swift */,
-				507700782487333300CB1250 /* MinMaxContainerView.swift */,
-				5077007624872E8300CB1250 /* HeaderContainerView.swift */,
-				503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */,
-				5077007A2487358C00CB1250 /* TodayHourlyWeatherCVView.swift */,
-				509D92322488247A00B059BC /* TodayDetailedOverviewContentView.swift */,
-				509D923624882C7F00B059BC /* TodayDetailedOverviewHorizontalSVView.swift */,
-				509D9234248825FF00B059BC /* TodayDetailedOverviewView.swift */,
+				505A96B2248868CC00F38CC1 /* HeaderContainer */,
+				505A96B1248868C200F38CC1 /* MinMaxContainer */,
+				505A96AE2488686C00F38CC1 /* TodayHourlyWeather */,
+				505A96AF2488688900F38CC1 /* DailyForecastForWeek */,
+				505A96B0248868AF00F38CC1 /* CurrentDayOverview */,
+				505A96AD2488685400F38CC1 /* TodayDetailedOverview */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		505A96AD2488685400F38CC1 /* TodayDetailedOverview */ = {
+			isa = PBXGroup;
+			children = (
+				509D9234248825FF00B059BC /* TodayDetailedOverviewView.swift */,
+				509D923624882C7F00B059BC /* TodayDetailedOverviewHorizontalSVView.swift */,
+				509D92322488247A00B059BC /* TodayDetailedOverviewContentView.swift */,
+			);
+			path = TodayDetailedOverview;
+			sourceTree = "<group>";
+		};
+		505A96AE2488686C00F38CC1 /* TodayHourlyWeather */ = {
+			isa = PBXGroup;
+			children = (
+				5077007A2487358C00CB1250 /* TodayHourlyWeatherCVView.swift */,
+				503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */,
+			);
+			path = TodayHourlyWeather;
+			sourceTree = "<group>";
+		};
+		505A96AF2488688900F38CC1 /* DailyForecastForWeek */ = {
+			isa = PBXGroup;
+			children = (
+				509D922E2487FFDC00B059BC /* DailyForecastForWeekSVView.swift */,
+				50830CDA24787D3100E5CE1B /* DailyForecastForWeekView.swift */,
+			);
+			path = DailyForecastForWeek;
+			sourceTree = "<group>";
+		};
+		505A96B0248868AF00F38CC1 /* CurrentDayOverview */ = {
+			isa = PBXGroup;
+			children = (
+				509D9230248810E900B059BC /* CurrentDayOverviewView.swift */,
+			);
+			path = CurrentDayOverview;
+			sourceTree = "<group>";
+		};
+		505A96B1248868C200F38CC1 /* MinMaxContainer */ = {
+			isa = PBXGroup;
+			children = (
+				507700782487333300CB1250 /* MinMaxContainerView.swift */,
+			);
+			path = MinMaxContainer;
+			sourceTree = "<group>";
+		};
+		505A96B2248868CC00F38CC1 /* HeaderContainer */ = {
+			isa = PBXGroup;
+			children = (
+				5077007624872E8300CB1250 /* HeaderContainerView.swift */,
+			);
+			path = HeaderContainer;
 			sourceTree = "<group>";
 		};
 		5080A7492440FC5000003BF1 = {
