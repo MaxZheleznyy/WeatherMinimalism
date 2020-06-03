@@ -66,6 +66,7 @@ class WeatherViewController: UIViewController {
         return stackView
     }()
     
+    let todayDetailedOverviewContainer = TodayDetailedOverviewView()
 
     //MARK: - Setup
     override func viewDidLoad() {
@@ -111,6 +112,22 @@ class WeatherViewController: UIViewController {
         contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
         
         contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
+        
+        test()
+    }
+    
+    func test() {
+        let testView = TodayDetailedOverviewContentView()
+        testView.titleLabel.text = "Hello 👋"
+        testView.dataLabel.text = "Data goes here"
+        
+        let testView2 = TodayDetailedOverviewContentView()
+        testView2.titleLabel.text = "Hello again"
+        testView2.dataLabel.text = "Another one?!"
+        
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(testView)
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(testView2)
+        contentMainStackView.addArrangedSubview(todayDetailedOverviewContainer)
     }
     
     func configureMainView() {
@@ -169,12 +186,10 @@ class WeatherViewController: UIViewController {
         showSpinner()
         
         if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), city.capitalized == locationFromUserDefaults.name.capitalized {
-            
             viewModel.fetchWeatherUsing(lat: locationFromUserDefaults.lat, lon: locationFromUserDefaults.long) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
             }
             return
-            
         }
         
         DispatchQueue.main.async {
@@ -193,12 +208,10 @@ class WeatherViewController: UIViewController {
         showSpinner()
         
         if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), lat.returnAsOneDigitPrecision == locationFromUserDefaults.lat.returnAsOneDigitPrecision && lon.returnAsOneDigitPrecision == locationFromUserDefaults.long.returnAsOneDigitPrecision {
-            
             viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
             }
             return
-            
         }
         
         DispatchQueue.main.async {
