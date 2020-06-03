@@ -17,6 +17,7 @@
 		503944152466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */; };
 		5077007724872E8300CB1250 /* HeaderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5077007624872E8300CB1250 /* HeaderContainerView.swift */; };
 		507700792487333300CB1250 /* MinMaxContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507700782487333300CB1250 /* MinMaxContainerView.swift */; };
+		5077007B2487358D00CB1250 /* TodayHourlyWeatherCVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5077007A2487358C00CB1250 /* TodayHourlyWeatherCVView.swift */; };
 		5080A7562440FC5000003BF1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A7552440FC5000003BF1 /* AppDelegate.swift */; };
 		5080A7582440FC5000003BF1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A7572440FC5000003BF1 /* SceneDelegate.swift */; };
 		5080A75A2440FC5000003BF1 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080A7592440FC5000003BF1 /* WeatherViewController.swift */; };
@@ -44,6 +45,7 @@
 		503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayHourlyWeatherCVCell.swift; sourceTree = "<group>"; };
 		5077007624872E8300CB1250 /* HeaderContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderContainerView.swift; sourceTree = "<group>"; };
 		507700782487333300CB1250 /* MinMaxContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinMaxContainerView.swift; sourceTree = "<group>"; };
+		5077007A2487358C00CB1250 /* TodayHourlyWeatherCVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayHourlyWeatherCVView.swift; sourceTree = "<group>"; };
 		5080A7522440FC5000003BF1 /* WeatherMinimalism.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherMinimalism.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5080A7552440FC5000003BF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5080A7572440FC5000003BF1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				50830CDA24787D3100E5CE1B /* DailyForecastForWeekView.swift */,
 				5077007624872E8300CB1250 /* HeaderContainerView.swift */,
 				507700782487333300CB1250 /* MinMaxContainerView.swift */,
+				5077007A2487358C00CB1250 /* TodayHourlyWeatherCVView.swift */,
 				503944142466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift */,
 			);
 			path = Views;
@@ -257,6 +260,7 @@
 				509E59C9244A66C2000791C3 /* SpinnerViewController.swift in Sources */,
 				5077007724872E8300CB1250 /* HeaderContainerView.swift in Sources */,
 				503944152466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift in Sources */,
+				5077007B2487358D00CB1250 /* TodayHourlyWeatherCVView.swift in Sources */,
 				5006E99C246A2F1C00480341 /* WeatherForTimeSlice.swift in Sources */,
 				5080A7582440FC5000003BF1 /* SceneDelegate.swift in Sources */,
 				507700792487333300CB1250 /* MinMaxContainerView.swift in Sources */,

@@ -45,6 +45,8 @@ class WeatherViewController: UIViewController {
     
     let minMaxTempContainerView = MinMaxContainerView()
     
+    let todayHourlyWeatherCVContainer = TodayHourlyWeatherCVView()
+    
     let mainContentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,27 +60,6 @@ class WeatherViewController: UIViewController {
         stackView.alignment = .fill
         stackView.spacing = 10
         return stackView
-    }()
-    
-    let todayHourlyWeatherCVContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    let todayHourlyWeatherCollectionView: UICollectionView = {
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .clear
-        collectionView.allowsSelection = false
-        collectionView.alwaysBounceHorizontal = true
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.contentInset = UIEdgeInsets(top: 4, left: 12, bottom: 4, right: 12)
-        return collectionView
     }()
     
     let dailyForecastForWeekSVContainer: UIView = {
@@ -153,22 +134,6 @@ class WeatherViewController: UIViewController {
         configureCurrentDayOverview()
     }
     
-    func configureCurrentDayOverview() {
-        currentDayOverviewContainer.addSubview(currentDayOverviewLabel)
-        let bottomDividerView = currentDayOverviewContainer.addBottomDividerView()
-        
-        contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
-        
-        let currentDayOverviewConstraints = [
-            currentDayOverviewLabel.topAnchor.constraint(equalTo: currentDayOverviewContainer.topAnchor, constant: 8),
-            currentDayOverviewLabel.leadingAnchor.constraint(equalTo: currentDayOverviewContainer.leadingAnchor, constant: 16),
-            currentDayOverviewLabel.trailingAnchor.constraint(equalTo: currentDayOverviewContainer.trailingAnchor, constant: -16),
-            currentDayOverviewLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -16)
-        ]
-        
-        NSLayoutConstraint.activate(currentDayOverviewConstraints)
-    }
-    
     func configureMainView() {
         view.addSubview(headerContainerView)
         
@@ -205,26 +170,10 @@ class WeatherViewController: UIViewController {
     }
     
     func configureCollectionView() {
-        let bottomDividerView = todayHourlyWeatherCVContainer.addBottomDividerView()
-        
-        todayHourlyWeatherCollectionView.register(TodayHourlyWeatherCVCell.self, forCellWithReuseIdentifier: TodayHourlyWeatherCVCell.identifier)
-        todayHourlyWeatherCollectionView.dataSource = self
-        todayHourlyWeatherCollectionView.delegate = self
-        
-        todayHourlyWeatherCVContainer.addSubview(todayHourlyWeatherCollectionView)
+        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.dataSource = self
+        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.delegate = self
         
         contentMainStackView.addArrangedSubview(todayHourlyWeatherCVContainer)
-        
-        let todayHourlyWeatherCollectionViewConstrainsts = [
-            todayHourlyWeatherCVContainer.heightAnchor.constraint(equalToConstant: 110),
-            
-            todayHourlyWeatherCollectionView.topAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.topAnchor),
-            todayHourlyWeatherCollectionView.leadingAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.leadingAnchor),
-            todayHourlyWeatherCollectionView.trailingAnchor.constraint(equalTo: todayHourlyWeatherCVContainer.trailingAnchor),
-            todayHourlyWeatherCollectionView.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
-        ]
-        
-        NSLayoutConstraint.activate(todayHourlyWeatherCollectionViewConstrainsts)
     }
     
     func configureDailyForecastForWeek() {
@@ -242,6 +191,22 @@ class WeatherViewController: UIViewController {
         NSLayoutConstraint.activate(dailyForecastForWeekConstraints)
         
         self.contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
+    }
+    
+    func configureCurrentDayOverview() {
+        currentDayOverviewContainer.addSubview(currentDayOverviewLabel)
+        let bottomDividerView = currentDayOverviewContainer.addBottomDividerView()
+        
+        contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
+        
+        let currentDayOverviewConstraints = [
+            currentDayOverviewLabel.topAnchor.constraint(equalTo: currentDayOverviewContainer.topAnchor, constant: 8),
+            currentDayOverviewLabel.leadingAnchor.constraint(equalTo: currentDayOverviewContainer.leadingAnchor, constant: 16),
+            currentDayOverviewLabel.trailingAnchor.constraint(equalTo: currentDayOverviewContainer.trailingAnchor, constant: -16),
+            currentDayOverviewLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -16)
+        ]
+        
+        NSLayoutConstraint.activate(currentDayOverviewConstraints)
     }
     
     private func selectRoadToMakeInitialCall() {
@@ -318,7 +283,7 @@ class WeatherViewController: UIViewController {
             
             self.fillUpMinMaxTempContainerView(dailyTemperature: weather.dailyWeather?.first?.dailyTemperature)
             
-            self.todayHourlyWeatherCollectionView.reloadData()
+            self.todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.reloadData()
             
             self.fillUpWeeklyForecastStackView()
             
