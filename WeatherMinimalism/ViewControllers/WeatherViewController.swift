@@ -113,20 +113,6 @@ class WeatherViewController: UIViewController {
         
         contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
         
-        test()
-    }
-    
-    func test() {
-        let testView = TodayDetailedOverviewContentView()
-        testView.titleLabel.text = "Hello 👋"
-        testView.dataLabel.text = "Data goes here"
-        
-        let testView2 = TodayDetailedOverviewContentView()
-        testView2.titleLabel.text = "Hello again"
-        testView2.dataLabel.text = "Another one?!"
-        
-        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(testView)
-        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(testView2)
         contentMainStackView.addArrangedSubview(todayDetailedOverviewContainer)
     }
     
@@ -237,6 +223,8 @@ class WeatherViewController: UIViewController {
             
             self.fillUpCurrentDayOverview()
             
+            self.fillUpTodayDetailedOverview()
+            
             self.dismissSpinner()
         }
     }
@@ -293,6 +281,53 @@ class WeatherViewController: UIViewController {
 
         let finalText = "Today: \(currentWeatherDescription.lowercased()). The high will be \(String(format: "%.0f", maxTemp))°. The low will be \(String(format: "%.0f", minTemp))°."
         currentDayOverviewContainer.currentDayOverviewLabel.text = finalText
+    }
+    
+    private func fillUpTodayDetailedOverview() {
+        guard let nonEmptyWeather = viewModel.publicWeatherData?.currentWeather else { return }
+        
+        //first row
+        let sunriseView = TodayDetailedOverviewContentView()
+        sunriseView.titleLabel.text = "Sunrise"
+        sunriseView.dataLabel.text = nonEmptyWeather.sunriseTimestamp?.timestampAsStringedHourMinuteForCurrentTimeZone ?? ""
+        
+        let sunsetView = TodayDetailedOverviewContentView()
+        sunsetView.titleLabel.text = "Sunset"
+        sunsetView.dataLabel.text = nonEmptyWeather.sunsetTimestamp?.timestampAsStringedHourMinuteForCurrentTimeZone ?? ""
+        
+        let sunsetSunriseStackView = TodayDetailedOverviewHorizontalSVView()
+        sunsetSunriseStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(sunriseView)
+        sunsetSunriseStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(sunsetView)
+        
+        //second row
+        let humidityView = TodayDetailedOverviewContentView()
+        humidityView.titleLabel.text = "Humidity"
+        humidityView.dataLabel.text = String(nonEmptyWeather.humidity ?? 0)
+        
+        let feelsLikeView = TodayDetailedOverviewContentView()
+        feelsLikeView.titleLabel.text = "Feels Like"
+        feelsLikeView.dataLabel.text = String(nonEmptyWeather.feelsLike ?? 0)
+        
+        let humidityFeelslikeStackView = TodayDetailedOverviewHorizontalSVView()
+        humidityFeelslikeStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(humidityView)
+        humidityFeelslikeStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(feelsLikeView)
+        
+        //third row
+        let visibilityView = TodayDetailedOverviewContentView()
+        visibilityView.titleLabel.text = "Visibility"
+        visibilityView.dataLabel.text = String(nonEmptyWeather.visibility ?? 0)
+        
+        let uvIndexView = TodayDetailedOverviewContentView()
+        uvIndexView.titleLabel.text = "UV Index"
+        uvIndexView.dataLabel.text = String(nonEmptyWeather.uvIndex ?? 0)
+        
+        let visibilityUVIndextackView = TodayDetailedOverviewHorizontalSVView()
+        visibilityUVIndextackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(visibilityView)
+        visibilityUVIndextackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(uvIndexView)
+        
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(sunsetSunriseStackView)
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(humidityFeelslikeStackView)
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(visibilityUVIndextackView)
     }
     
     private func toggleToolbarHidden(isHidden: Bool) {

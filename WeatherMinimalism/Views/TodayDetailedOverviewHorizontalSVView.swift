@@ -1,5 +1,5 @@
 //
-//  TodayDetailedOverviewView.swift
+//  TodayDetailedOverviewHorizontalSVView.swift
 //  WeatherMinimalism
 //
 //  Created by Maxim Zheleznyy on 6/3/20.
@@ -8,12 +8,12 @@
 
 import UIKit
 
-class TodayDetailedOverviewView: UIView {
+class TodayDetailedOverviewHorizontalSVView: UIView {
     
-    let todayDetailedOverviewMainStackView: UIStackView = {
+    let todayDetailedOverviewHorizontalStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
+        stackView.axis = .horizontal
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
         return stackView
@@ -25,13 +25,13 @@ class TodayDetailedOverviewView: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         
-        self.addSubview(todayDetailedOverviewMainStackView)
+        self.addSubview(todayDetailedOverviewHorizontalStackView)
         
         let contentConstraints = [
-            todayDetailedOverviewMainStackView.topAnchor.constraint(equalTo: self.topAnchor),
-            todayDetailedOverviewMainStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            todayDetailedOverviewMainStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-            todayDetailedOverviewMainStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
+            todayDetailedOverviewHorizontalStackView.topAnchor.constraint(equalTo: self.topAnchor),
+            todayDetailedOverviewHorizontalStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            todayDetailedOverviewHorizontalStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            todayDetailedOverviewHorizontalStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ]
         
         NSLayoutConstraint.activate(contentConstraints)
