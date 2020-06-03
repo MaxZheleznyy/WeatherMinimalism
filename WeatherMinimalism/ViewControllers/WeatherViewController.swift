@@ -302,11 +302,11 @@ class WeatherViewController: UIViewController {
         //second row
         let humidityView = TodayDetailedOverviewContentView()
         humidityView.titleLabel.text = "Humidity"
-        humidityView.dataLabel.text = String(nonEmptyWeather.humidity ?? 0)
+        humidityView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.humidity ?? 0) + "%"
         
         let feelsLikeView = TodayDetailedOverviewContentView()
         feelsLikeView.titleLabel.text = "Feels Like"
-        feelsLikeView.dataLabel.text = String(nonEmptyWeather.feelsLike ?? 0)
+        feelsLikeView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.feelsLike ?? 0) + "°"
         
         let humidityFeelslikeStackView = TodayDetailedOverviewHorizontalSVView()
         humidityFeelslikeStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(humidityView)
@@ -315,16 +315,17 @@ class WeatherViewController: UIViewController {
         //third row
         let visibilityView = TodayDetailedOverviewContentView()
         visibilityView.titleLabel.text = "Visibility"
-        visibilityView.dataLabel.text = String(nonEmptyWeather.visibility ?? 0)
+        visibilityView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.visibility?.convertMetersIntoKilometers ?? 0) + " km"
         
         let uvIndexView = TodayDetailedOverviewContentView()
         uvIndexView.titleLabel.text = "UV Index"
-        uvIndexView.dataLabel.text = String(nonEmptyWeather.uvIndex ?? 0)
+        uvIndexView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.uvIndex ?? 0)
         
         let visibilityUVIndextackView = TodayDetailedOverviewHorizontalSVView()
         visibilityUVIndextackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(visibilityView)
         visibilityUVIndextackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(uvIndexView)
         
+        //final setup
         todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(sunsetSunriseStackView)
         todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(humidityFeelslikeStackView)
         todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(visibilityUVIndextackView)

@@ -14,7 +14,7 @@ extension Double {
         return Double(formatedString)!
     }
     
-    var timestampAsStringedHourMinuteForCurrentTimeZone: String {
+    var timestampAsStringedHourMinuteForCurrentTimeZone: String? {
         let date = Date(timeIntervalSince1970: self)
         
         let dateFormatter = DateFormatter()
@@ -22,5 +22,9 @@ extension Double {
         dateFormatter.dateFormat = "HH:mm"
         let strDate = dateFormatter.string(from: date)
         return strDate
+    }
+    
+    var convertMetersIntoKilometers: Double {
+        return self / 1000
     }
 }
