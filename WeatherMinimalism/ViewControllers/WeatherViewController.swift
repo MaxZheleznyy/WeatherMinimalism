@@ -24,15 +24,15 @@ class WeatherViewController: UIViewController {
         didSet {
             if headerHeightToUse >= 250 {
                 headerContainerViewHeight?.constant = 250
-                tempLabel.textColor = UIColor.label.withAlphaComponent(1.0)
+                headerContainerView.tempLabel.textColor = UIColor.label.withAlphaComponent(1.0)
             } else if headerHeightToUse <= 90 {
                 headerContainerViewHeight?.constant = 90
-                tempLabel.textColor = UIColor.label.withAlphaComponent(0.0)
+                headerContainerView.tempLabel.textColor = UIColor.label.withAlphaComponent(0.0)
             } else {
                 headerContainerViewHeight?.constant = headerHeightToUse
                 
                 let alphaPercentToUse = (headerHeightToUse - 100) / 100
-                tempLabel.textColor = UIColor.label.withAlphaComponent(alphaPercentToUse)
+                headerContainerView.tempLabel.textColor = UIColor.label.withAlphaComponent(alphaPercentToUse)
             }
             self.view.layoutIfNeeded()
         }
@@ -40,6 +40,10 @@ class WeatherViewController: UIViewController {
     
     //MARK: - UI
     let spinnerView = SpinnerViewController()
+    
+    let headerContainerView = HeaderContainerView()
+    
+    let minMaxTempContainerView = MinMaxContainerView()
     
     let mainContentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -54,85 +58,6 @@ class WeatherViewController: UIViewController {
         stackView.alignment = .fill
         stackView.spacing = 10
         return stackView
-    }()
-    
-    let headerContainerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let selectedLocation: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "...Location"
-        label.textAlignment = .center
-        label.textColor = .label
-        label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 38, weight: .heavy)
-        return label
-    }()
-    
-    let tempDescription: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "..."
-        label.textAlignment = .center
-        label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        return label
-    }()
-    
-    let tempLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "°"
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 80, weight: .medium)
-        return label
-    }()
-    
-    let minMaxTempContainerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let dayOfTheWeekLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        return label
-    }()
-    
-    let todayLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "TODAY"
-        label.textAlignment = .left
-        label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 16, weight: .light)
-        return label
-    }()
-    
-    let maxTemp: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .right
-        label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        return label
-    }()
-    
-    let minTemp: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .right
-        label.textColor = .secondaryLabel
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        return label
     }()
     
     let todayHourlyWeatherCVContainer: UIView = {
@@ -247,10 +172,6 @@ class WeatherViewController: UIViewController {
     func configureMainView() {
         view.addSubview(headerContainerView)
         
-        headerContainerView.addSubview(selectedLocation)
-        headerContainerView.addSubview(tempLabel)
-        headerContainerView.addSubview(tempDescription)
-        
         view.addSubview(mainContentScrollView)
         mainContentScrollView.delegate = self
         
@@ -264,19 +185,6 @@ class WeatherViewController: UIViewController {
             headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             headerContainerViewHeight!,
             
-            selectedLocation.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 20),
-            selectedLocation.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
-            selectedLocation.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-            
-            tempDescription.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 0),
-            tempDescription.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
-            tempDescription.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-
-            tempLabel.topAnchor.constraint(lessThanOrEqualTo: tempDescription.bottomAnchor, constant: 0),
-            tempLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 18),
-            tempLabel.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -18),
-            tempLabel.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8),
-            
             mainContentScrollView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
             mainContentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             mainContentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -289,48 +197,11 @@ class WeatherViewController: UIViewController {
             contentMainStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0)
         ]
         
-        selectedLocation.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        tempDescription.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        tempLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
-        
         NSLayoutConstraint.activate(mainConstraints)
     }
     
     func configureMinMaxTempView() {
-        let bottomDividerView = minMaxTempContainerView.addBottomDividerView()
-        
-        minMaxTempContainerView.addSubview(dayOfTheWeekLabel)
-        minMaxTempContainerView.addSubview(todayLabel)
-        minMaxTempContainerView.addSubview(maxTemp)
-        minMaxTempContainerView.addSubview(minTemp)
-        
-        let minMaxViewConstrainsts = [
-            dayOfTheWeekLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
-            dayOfTheWeekLabel.leadingAnchor.constraint(equalTo: minMaxTempContainerView.leadingAnchor, constant: 16),
-            dayOfTheWeekLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
-            
-            todayLabel.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
-            todayLabel.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 8),
-            todayLabel.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
-            
-            maxTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
-            maxTemp.leadingAnchor.constraint(equalTo: todayLabel.trailingAnchor, constant: 20),
-            maxTemp.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8),
-            
-            minTemp.topAnchor.constraint(equalTo: minMaxTempContainerView.topAnchor),
-            minTemp.leadingAnchor.constraint(equalTo: maxTemp.trailingAnchor, constant: 8),
-            minTemp.trailingAnchor.constraint(equalTo: minMaxTempContainerView.trailingAnchor, constant: -16),
-            minTemp.bottomAnchor.constraint(equalTo: bottomDividerView.topAnchor, constant: -8)
-        ]
-        
-        dayOfTheWeekLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        todayLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        maxTemp.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        minTemp.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        
         contentMainStackView.addArrangedSubview(minMaxTempContainerView)
-        
-        NSLayoutConstraint.activate(minMaxViewConstrainsts)
     }
     
     func configureCollectionView() {
@@ -463,21 +334,21 @@ class WeatherViewController: UIViewController {
             if cityFromUD.state != "" {
                 finalString += ", \(cityFromUD.state.uppercased())"
             }
-            self.selectedLocation.text = finalString
+            headerContainerView.selectedLocation.text = finalString
         }
         
-        self.tempDescription.text = currentWeather?.weatherDetails?.first?.description
+        headerContainerView.tempDescription.text = currentWeather?.weatherDetails?.first?.description
         if let nonEmtyTemp = currentWeather?.temperature {
-            self.tempLabel.text = String(format: "%.0f", nonEmtyTemp) + "°"
+            headerContainerView.tempLabel.text = String(format: "%.0f", nonEmtyTemp) + "°"
         }
     }
     
     private func fillUpMinMaxTempContainerView(dailyTemperature: DailyTemperature?) {
-        self.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
+        minMaxTempContainerView.dayOfTheWeekLabel.text = Date().dayOfWeekByString()
         
         if let minTemp = dailyTemperature?.min, let maxTemp = dailyTemperature?.max {
-            self.minTemp.text = String(format: "%.0f", minTemp) + "°"
-            self.maxTemp.text = String(format: "%.0f", maxTemp) + "°"
+            minMaxTempContainerView.minTemp.text = String(format: "%.0f", minTemp) + "°"
+            minMaxTempContainerView.maxTemp.text = String(format: "%.0f", maxTemp) + "°"
         }
     }
     
