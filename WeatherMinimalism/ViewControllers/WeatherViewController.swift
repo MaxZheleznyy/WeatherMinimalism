@@ -66,6 +66,7 @@ class WeatherViewController: UIViewController {
         return stackView
     }()
     
+    let todayDetailedOverviewContainer = TodayDetailedOverviewView()
 
     //MARK: - Setup
     override func viewDidLoad() {
@@ -111,6 +112,8 @@ class WeatherViewController: UIViewController {
         contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
         
         contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
+        
+        contentMainStackView.addArrangedSubview(todayDetailedOverviewContainer)
     }
     
     func configureMainView() {
@@ -169,12 +172,10 @@ class WeatherViewController: UIViewController {
         showSpinner()
         
         if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), city.capitalized == locationFromUserDefaults.name.capitalized {
-            
             viewModel.fetchWeatherUsing(lat: locationFromUserDefaults.lat, lon: locationFromUserDefaults.long) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
             }
             return
-            
         }
         
         DispatchQueue.main.async {
@@ -193,12 +194,10 @@ class WeatherViewController: UIViewController {
         showSpinner()
         
         if let locationFromUserDefaults = viewModel.getCityFromUserDefauts(), lat.returnAsOneDigitPrecision == locationFromUserDefaults.lat.returnAsOneDigitPrecision && lon.returnAsOneDigitPrecision == locationFromUserDefaults.long.returnAsOneDigitPrecision {
-            
             viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
                 self?.updateUIWith(weather: weather)
             }
             return
-            
         }
         
         DispatchQueue.main.async {
@@ -223,6 +222,8 @@ class WeatherViewController: UIViewController {
             self.fillUpWeeklyForecastStackView()
             
             self.fillUpCurrentDayOverview()
+            
+            self.fillUpTodayDetailedOverview()
             
             self.dismissSpinner()
         }
@@ -280,6 +281,54 @@ class WeatherViewController: UIViewController {
 
         let finalText = "Today: \(currentWeatherDescription.lowercased()). The high will be \(String(format: "%.0f", maxTemp))°. The low will be \(String(format: "%.0f", minTemp))°."
         currentDayOverviewContainer.currentDayOverviewLabel.text = finalText
+    }
+    
+    private func fillUpTodayDetailedOverview() {
+        guard let nonEmptyWeather = viewModel.publicWeatherData?.currentWeather else { return }
+        
+        //first row
+        let sunriseView = TodayDetailedOverviewContentView()
+        sunriseView.titleLabel.text = "Sunrise"
+        sunriseView.dataLabel.text = nonEmptyWeather.sunriseTimestamp?.timestampAsStringedHourMinuteForCurrentTimeZone ?? ""
+        
+        let sunsetView = TodayDetailedOverviewContentView()
+        sunsetView.titleLabel.text = "Sunset"
+        sunsetView.dataLabel.text = nonEmptyWeather.sunsetTimestamp?.timestampAsStringedHourMinuteForCurrentTimeZone ?? ""
+        
+        let sunsetSunriseStackView = TodayDetailedOverviewHorizontalSVView()
+        sunsetSunriseStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(sunriseView)
+        sunsetSunriseStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(sunsetView)
+        
+        //second row
+        let humidityView = TodayDetailedOverviewContentView()
+        humidityView.titleLabel.text = "Humidity"
+        humidityView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.humidity ?? 0) + "%"
+        
+        let feelsLikeView = TodayDetailedOverviewContentView()
+        feelsLikeView.titleLabel.text = "Feels Like"
+        feelsLikeView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.feelsLike ?? 0) + "°"
+        
+        let humidityFeelslikeStackView = TodayDetailedOverviewHorizontalSVView()
+        humidityFeelslikeStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(humidityView)
+        humidityFeelslikeStackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(feelsLikeView)
+        
+        //third row
+        let visibilityView = TodayDetailedOverviewContentView()
+        visibilityView.titleLabel.text = "Visibility"
+        visibilityView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.visibility?.convertMetersIntoKilometers ?? 0) + " km"
+        
+        let uvIndexView = TodayDetailedOverviewContentView()
+        uvIndexView.titleLabel.text = "UV Index"
+        uvIndexView.dataLabel.text = String(format: "%.0f", nonEmptyWeather.uvIndex ?? 0)
+        
+        let visibilityUVIndextackView = TodayDetailedOverviewHorizontalSVView()
+        visibilityUVIndextackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(visibilityView)
+        visibilityUVIndextackView.todayDetailedOverviewHorizontalStackView.addArrangedSubview(uvIndexView)
+        
+        //final setup
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(sunsetSunriseStackView)
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(humidityFeelslikeStackView)
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.addArrangedSubview(visibilityUVIndextackView)
     }
     
     private func toggleToolbarHidden(isHidden: Bool) {
