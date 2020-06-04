@@ -10,16 +10,20 @@ import UIKit
 
 let imageCache = NSCache<AnyObject, AnyObject>()
 
-extension UIImageView {
+extension WeatherIconImageView {
     func loadImageFromURL(url: String) {
+        self.activityIndicator.stopAnimating()
+        self.activityIndicator.startAnimating()
         self.image = nil
         
         guard let URL = URL(string: url) else {
-            print("No Image For this url", url)
+            print("Can't find an image for the url", url)
+            self.activityIndicator.stopAnimating()
             return
         }
         
         if let cachedImage = imageCache.object(forKey: url as AnyObject) as? UIImage {
+            self.activityIndicator.stopAnimating()
             self.image = cachedImage
             return
         }
@@ -31,11 +35,11 @@ extension UIImageView {
                     imageCache.setObject(imageTocache, forKey: url as AnyObject)
                     
                     DispatchQueue.main.async {
+                        self?.activityIndicator.stopAnimating()
                         self?.image = imageTocache
                     }
                 }
             }
         }
-        
     }
 }
