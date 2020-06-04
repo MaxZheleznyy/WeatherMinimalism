@@ -22,8 +22,8 @@ class TodayHourlyWeatherCVCell: UICollectionViewCell {
         return label
     }()
     
-    let weatherIcon: UIImageView = {
-        let imageView = UIImageView()
+    let weatherIcon: WeatherIconImageView = {
+        let imageView = WeatherIconImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView

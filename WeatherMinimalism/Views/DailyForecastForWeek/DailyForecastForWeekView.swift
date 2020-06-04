@@ -20,8 +20,8 @@ class DailyForecastForWeekView: UIView {
         return label
     }()
     
-    let weatherForDayImageView: UIImageView = {
-        let imageView = UIImageView()
+    let weatherForDayImageView: WeatherIconImageView = {
+        let imageView = WeatherIconImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -64,6 +64,7 @@ class DailyForecastForWeekView: UIView {
             weatherForDayImageView.leadingAnchor.constraint(equalTo: dayOfTheWeekLabel.trailingAnchor, constant: 8),
             weatherForDayImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8),
             weatherForDayImageView.heightAnchor.constraint(equalToConstant: 50),
+            weatherForDayImageView.widthAnchor.constraint(equalToConstant: 50),
             weatherForDayImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
             maxTempLabel.leadingAnchor.constraint(equalTo: weatherForDayImageView.trailingAnchor, constant: 8),
@@ -79,6 +80,8 @@ class DailyForecastForWeekView: UIView {
         
         weatherForDayImageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         weatherForDayImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        weatherForDayImageView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        weatherForDayImageView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         
         maxTempLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         maxTempLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
