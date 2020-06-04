@@ -18,8 +18,6 @@ class WeatherViewController: UIViewController {
     
     var locationManager = CLLocationManager()
     
-    var headerContainerViewHeight: NSLayoutConstraint?
-    
     var headerHeightToUse: CGFloat = 250 {
         didSet {
             if headerHeightToUse >= 250 {
@@ -40,18 +38,14 @@ class WeatherViewController: UIViewController {
     
     //MARK: - UI
     let spinnerView = SpinnerViewController()
-    
     let headerContainerView = HeaderContainerView()
-    
     let minMaxTempContainerView = MinMaxContainerView()
-    
     let todayHourlyWeatherCVContainer = TodayHourlyWeatherCVView()
-    
     let dailyForecastForWeekSVContainer = DailyForecastForWeekSVView()
-    
     let currentDayOverviewContainer = CurrentDayOverviewView()
-    
     let todayDetailedOverviewContainer = TodayDetailedOverviewView()
+    
+    var headerContainerViewHeight: NSLayoutConstraint?
     
     let mainContentScrollView: UIScrollView = {
         let scrollView = UIScrollView()
