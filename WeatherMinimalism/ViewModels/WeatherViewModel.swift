@@ -11,15 +11,24 @@ import CoreData
 
 class WeatherViewModel {
     
+    var cities = [City]()
+    
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     private var privateWeatherData: Forecast?
-    private let defaults = UserDefaults.standard
-    private let storedLocationKey = "StoredLocation"
-    private var cities = [City]()
-    
+        
     var publicWeatherData: Forecast? {
         get {
             return privateWeatherData
+        }
+    }
+    
+    var currentCity: City? {
+        get {
+            if let recentCity = cities.first {
+                return recentCity
+            } else {
+                return nil
+            }
         }
     }
     
@@ -93,15 +102,6 @@ class WeatherViewModel {
         return nil
     }
     
-    func saveNewCityToUserDefaults(location: Location) {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(location) {
-            defaults.set(encoded, forKey: storedLocationKey)
-        }
-        
-        saveCityToDB(location: location)
-    }
-    
     func saveCityToDB(location: Location) {
         DispatchQueue.main.async { [unowned self] in
             let city = City(context: self.persistentContainer.viewContext)
@@ -128,17 +128,6 @@ class WeatherViewModel {
         } catch {
             print("Load cities failed: \(error)")
         }
-    }
-    
-    func getCityFromUserDefauts() -> Location? {
-        if let savedLocation = defaults.object(forKey: storedLocationKey) as? Data {
-            let decoder = JSONDecoder()
-            if let loadedLocation = try? decoder.decode(Location.self, from: savedLocation) {
-                return loadedLocation
-            }
-        }
-        
-        return nil
     }
     
     func saveContext () {
