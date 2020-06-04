@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 class WeatherViewModel {
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
@@ -18,6 +19,30 @@ class WeatherViewModel {
     var publicWeatherData: Forecast? {
         get {
             return privateWeatherData
+        }
+    }
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "WeatherMinimalism")
+        
+        container.loadPersistentStores(completionHandler: { storeDescription, error in
+            if let error = error {
+                fatalError("Unresolved error \(error)")
+            }
+        })
+        return container
+    }()
+    
+    func saveContext () {
+        let context = persistentContainer.viewContext
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
         }
     }
     
