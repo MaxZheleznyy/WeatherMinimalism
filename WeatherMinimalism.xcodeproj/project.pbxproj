@@ -90,13 +90,13 @@
 		503944162466126000B1BBD1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				505A96B324886BE100F38CC1 /* WeatherIconImageView.swift */,
 				505A96B2248868CC00F38CC1 /* HeaderContainer */,
 				505A96B1248868C200F38CC1 /* MinMaxContainer */,
 				505A96AE2488686C00F38CC1 /* TodayHourlyWeather */,
 				505A96AF2488688900F38CC1 /* DailyForecastForWeek */,
 				505A96B0248868AF00F38CC1 /* CurrentDayOverview */,
 				505A96AD2488685400F38CC1 /* TodayDetailedOverview */,
+				5060F86B24887332005F0725 /* WeatherIconImageView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -151,6 +151,14 @@
 				5077007624872E8300CB1250 /* HeaderContainerView.swift */,
 			);
 			path = HeaderContainer;
+			sourceTree = "<group>";
+		};
+		5060F86B24887332005F0725 /* WeatherIconImageView */ = {
+			isa = PBXGroup;
+			children = (
+				505A96B324886BE100F38CC1 /* WeatherIconImageView.swift */,
+			);
+			path = WeatherIconImageView;
 			sourceTree = "<group>";
 		};
 		5080A7492440FC5000003BF1 = {
