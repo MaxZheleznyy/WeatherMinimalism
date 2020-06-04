@@ -38,6 +38,8 @@
 		509E59C7244A633A000791C3 /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59C6244A633A000791C3 /* CollectionExtension.swift */; };
 		509E59C9244A66C2000791C3 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59C8244A66C2000791C3 /* SpinnerViewController.swift */; };
 		50B8F5E6246F259400EA0BFD /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */; };
+		50D0792A24896E1F0001A7FF /* City+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0792824896E1F0001A7FF /* City+CoreDataClass.swift */; };
+		50D0792B24896E1F0001A7FF /* City+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D0792924896E1F0001A7FF /* City+CoreDataProperties.swift */; };
 		50D2AF5B2465D873007638AF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D2AF5A2465D873007638AF /* DateExtension.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +77,8 @@
 		509E59C6244A633A000791C3 /* CollectionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtension.swift; sourceTree = "<group>"; };
 		509E59C8244A66C2000791C3 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
+		50D0792824896E1F0001A7FF /* City+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "City+CoreDataClass.swift"; sourceTree = "<group>"; };
+		50D0792924896E1F0001A7FF /* City+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "City+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		50D2AF5A2465D873007638AF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -214,6 +218,8 @@
 				5006E99D246A303200480341 /* WeatherDetails.swift */,
 				50039034246DF0AD00B13C5E /* DailyTemperature.swift */,
 				5003903A246F09F800B13C5E /* Location.swift */,
+				50D0792824896E1F0001A7FF /* City+CoreDataClass.swift */,
+				50D0792924896E1F0001A7FF /* City+CoreDataProperties.swift */,
 				50168E7F2488A8F300F3F1A2 /* WeatherMinimalism.xcdatamodeld */,
 			);
 			path = Models;
@@ -330,6 +336,7 @@
 				509E59C0244A3699000791C3 /* WeatherIconImageViewExtension.swift in Sources */,
 				5080A76C244101D300003BF1 /* Forecast.swift in Sources */,
 				509E59BE244A3614000791C3 /* FloatExtension.swift in Sources */,
+				50D0792B24896E1F0001A7FF /* City+CoreDataProperties.swift in Sources */,
 				5080A75A2440FC5000003BF1 /* WeatherViewController.swift in Sources */,
 				509D923724882C7F00B059BC /* TodayDetailedOverviewHorizontalSVView.swift in Sources */,
 				509E59C7244A633A000791C3 /* CollectionExtension.swift in Sources */,
@@ -344,6 +351,7 @@
 				509E59C9244A66C2000791C3 /* SpinnerViewController.swift in Sources */,
 				5077007724872E8300CB1250 /* HeaderContainerView.swift in Sources */,
 				503944152466125A00B1BBD1 /* TodayHourlyWeatherCVCell.swift in Sources */,
+				50D0792A24896E1F0001A7FF /* City+CoreDataClass.swift in Sources */,
 				5077007B2487358D00CB1250 /* TodayHourlyWeatherCVView.swift in Sources */,
 				5006E99C246A2F1C00480341 /* WeatherForTimeSlice.swift in Sources */,
 				5080A7582440FC5000003BF1 /* SceneDelegate.swift in Sources */,

@@ -10,11 +10,12 @@ import Foundation
 import CoreData
 
 class WeatherViewModel {
-    private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     
+    private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     private var privateWeatherData: Forecast?
     private let defaults = UserDefaults.standard
     private let storedLocationKey = "StoredLocation"
+    private var cities = [City]()
     
     var publicWeatherData: Forecast? {
         get {
@@ -22,29 +23,19 @@ class WeatherViewModel {
         }
     }
     
-    lazy var persistentContainer: NSPersistentContainer = {
+    private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "WeatherMinimalism")
         
-        container.loadPersistentStores(completionHandler: { storeDescription, error in
+        container.loadPersistentStores { storeDescription, error in
+            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
             if let error = error {
-                fatalError("Unresolved error \(error)")
-            }
-        })
-        return container
-    }()
-    
-    func saveContext () {
-        let context = persistentContainer.viewContext
-        
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                print("Can't loadPersistentStores: \(error)")
             }
         }
-    }
+        
+        return container
+    }()
     
     func fetchWeatherUsing(lat: Double, lon: Double, completion: @escaping (Forecast) -> ()) {
         let apiURL = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(lon)&exclude=minutely&units=metric&appid=\(apiKey)"
@@ -59,7 +50,7 @@ class WeatherViewModel {
                 self?.privateWeatherData = currentWeather
                 completion(currentWeather)
             } catch {
-                print(error)
+                print("Fetch weather with lat and long failed: \(error)")
             }
         }.resume()
     }
@@ -75,7 +66,7 @@ class WeatherViewModel {
                     return possibleCity
                 }
             } catch {
-                print("Can't decode city.list.json file data")
+                print("Can't decode city.list.json file data: \(error)")
                 return nil
             }
         }
@@ -95,7 +86,7 @@ class WeatherViewModel {
                     return firstCity
                 }
             } catch {
-                print("Can't decode city.list.json file data")
+                print("Can't decode city.list.json file data: \(error)")
                 return nil
             }
         }
@@ -106,6 +97,36 @@ class WeatherViewModel {
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(location) {
             defaults.set(encoded, forKey: storedLocationKey)
+        }
+        
+        saveCityToDB(location: location)
+    }
+    
+    func saveCityToDB(location: Location) {
+        DispatchQueue.main.async { [unowned self] in
+            let city = City(context: self.persistentContainer.viewContext)
+            city.id = location.id
+            city.name = location.name
+            city.state = location.state
+            city.country = location.country
+            city.latitude = location.lat
+            city.longitude = location.long
+            city.addedDate = Date()
+            
+            self.saveContext()
+            self.loadCitiesFromDB()
+        }
+    }
+    
+    func loadCitiesFromDB() {
+        let request = City.createFetchRequest()
+        let sort = NSSortDescriptor(key: "addedDate", ascending: false)
+        request.sortDescriptors = [sort]
+
+        do {
+            cities = try persistentContainer.viewContext.fetch(request)
+        } catch {
+            print("Load cities failed: \(error)")
         }
     }
     
@@ -118,5 +139,15 @@ class WeatherViewModel {
         }
         
         return nil
+    }
+    
+    func saveContext () {
+        if persistentContainer.viewContext.hasChanges {
+            do {
+                try persistentContainer.viewContext.save()
+            } catch {
+                print("Save context failed: \(error)")
+            }
+        }
     }
 }
