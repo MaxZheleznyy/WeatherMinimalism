@@ -212,15 +212,8 @@
 		509E59C2244A3972000791C3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				5080A76B244101D300003BF1 /* Forecast.swift */,
-				5006E99B246A2F1C00480341 /* WeatherForTimeSlice.swift */,
-				50039036246F033E00B13C5E /* WeatherForDaily.swift */,
-				5006E99D246A303200480341 /* WeatherDetails.swift */,
-				50039034246DF0AD00B13C5E /* DailyTemperature.swift */,
-				5003903A246F09F800B13C5E /* Location.swift */,
-				50D0792824896E1F0001A7FF /* City+CoreDataClass.swift */,
-				50D0792924896E1F0001A7FF /* City+CoreDataProperties.swift */,
-				50168E7F2488A8F300F3F1A2 /* WeatherMinimalism.xcdatamodeld */,
+				50F7B8092489ACEF00352D01 /* ExternalStorage */,
+				50F7B80A2489AD0C00352D01 /* LocalStorage */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -253,6 +246,29 @@
 				5080A7632440FC5000003BF1 /* Info.plist */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		50F7B8092489ACEF00352D01 /* ExternalStorage */ = {
+			isa = PBXGroup;
+			children = (
+				5080A76B244101D300003BF1 /* Forecast.swift */,
+				5006E99B246A2F1C00480341 /* WeatherForTimeSlice.swift */,
+				50039036246F033E00B13C5E /* WeatherForDaily.swift */,
+				5006E99D246A303200480341 /* WeatherDetails.swift */,
+				50039034246DF0AD00B13C5E /* DailyTemperature.swift */,
+				5003903A246F09F800B13C5E /* Location.swift */,
+			);
+			path = ExternalStorage;
+			sourceTree = "<group>";
+		};
+		50F7B80A2489AD0C00352D01 /* LocalStorage */ = {
+			isa = PBXGroup;
+			children = (
+				50D0792824896E1F0001A7FF /* City+CoreDataClass.swift */,
+				50D0792924896E1F0001A7FF /* City+CoreDataProperties.swift */,
+				50168E7F2488A8F300F3F1A2 /* WeatherMinimalism.xcdatamodeld */,
+			);
+			path = LocalStorage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

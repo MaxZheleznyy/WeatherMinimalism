@@ -13,6 +13,8 @@ struct Forecast: Decodable {
     let lat: Double?
     let long: Double?
     let currentWeather: WeatherForTimeSlice?
+    let dailyWeather: [WeatherForDaily]?
+    
     private let hourlyWeather: [WeatherForTimeSlice]?
     
     var publicHourlyWeather: [WeatherForTimeSlice] {
@@ -25,8 +27,6 @@ struct Forecast: Decodable {
             }
         }
     }
-    
-    let dailyWeather: [WeatherForDaily]?
     
     enum CodingKeys: String, CodingKey {
         case lat, long
