@@ -16,7 +16,7 @@ class HeaderContainerView: UIView {
         label.text = "...Location"
         label.textAlignment = .center
         label.textColor = .label
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = UIFont.systemFont(ofSize: 38, weight: .heavy)
         return label
     }()
@@ -52,8 +52,8 @@ class HeaderContainerView: UIView {
         
         let contentConstraints = [
             selectedLocation.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-            selectedLocation.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 18),
-            selectedLocation.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -18),
+            selectedLocation.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
+            selectedLocation.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8),
             
             tempDescription.topAnchor.constraint(equalTo: selectedLocation.bottomAnchor, constant: 0),
             tempDescription.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 18),

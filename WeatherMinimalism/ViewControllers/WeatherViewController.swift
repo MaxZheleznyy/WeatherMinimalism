@@ -249,11 +249,7 @@ class WeatherViewController: UIViewController {
     
     private func fillUpHeaderContainerView(currentWeather: WeatherForTimeSlice?) {
         if let savedCity = viewModel.currentCity {
-            var finalString = savedCity.name.capitalized
-            if savedCity.state != "" {
-                finalString += ", \(savedCity.state.uppercased())"
-            }
-            headerContainerView.selectedLocation.text = finalString
+            headerContainerView.selectedLocation.text = savedCity.name.capitalized
         }
         
         headerContainerView.tempDescription.text = currentWeather?.weatherDetails?.first?.description
