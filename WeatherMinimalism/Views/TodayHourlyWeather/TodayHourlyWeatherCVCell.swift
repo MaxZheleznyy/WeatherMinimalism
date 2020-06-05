@@ -83,6 +83,8 @@ class TodayHourlyWeatherCVCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        //TODO add reuse elements
+        if weatherIcon.activityIndicator.isAnimating {
+            weatherIcon.activityIndicator.stopAnimating()
+        }
     }
 }

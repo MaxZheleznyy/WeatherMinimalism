@@ -452,10 +452,14 @@ extension WeatherViewController: UICollectionViewDataSource, UICollectionViewDel
             
             if let nonEmptyIcon = weatherDataDetails.icon {
                 cell.weatherIcon.loadImageFromURL(url: "http://openweathermap.org/img/wn/\(nonEmptyIcon)@2x.png")
+            } else {
+                cell.weatherIcon.image = nil
             }
             
             if let nonEmptyTemp = weatherData.temperature {
                 cell.temperatureLabel.text = String(format: "%.0f", nonEmptyTemp) + "°"
+            } else {
+                cell.temperatureLabel.text = nil
             }
         }
         
