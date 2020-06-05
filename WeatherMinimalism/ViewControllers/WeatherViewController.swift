@@ -169,6 +169,11 @@ class WeatherViewController: UIViewController {
         
         if let savedCity = viewModel.currentCity, city.capitalized == savedCity.name.capitalized {
             viewModel.fetchWeatherUsing(lat: savedCity.latitude, lon: savedCity.longitude) { [weak self] weather in
+                if let currentWeater = weather.currentWeather {
+                    let location = Location(id: savedCity.id, name: savedCity.name, state: savedCity.state, country: savedCity.country, lat: savedCity.latitude, long: savedCity.longitude)
+                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                }
+                
                 self?.updateUIWith(weather: weather)
             }
             return
@@ -178,6 +183,11 @@ class WeatherViewController: UIViewController {
             if let location = self.viewModel.returnLocationFromJSONFile(cityName: city) {
                 self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
                     self?.viewModel.saveCityToDB(location: location)
+                    
+                    if let currentWeater = weather.currentWeather {
+                        self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                    }
+                    
                     self?.updateUIWith(weather: weather)
                 }
             } else {
@@ -191,17 +201,29 @@ class WeatherViewController: UIViewController {
         
         if let savedCity = viewModel.currentCity, lat.returnAsOneDigitPrecision == savedCity.latitude.returnAsOneDigitPrecision && lon.returnAsOneDigitPrecision == savedCity.longitude.returnAsOneDigitPrecision {
             viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
+                if let currentWeater = weather.currentWeather {
+                    let location = Location(id: savedCity.id, name: savedCity.name, state: savedCity.state, country: savedCity.country, lat: savedCity.latitude, long: savedCity.longitude)
+                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                }
+                
                 self?.updateUIWith(weather: weather)
             }
             return
         }
         
         DispatchQueue.main.async {
+            var locationToUse: Location?
+            
             if let nonEmptyLocationFromJSON = self.viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
+                locationToUse = nonEmptyLocationFromJSON
                 self.viewModel.saveCityToDB(location: nonEmptyLocationFromJSON)
             }
             
             self.viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
+                if let location = locationToUse, let currentWeater = weather.currentWeather {
+                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                }
+                
                 self?.updateUIWith(weather: weather)
             }
         }

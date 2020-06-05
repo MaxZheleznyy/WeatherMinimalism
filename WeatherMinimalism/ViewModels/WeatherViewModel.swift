@@ -130,13 +130,53 @@ class WeatherViewModel {
         }
     }
     
-    func saveContext () {
-        if persistentContainer.viewContext.hasChanges {
-            do {
-                try persistentContainer.viewContext.save()
-            } catch {
-                print("Save context failed: \(error)")
+    func saveWeatherForCity(cityForWeather: Location, weatherFromServer: WeatherForTimeSlice) {
+        DispatchQueue.main.async { [unowned self] in
+            var cityToUpdate: City?
+            
+            let cityRequest = City.createFetchRequest()
+            cityRequest.predicate = NSPredicate(format: "id == %d", cityForWeather.id)
+            
+            if let cities = try? self.persistentContainer.viewContext.fetch(cityRequest) {
+                if cities.count > 0 {
+                    // DB has the city already
+                    cityToUpdate = cities[0]
+                }
             }
+            
+            if cityToUpdate == nil {
+                // We need to create a new city in DB
+                let city = City(context: self.persistentContainer.viewContext)
+                city.id = cityForWeather.id
+                city.name = cityForWeather.name
+                city.state = cityForWeather.state
+                city.country = cityForWeather.country
+                city.latitude = cityForWeather.lat
+                city.longitude = cityForWeather.long
+                city.addedDate = Date()
+                
+                cityToUpdate = city
+            }
+            
+            guard let nonEmptyCityToUpdate = cityToUpdate else { return }
+            let weather = CurrentWeather(context: self.persistentContainer.viewContext)
+            weather.city = nonEmptyCityToUpdate
+            weather.id = nonEmptyCityToUpdate.id
+            weather.temperature = weatherFromServer.temperature ?? 0
+            weather.timestamp = weatherFromServer.weatherTimestamp ?? 0
+            
+            nonEmptyCityToUpdate.currentWeather = weather
+            
+            self.saveContext()
+            self.loadCitiesFromDB()
+        }
+    }
+    
+    func saveContext () {
+        do {
+            try persistentContainer.viewContext.saveIfHasChanges()
+        } catch {
+            print("Save context failed: \(error)")
         }
     }
 }
