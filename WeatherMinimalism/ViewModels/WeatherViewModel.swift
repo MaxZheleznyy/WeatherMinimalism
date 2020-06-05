@@ -11,6 +11,7 @@ import CoreData
 
 class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
+    //MARK: - Contants
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     private var privateWeatherData: Forecast?
     private var fetchedCitiesController: NSFetchedResultsController<City>!
@@ -45,6 +46,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         return container
     }()
     
+    //MARK: - Network
     func fetchWeatherUsing(lat: Double, lon: Double, completion: @escaping (Forecast) -> ()) {
         let apiURL = "https://api.openweathermap.org/data/2.5/onecall?lat=\(lat)&lon=\(lon)&exclude=minutely&units=metric&appid=\(apiKey)"
 
@@ -63,6 +65,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }.resume()
     }
     
+    //MARK: - Local JSON
     func returnLocationFromJSONFile(cityName: String) -> Location? {
         if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
             do {
@@ -101,6 +104,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         return nil
     }
     
+    //MARK: - Core Data
     func saveCityToDB(location: Location) {
         DispatchQueue.main.async { [unowned self] in
             let city = City(context: self.persistentContainer.viewContext)
