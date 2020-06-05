@@ -9,12 +9,11 @@
 import Foundation
 import CoreData
 
-class WeatherViewModel {
-    
-    var cities = [City]()
+class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     private var privateWeatherData: Forecast?
+    private var fetchedCitiesController: NSFetchedResultsController<City>!
         
     var publicWeatherData: Forecast? {
         get {
@@ -24,7 +23,7 @@ class WeatherViewModel {
     
     var currentCity: City? {
         get {
-            if let recentCity = cities.first {
+            if let recentCity = fetchedCitiesController.fetchedObjects?.first {
                 return recentCity
             } else {
                 return nil
@@ -119,12 +118,17 @@ class WeatherViewModel {
     }
     
     func loadCitiesFromDB() {
-        let request = City.createFetchRequest()
-        let sort = NSSortDescriptor(key: "addedDate", ascending: false)
-        request.sortDescriptors = [sort]
+        if fetchedCitiesController == nil {
+            let request = City.createFetchRequest()
+            let sort = NSSortDescriptor(key: "addedDate", ascending: false)
+            request.sortDescriptors = [sort]
+            
+            fetchedCitiesController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+            fetchedCitiesController.delegate = self
+        }
 
         do {
-            cities = try persistentContainer.viewContext.fetch(request)
+            try fetchedCitiesController.performFetch()
         } catch {
             print("Load cities failed: \(error)")
         }
@@ -172,7 +176,7 @@ class WeatherViewModel {
         }
     }
     
-    func saveContext () {
+    private func saveContext () {
         do {
             try persistentContainer.viewContext.saveIfHasChanges()
         } catch {
