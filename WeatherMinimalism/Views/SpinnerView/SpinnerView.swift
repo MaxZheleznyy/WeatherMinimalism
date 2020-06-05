@@ -7,7 +7,7 @@
 //
 import UIKit
 
-class SpinnerViewController: UIViewController {
+class SpinnerView: UIView {
     
     let containerView: UIView = {
         let view = UIView()
@@ -21,11 +21,14 @@ class SpinnerViewController: UIViewController {
     let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.hidesWhenStopped = true
         return spinner
     }()
-
-    override func loadView() {
-        view = UIView()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
         
         let blurEffect = UIBlurEffect.init(style: .regular)
         let visualEffect = UIVisualEffectView.init(effect: blurEffect)
@@ -33,23 +36,25 @@ class SpinnerViewController: UIViewController {
         bluredView.contentView.addSubview(visualEffect)
         visualEffect.frame = UIScreen.main.bounds
         bluredView.frame = UIScreen.main.bounds
-        view.insertSubview(bluredView, at: 0)
+        self.insertSubview(bluredView, at: 0)
 
-        self.view.addSubview(containerView)
-        self.view.addSubview(spinner)
+        self.addSubview(containerView)
+        self.addSubview(spinner)
 
         let spinnerViewConstraints = [
             containerView.heightAnchor.constraint(equalToConstant: 50),
             containerView.widthAnchor.constraint(equalToConstant: 50),
-            containerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            containerView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            containerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 
-            spinner.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            spinner.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ]
         
         NSLayoutConstraint.activate(spinnerViewConstraints)
-        
-        spinner.startAnimating()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

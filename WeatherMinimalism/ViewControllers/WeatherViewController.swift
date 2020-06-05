@@ -37,7 +37,7 @@ class WeatherViewController: UIViewController {
     }
     
     //MARK: - UI
-    let spinnerView = SpinnerViewController()
+    let spinnerView = SpinnerView()
     let headerContainerView = HeaderContainerView()
     let minMaxTempContainerView = MinMaxContainerView()
     let todayHourlyWeatherCVContainer = TodayHourlyWeatherCVView()
@@ -355,19 +355,27 @@ class WeatherViewController: UIViewController {
     
     private func showSpinner() {
         toggleToolbarHidden(isHidden: true)
+        spinnerView.isHidden = false
+        spinnerView.spinner.startAnimating()
         
-        addChild(spinnerView)
-        spinnerView.view.frame = view.frame
-        view.addSubview(spinnerView.view)
-        spinnerView.didMove(toParent: self)
+        view.addSubview(spinnerView)
+        
+        let constraints = [
+            spinnerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            spinnerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            spinnerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            spinnerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
     }
     
     private func dismissSpinner() {
         toggleToolbarHidden(isHidden: false)
-
-        spinnerView.willMove(toParent: nil)
-        spinnerView.view.removeFromSuperview()
-        spinnerView.removeFromParent()
+        
+        spinnerView.isHidden = true
+        spinnerView.spinner.stopAnimating()
+        spinnerView.removeFromSuperview()
     }
     
     @objc func handleAddPlaceButton() {
