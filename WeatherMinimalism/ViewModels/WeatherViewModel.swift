@@ -24,10 +24,22 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     var currentCity: City? {
         get {
+            checkFetchController()
             if let recentCity = fetchedCitiesController.fetchedObjects?.first {
                 return recentCity
             } else {
                 return nil
+            }
+        }
+    }
+    
+    var publicSavedCities: [City] {
+        get {
+            checkFetchController()
+            if let cities = fetchedCitiesController.fetchedObjects {
+                return cities
+            } else {
+                return []
             }
         }
     }
@@ -177,6 +189,12 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
             
             self.saveContext()
             self.loadCitiesFromDB()
+        }
+    }
+    
+    private func checkFetchController() {
+        if fetchedCitiesController == nil || fetchedCitiesController.fetchedObjects == nil || fetchedCitiesController.fetchedObjects?.count ?? 0 <= 0 {
+            loadCitiesFromDB()
         }
     }
     
