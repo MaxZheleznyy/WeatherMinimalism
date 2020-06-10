@@ -85,10 +85,11 @@ class WeatherViewController: UIViewController {
     
     private func configureBottomToolBar() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        let citiesButton = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: self, action: #selector(showCitiesSelectorView))
         let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton))
         let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
         
-        toolbarItems = [plusButton, spacer, refreshButton]
+        toolbarItems = [plusButton, refreshButton, spacer, citiesButton]
         
         navigationController?.toolbar.barTintColor = .systemBackground
         navigationController?.toolbar.isTranslucent = false
@@ -410,6 +411,11 @@ class WeatherViewController: UIViewController {
         if let savedCity = viewModel.currentCity {
             loadDataUsing(lat: savedCity.latitude, lon: savedCity.longitude)
         }
+    }
+    
+    @objc func showCitiesSelectorView() {
+        let citiesSelectionVC = CitiesSelectorViewController()
+        self.present(citiesSelectionVC, animated: true, completion: nil)
     }
 }
 
