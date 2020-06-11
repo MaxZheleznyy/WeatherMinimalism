@@ -193,7 +193,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     private func checkFetchController() {
-        if fetchedCitiesController == nil || fetchedCitiesController.fetchedObjects == nil || fetchedCitiesController.fetchedObjects?.count ?? 0 <= 0 {
+        if fetchedCitiesController == nil || fetchedCitiesController.fetchedObjects == nil {
             loadCitiesFromDB()
         }
     }
