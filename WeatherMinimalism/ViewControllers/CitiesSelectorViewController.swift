@@ -21,8 +21,8 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         return scrollView
     }()
     
-    let contentMainStackView: UIStackView = {
-        let stackView = UIStackView()
+    let contentMainStackView: CitySelectorStackView = {
+        let stackView = CitySelectorStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -44,6 +44,8 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
+        
+        contentMainStackView.delegate = self
         
         configureMainView()
         fillUpStackViewWithData()
@@ -84,12 +86,22 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
             
             contentMainStackView.addArrangedSubview(cityCellView)
         }
+        
+        contentMainStackView.configureTapGestures()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed {
             delegate?.citiesSelectorGoingToClose(needToUpdate: needToUpdate)
+        }
+    }
+}
+
+extension CitiesSelectorViewController: CitySelectorStackViewDelegate {
+    func didTapOnView(at index: Int) {
+        if let city = viewModel.publicSavedCities[safe: index] {
+            print(city.name)
         }
     }
 }
