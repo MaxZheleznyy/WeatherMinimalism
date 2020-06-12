@@ -46,6 +46,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .systemBackground
         
         configureMainView()
+        fillUpStackViewWithData()
     }
     
     func configureMainView() {
@@ -68,6 +69,21 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         ]
         
         NSLayoutConstraint.activate(mainConstraints)
+    }
+    
+    func fillUpStackViewWithData() {
+        for city in viewModel.publicSavedCities {
+            let cityCellView = SelectCityCellView()
+            
+            //TODO get current time in the city
+            cityCellView.currentCityTimeLabel.text = "⏰"
+            cityCellView.currentCityNameLabel.text = city.name
+            
+            //TODO make a network call if there is no weather data
+            cityCellView.currentCityTemperatureLabel.text = String(city.currentWeather?.temperature ?? 0)
+            
+            contentMainStackView.addArrangedSubview(cityCellView)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
