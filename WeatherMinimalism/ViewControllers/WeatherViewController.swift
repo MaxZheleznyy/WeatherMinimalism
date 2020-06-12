@@ -496,3 +496,11 @@ extension WeatherViewController: CLLocationManagerDelegate {
         loadDataUsing(lat: location.latitude, lon: location.longitude)
     }
 }
+
+extension WeatherViewController: CitiesSelectorViewControllerDelegate {
+    func citiesSelectorGoingToClose(needToUpdate: Bool) {
+        if needToUpdate {
+            handleRefresh()
+        }
+    }
+}

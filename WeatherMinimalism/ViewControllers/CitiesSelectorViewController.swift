@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CitiesSelectorViewControllerDelegate: AnyObject {
+    func citiesSelectorGoingToClose(needToUpdate: Bool)
+}
+
 class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - UI
@@ -28,6 +32,10 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Contants
     let viewModel = WeatherViewModel()
+    
+    weak var delegate: CitiesSelectorViewControllerDelegate?
+    
+    private var needToUpdate: Bool = false
     
     
     //MARK: - Setup
@@ -65,7 +73,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isBeingDismissed {
-            //pass info about it into weatherViewController
+            delegate?.citiesSelectorGoingToClose(needToUpdate: needToUpdate)
         }
     }
 }
