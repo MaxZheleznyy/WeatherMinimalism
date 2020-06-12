@@ -26,6 +26,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
+        stackView.distribution = .fill
         stackView.spacing = 10
         return stackView
     }()
@@ -63,8 +64,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
             contentMainStackView.leadingAnchor.constraint(equalTo: mainContentScrollView.leadingAnchor, constant: 0),
             contentMainStackView.trailingAnchor.constraint(equalTo: mainContentScrollView.trailingAnchor, constant: 0),
             contentMainStackView.bottomAnchor.constraint(equalTo: mainContentScrollView.bottomAnchor, constant: 0),
-            contentMainStackView.centerXAnchor.constraint(equalTo: mainContentScrollView.centerXAnchor),
-            contentMainStackView.centerYAnchor.constraint(equalTo: mainContentScrollView.centerYAnchor)
+            contentMainStackView.widthAnchor.constraint(equalTo: self.view.widthAnchor)
         ]
         
         NSLayoutConstraint.activate(mainConstraints)
