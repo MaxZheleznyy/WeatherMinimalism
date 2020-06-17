@@ -91,6 +91,7 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let city = viewModel.publicSavedCities[safe: indexPath.row] {
             print(city.name)
+            viewModel.saveCityToDB(locationToSave: nil, cityToSave: city)
         }
         
         tableView.deselectRow(at: indexPath, animated: true)

@@ -183,7 +183,7 @@ class WeatherViewController: UIViewController {
         DispatchQueue.main.async {
             if let location = self.viewModel.returnLocationFromJSONFile(cityName: city) {
                 self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
-                    self?.viewModel.saveCityToDB(location: location)
+                    self?.viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
                     
                     if let currentWeater = weather.currentWeather {
                         self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
@@ -217,7 +217,7 @@ class WeatherViewController: UIViewController {
             
             if let nonEmptyLocationFromJSON = self.viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
                 locationToUse = nonEmptyLocationFromJSON
-                self.viewModel.saveCityToDB(location: nonEmptyLocationFromJSON)
+                self.viewModel.saveCityToDB(locationToSave: nonEmptyLocationFromJSON, cityToSave: nil)
             }
             
             self.viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
