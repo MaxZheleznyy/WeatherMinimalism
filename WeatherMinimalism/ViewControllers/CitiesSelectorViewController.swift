@@ -9,7 +9,7 @@
 import UIKit
 
 protocol CitiesSelectorViewControllerDelegate: AnyObject {
-    func citiesSelectorGoingToClose(needToUpdate: Bool)
+    func citiesSelectorGoingToClose(cityToUpdate: City?)
 }
 
 class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
@@ -83,10 +83,9 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
         tableView.deselectRow(at: indexPath, animated: true)
         
         if let city = viewModel.publicSavedCities[safe: indexPath.row], city != viewModel.currentCity {
-            viewModel.saveCityToDB(locationToSave: nil, cityToSave: city)
-            delegate?.citiesSelectorGoingToClose(needToUpdate: true)
+            delegate?.citiesSelectorGoingToClose(cityToUpdate: city)
         } else {
-            delegate?.citiesSelectorGoingToClose(needToUpdate: false)
+            delegate?.citiesSelectorGoingToClose(cityToUpdate: nil)
         }
         
         self.dismiss(animated: true, completion: nil)
