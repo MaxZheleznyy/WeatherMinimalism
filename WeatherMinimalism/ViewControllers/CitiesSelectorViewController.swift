@@ -26,8 +26,6 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     weak var delegate: CitiesSelectorViewControllerDelegate?
     
-    private var needToUpdate: Bool = false
-    
     
     //MARK: - Setup
     override func viewDidLoad() {
@@ -41,13 +39,6 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         tableView.register(SelectCityTableViewCell.self, forCellReuseIdentifier: SelectCityTableViewCell.selectedCityCVIdentifier)
         
         configureMainView()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if isBeingDismissed {
-            delegate?.citiesSelectorGoingToClose(needToUpdate: needToUpdate)
-        }
     }
     
     func configureMainView() {
@@ -89,11 +80,15 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let city = viewModel.publicSavedCities[safe: indexPath.row] {
-            print(city.name)
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if let city = viewModel.publicSavedCities[safe: indexPath.row], city != viewModel.currentCity {
             viewModel.saveCityToDB(locationToSave: nil, cityToSave: city)
+            delegate?.citiesSelectorGoingToClose(needToUpdate: true)
+        } else {
+            delegate?.citiesSelectorGoingToClose(needToUpdate: false)
         }
         
-        tableView.deselectRow(at: indexPath, animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
 }

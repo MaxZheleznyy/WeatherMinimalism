@@ -415,6 +415,7 @@ class WeatherViewController: UIViewController {
     
     @objc func showCitiesSelectorView() {
         let citiesSelectionVC = CitiesSelectorViewController()
+        citiesSelectionVC.delegate = self
         self.present(citiesSelectionVC, animated: true, completion: nil)
     }
 }
