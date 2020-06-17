@@ -82,7 +82,8 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
             cityCellView.currentCityNameLabel.text = city.name
             
             //TODO make a network call if there is no weather data
-            cityCellView.currentCityTemperatureLabel.text = String(city.currentWeather?.temperature ?? 0)
+            let cityTemperature = city.currentWeather?.temperature ?? 0
+            cityCellView.currentCityTemperatureLabel.text = String(format: "%.0f", cityTemperature) + "°"
             
             contentMainStackView.addArrangedSubview(cityCellView)
         }
