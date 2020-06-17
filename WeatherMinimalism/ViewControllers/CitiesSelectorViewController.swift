@@ -77,8 +77,6 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         for city in viewModel.publicSavedCities {
             let cityCellView = SelectCityCellView()
             
-            //TODO get current time in the city
-            cityCellView.currentCityTimeLabel.text = "⏰"
             cityCellView.currentCityNameLabel.text = city.name
             
             //TODO make a network call if there is no weather data

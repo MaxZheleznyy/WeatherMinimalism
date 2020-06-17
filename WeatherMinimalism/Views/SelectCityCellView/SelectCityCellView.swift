@@ -10,16 +10,6 @@ import UIKit
 
 class SelectCityCellView: UIView {
     
-    let currentCityTimeLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        label.textColor = .label
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        label.numberOfLines = 1
-        return label
-    }()
-    
     let currentCityNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -47,15 +37,12 @@ class SelectCityCellView: UIView {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(currentCityTimeLabel)
         self.addSubview(currentCityNameLabel)
         self.addSubview(currentCityTemperatureLabel)
         
         let contentConstraints = [
-            currentCityTimeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
-            currentCityTimeLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
             
-            currentCityNameLabel.topAnchor.constraint(equalTo: currentCityTimeLabel.bottomAnchor, constant: 8),
+            currentCityNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
             currentCityNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
             currentCityNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
             
@@ -65,8 +52,8 @@ class SelectCityCellView: UIView {
             currentCityTemperatureLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15),
         ]
         
-        currentCityTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        currentCityTimeLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+//        currentCityTimeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//        currentCityTimeLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
         currentCityNameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         currentCityNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
