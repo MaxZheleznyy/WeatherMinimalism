@@ -15,20 +15,10 @@ protocol CitiesSelectorViewControllerDelegate: AnyObject {
 class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - UI
-    let mainContentScrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
-    
-    let contentMainStackView: CitySelectorStackView = {
-        let stackView = CitySelectorStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        stackView.spacing = 10
-        return stackView
+    let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
     }()
     
     //MARK: - Contants
@@ -45,48 +35,12 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         
         view.backgroundColor = .systemBackground
         
-        contentMainStackView.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        tableView.register(SelectCityTableViewCell.self, forCellReuseIdentifier: SelectCityTableViewCell.selectedCityCVIdentifier)
         
         configureMainView()
-        fillUpStackViewWithData()
-    }
-    
-    func configureMainView() {
-        view.addSubview(mainContentScrollView)
-        mainContentScrollView.delegate = self
-        
-        mainContentScrollView.addSubview(contentMainStackView)
-        
-        let mainConstraints = [
-            mainContentScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            mainContentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainContentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            mainContentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            contentMainStackView.topAnchor.constraint(equalTo: mainContentScrollView.topAnchor, constant: 10),
-            contentMainStackView.leadingAnchor.constraint(equalTo: mainContentScrollView.leadingAnchor, constant: 0),
-            contentMainStackView.trailingAnchor.constraint(equalTo: mainContentScrollView.trailingAnchor, constant: 0),
-            contentMainStackView.bottomAnchor.constraint(equalTo: mainContentScrollView.bottomAnchor, constant: 0),
-            contentMainStackView.widthAnchor.constraint(equalTo: self.view.widthAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(mainConstraints)
-    }
-    
-    func fillUpStackViewWithData() {
-        for city in viewModel.publicSavedCities {
-            let cityCellView = SelectCityCellView()
-            
-            cityCellView.currentCityNameLabel.text = city.name
-            
-            //TODO make a network call if there is no weather data
-            let cityTemperature = city.currentWeather?.temperature ?? 0
-            cityCellView.currentCityTemperatureLabel.text = String(format: "%.0f", cityTemperature) + "°"
-            
-            contentMainStackView.addArrangedSubview(cityCellView)
-        }
-        
-        contentMainStackView.configureTapGestures()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -95,12 +49,50 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
             delegate?.citiesSelectorGoingToClose(needToUpdate: needToUpdate)
         }
     }
+    
+    func configureMainView() {
+        view.addSubview(tableView)
+        
+        let mainConstraints = [
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(mainConstraints)
+        
+        tableView.tableFooterView = UIView()
+    }
 }
 
-extension CitiesSelectorViewController: CitySelectorStackViewDelegate {
-    func didTapOnView(at index: Int) {
-        if let city = viewModel.publicSavedCities[safe: index] {
+//MARK: - UITableView
+extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.publicSavedCities.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: SelectCityTableViewCell.selectedCityCVIdentifier, for: indexPath) as? SelectCityTableViewCell, let city = viewModel.publicSavedCities[safe: indexPath.row] {
+            
+            cell.currentCityNameLabel.text = city.name
+            
+            //TODO make a network call if there is no weather data
+            let cityTemperature = city.currentWeather?.temperature ?? 0
+            cell.currentCityTemperatureLabel.text = String(format: "%.0f", cityTemperature) + "°"
+            
+            return cell
+        } else {
+            let cell = UITableViewCell()
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let city = viewModel.publicSavedCities[safe: indexPath.row] {
             print(city.name)
         }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
