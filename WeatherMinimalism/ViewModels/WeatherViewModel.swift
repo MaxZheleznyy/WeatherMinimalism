@@ -24,6 +24,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     var currentCity: City? {
         get {
+            checkFetchController()
             if let recentCity = fetchedCitiesController.fetchedObjects?.first {
                 return recentCity
             } else {
@@ -32,18 +33,24 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    private lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "WeatherMinimalism")
-        
-        container.loadPersistentStores { storeDescription, error in
-            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            
-            if let error = error {
-                print("Can't loadPersistentStores: \(error)")
+    var publicSavedCities: [City] {
+        get {
+            checkFetchController()
+            if let cities = fetchedCitiesController.fetchedObjects {
+                return cities
+            } else {
+                return []
             }
         }
-        
-        return container
+    }
+    
+    private lazy var persistentContainer: NSPersistentContainer = {
+        if let container = try? PersistentContainer.container() {
+            return returnConfigredContainer(container: container)
+        } else {
+            let container = NSPersistentContainer(name: "WeatherMinimalism")
+            return returnConfigredContainer(container: container)
+        }
     }()
     
     //MARK: - Network
@@ -105,16 +112,28 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     //MARK: - Core Data
-    func saveCityToDB(location: Location) {
+    func saveCityToDB(locationToSave: Location?, cityToSave: City?) {
+        guard locationToSave != nil || cityToSave != nil else { return }
+        
         DispatchQueue.main.async { [unowned self] in
             let city = City(context: self.persistentContainer.viewContext)
-            city.id = location.id
-            city.name = location.name
-            city.state = location.state
-            city.country = location.country
-            city.latitude = location.lat
-            city.longitude = location.long
-            city.addedDate = Date()
+            if let nonEmptyLocation = locationToSave {
+                city.id = nonEmptyLocation.id
+                city.name = nonEmptyLocation.name
+                city.state = nonEmptyLocation.state
+                city.country = nonEmptyLocation.country
+                city.latitude = nonEmptyLocation.lat
+                city.longitude = nonEmptyLocation.long
+                city.addedDate = Date()
+            } else if let nonEmptyCity = cityToSave {
+                city.id = nonEmptyCity.id
+                city.name = nonEmptyCity.name
+                city.state = nonEmptyCity.state
+                city.country = nonEmptyCity.country
+                city.latitude = nonEmptyCity.latitude
+                city.longitude = nonEmptyCity.longitude
+                city.addedDate = Date()
+            }
             
             self.saveContext()
             self.loadCitiesFromDB()
@@ -180,11 +199,30 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    private func checkFetchController() {
+        if fetchedCitiesController == nil || fetchedCitiesController.fetchedObjects == nil {
+            loadCitiesFromDB()
+        }
+    }
+    
     private func saveContext () {
         do {
             try persistentContainer.viewContext.saveIfHasChanges()
         } catch {
             print("Save context failed: \(error)")
         }
+    }
+    
+    // MARK: - Support
+    private func returnConfigredContainer(container: NSPersistentContainer) -> NSPersistentContainer {
+        container.loadPersistentStores { storeDescription, error in
+            container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
+            if let error = error {
+                print("Can't loadPersistentStores: \(error)")
+            }
+        }
+        
+        return container
     }
 }

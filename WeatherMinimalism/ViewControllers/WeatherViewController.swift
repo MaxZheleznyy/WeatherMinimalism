@@ -85,10 +85,10 @@ class WeatherViewController: UIViewController {
     
     private func configureBottomToolBar() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton))
+        let citiesButton = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: self, action: #selector(showCitiesSelectorView))
         let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
         
-        toolbarItems = [plusButton, spacer, refreshButton]
+        toolbarItems = [refreshButton, spacer, citiesButton]
         
         navigationController?.toolbar.barTintColor = .systemBackground
         navigationController?.toolbar.isTranslucent = false
@@ -159,15 +159,15 @@ class WeatherViewController: UIViewController {
         if let city = viewModel.currentCity {
             loadDataUsing(lat: city.latitude, lon: city.longitude)
         } else {
-            showAlertForAddCity(title: "Add Your City", message: "In order to get weather conditions you need to type a city name", actionText: "Add")
+            showAlertForAddCity()
         }
     }
     
     //MARK: - Actions
-    func loadDataUsing(city: String) {
+    func loadDataUsing(cityName: String) {
         showSpinner()
         
-        if let savedCity = viewModel.currentCity, city.capitalized == savedCity.name.capitalized {
+        if let savedCity = viewModel.currentCity, cityName.capitalized == savedCity.name.capitalized {
             viewModel.fetchWeatherUsing(lat: savedCity.latitude, lon: savedCity.longitude) { [weak self] weather in
                 if let currentWeater = weather.currentWeather {
                     let location = Location(id: savedCity.id, name: savedCity.name, state: savedCity.state, country: savedCity.country, lat: savedCity.latitude, long: savedCity.longitude)
@@ -180,9 +180,9 @@ class WeatherViewController: UIViewController {
         }
         
         DispatchQueue.main.async {
-            if let location = self.viewModel.returnLocationFromJSONFile(cityName: city) {
+            if let location = self.viewModel.returnLocationFromJSONFile(cityName: cityName) {
                 self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
-                    self?.viewModel.saveCityToDB(location: location)
+                    self?.viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
                     
                     if let currentWeater = weather.currentWeather {
                         self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
@@ -216,12 +216,29 @@ class WeatherViewController: UIViewController {
             
             if let nonEmptyLocationFromJSON = self.viewModel.returnLocationFromJSONFile(lat: lat, long: lon) {
                 locationToUse = nonEmptyLocationFromJSON
-                self.viewModel.saveCityToDB(location: nonEmptyLocationFromJSON)
+                self.viewModel.saveCityToDB(locationToSave: nonEmptyLocationFromJSON, cityToSave: nil)
             }
             
             self.viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
                 if let location = locationToUse, let currentWeater = weather.currentWeather {
                     self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                }
+                
+                self?.updateUIWith(weather: weather)
+            }
+        }
+    }
+    
+    func loadDataUsing(city: City) {
+        showSpinner()
+        
+        DispatchQueue.main.async {
+            self.viewModel.fetchWeatherUsing(lat: city.latitude, lon: city.longitude) { [weak self] weather in
+                self?.viewModel.saveCityToDB(locationToSave: nil, cityToSave: city)
+                
+                if let currentWeater = weather.currentWeather {
+                    let locationFromCity = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
+                    self?.viewModel.saveWeatherForCity(cityForWeather: locationFromCity, weatherFromServer: currentWeater)
                 }
                 
                 self?.updateUIWith(weather: weather)
@@ -374,14 +391,10 @@ class WeatherViewController: UIViewController {
         spinnerView.removeFromSuperview()
     }
     
-    @objc func handleAddPlaceButton() {
-        showAlertForAddCity(title: nil, message: nil, actionText: nil)
-    }
-    
-    private func showAlertForAddCity(title: String?, message: String?, actionText: String?) {
-        let titleToUse = title ?? "Change City"
-        let messageToUse = message ?? ""
-        let actionTextToUse = actionText ?? "Change"
+    private func showAlertForAddCity() {
+        let titleToUse = "Add City"
+        let messageToUse = "In order to get weather conditions you need to type a city name"
+        let actionTextToUse = "Add"
         
         let alertController = UIAlertController(title: titleToUse, message: messageToUse, preferredStyle: .alert)
            alertController.addTextField { (textField : UITextField!) -> Void in
@@ -392,7 +405,7 @@ class WeatherViewController: UIViewController {
             let firstTextField = alertController.textFields![0] as UITextField
             guard let cityname = firstTextField.text else { return }
             
-            self.loadDataUsing(city: cityname)
+            self.loadDataUsing(cityName: cityname)
         })
           
        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
@@ -410,6 +423,12 @@ class WeatherViewController: UIViewController {
         if let savedCity = viewModel.currentCity {
             loadDataUsing(lat: savedCity.latitude, lon: savedCity.longitude)
         }
+    }
+    
+    @objc func showCitiesSelectorView() {
+        let citiesSelectionVC = CitiesSelectorViewController()
+        citiesSelectionVC.delegate = self
+        self.present(citiesSelectionVC, animated: true, completion: nil)
     }
 }
 
@@ -488,5 +507,13 @@ extension WeatherViewController: CLLocationManagerDelegate {
         
         guard let location = locations[safe: 0]?.coordinate else { return }
         loadDataUsing(lat: location.latitude, lon: location.longitude)
+    }
+}
+
+extension WeatherViewController: CitiesSelectorViewControllerDelegate {
+    func citiesSelectorGoingToClose(cityToUpdate: City?) {
+        if let city = cityToUpdate {
+            loadDataUsing(city: city)
+        }
     }
 }
