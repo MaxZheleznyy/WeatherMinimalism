@@ -15,6 +15,8 @@ protocol CitiesSelectorViewControllerDelegate: AnyObject {
 class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - UI
+    let spinnerView = SpinnerView()
+    
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,6 +41,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         tableView.register(SelectCityTableViewCell.self, forCellReuseIdentifier: SelectCityTableViewCell.selectedCityCVIdentifier)
         
         configureMainView()
+        configureFooterView()
     }
     
     func configureMainView() {
@@ -52,8 +55,124 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         ]
         
         NSLayoutConstraint.activate(mainConstraints)
+    }
+    
+    func configureFooterView() {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
+        footerView.backgroundColor = .clear
         
-        tableView.tableFooterView = UIView()
+        let addCityButton = UIButton()
+        let buttonImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        addCityButton.setImage(buttonImage, for: .normal)
+        addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
+        addCityButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        footerView.addSubview(addCityButton)
+        
+        let footerContraints = [
+            addCityButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
+            addCityButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -8),
+            addCityButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8),
+            addCityButton.widthAnchor.constraint(equalToConstant: 30)
+        ]
+
+        NSLayoutConstraint.activate(footerContraints)
+        
+        tableView.tableFooterView = footerView
+    }
+    
+    //MARK: - Actions
+    @objc func handleAddCity() {
+        showAlertForAddCity()
+    }
+    
+    private func showAlertForAddCity() {
+        let titleToUse = "Add City"
+        let actionTextToUse = "Add"
+        
+        let alertController = UIAlertController(title: titleToUse, message: nil, preferredStyle: .alert)
+           alertController.addTextField { (textField : UITextField!) -> Void in
+               textField.placeholder = "City Name"
+        }
+        
+        let saveAction = UIAlertAction(title: actionTextToUse, style: .default, handler: { alert -> Void in
+            let firstTextField = alertController.textFields![0] as UITextField
+            guard let cityname = firstTextField.text else { return }
+            
+            self.loadDataUsing(cityName: cityname)
+        })
+          
+       let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
+          print("Cancel")
+       })
+    
+
+       alertController.addAction(saveAction)
+       alertController.addAction(cancelAction)
+
+       present(alertController, animated: true, completion: nil)
+    }
+    
+    func loadDataUsing(cityName: String) {
+        showSpinner()
+        
+        if let savedCity = viewModel.currentCity, cityName.capitalized == savedCity.name.capitalized {
+            viewModel.fetchWeatherUsing(lat: savedCity.latitude, lon: savedCity.longitude) { [weak self] weather in
+                if let currentWeater = weather.currentWeather {
+                    let location = Location(id: savedCity.id, name: savedCity.name, state: savedCity.state, country: savedCity.country, lat: savedCity.latitude, long: savedCity.longitude)
+                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                    
+                    DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                        self?.dismissSpinner()
+                    }
+                }
+            }
+            
+            dismissSpinner()
+            return
+        }
+        
+        DispatchQueue.main.async {
+            if let location = self.viewModel.returnLocationFromJSONFile(cityName: cityName) {
+                self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
+                    self?.viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
+                    
+                    if let currentWeater = weather.currentWeather {
+                        self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                        
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                            self?.dismissSpinner()
+                        }
+                    }
+                }
+            } else {
+                self.dismissSpinner()
+            }
+        }
+    }
+    
+    private func showSpinner() {
+        spinnerView.isHidden = false
+        spinnerView.spinner.startAnimating()
+        
+        view.addSubview(spinnerView)
+        
+        let constraints = [
+            spinnerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            spinnerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            spinnerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            spinnerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+    }
+    
+    private func dismissSpinner() {
+        spinnerView.isHidden = true
+        spinnerView.spinner.stopAnimating()
+        spinnerView.removeFromSuperview()
     }
 }
 
