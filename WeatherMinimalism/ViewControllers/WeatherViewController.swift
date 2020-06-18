@@ -246,6 +246,13 @@ class WeatherViewController: UIViewController {
         }
     }
     
+    @objc func handleRefresh() {
+        if let savedCity = viewModel.currentCity {
+            loadDataUsing(lat: savedCity.latitude, lon: savedCity.longitude)
+        }
+    }
+    
+    //MARK: - UI Actions
     func updateUIWith(weather: Forecast) {
         DispatchQueue.main.async {
             self.fillUpHeaderContainerView(currentWeather: weather.currentWeather)
@@ -416,12 +423,6 @@ class WeatherViewController: UIViewController {
        alertController.addAction(cancelAction)
 
        present(alertController, animated: true, completion: nil)
-    }
-    
-    @objc func handleRefresh() {
-        if let savedCity = viewModel.currentCity {
-            loadDataUsing(lat: savedCity.latitude, lon: savedCity.longitude)
-        }
     }
     
     @objc func showCitiesSelectorView() {

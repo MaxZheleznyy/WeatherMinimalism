@@ -98,39 +98,6 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         showAlertForAddCity()
     }
     
-    private func showAlertForAddCity() {
-        let titleToUse = "Add City"
-        let actionTextToUse = "Add"
-        
-        let alertController = UIAlertController(title: titleToUse, message: nil, preferredStyle: .alert)
-           alertController.addTextField { (textField : UITextField!) -> Void in
-               textField.placeholder = "City Name"
-        }
-        
-        let saveAction = UIAlertAction(title: actionTextToUse, style: .default, handler: { alert -> Void in
-            let firstTextField = alertController.textFields![0] as UITextField
-            guard let cityname = firstTextField.text else { return }
-            
-            self.loadDataUsing(cityName: cityname)
-        })
-          
-       let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-
-       alertController.addAction(saveAction)
-       alertController.addAction(cancelAction)
-
-       present(alertController, animated: true, completion: nil)
-    }
-    
-    private func showCantRemoveCurrentCityAlert() {
-        let alertController = UIAlertController(title: "Can't remove the city", message: "We need at least one city to show weather data", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
-        
-        alertController.addAction(okAction)
-        
-        present(alertController, animated: true, completion: nil)
-    }
-    
     func loadDataUsing(cityName: String) {
         showSpinner()
         
@@ -169,6 +136,40 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
                 self.dismissSpinner()
             }
         }
+    }
+    
+    //MARK: - UI Actions
+    private func showAlertForAddCity() {
+        let titleToUse = "Add City"
+        let actionTextToUse = "Add"
+        
+        let alertController = UIAlertController(title: titleToUse, message: nil, preferredStyle: .alert)
+           alertController.addTextField { (textField : UITextField!) -> Void in
+               textField.placeholder = "City Name"
+        }
+        
+        let saveAction = UIAlertAction(title: actionTextToUse, style: .default, handler: { alert -> Void in
+            let firstTextField = alertController.textFields![0] as UITextField
+            guard let cityname = firstTextField.text else { return }
+            
+            self.loadDataUsing(cityName: cityname)
+        })
+          
+       let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+       alertController.addAction(saveAction)
+       alertController.addAction(cancelAction)
+
+       present(alertController, animated: true, completion: nil)
+    }
+    
+    private func showCantRemoveCurrentCityAlert() {
+        let alertController = UIAlertController(title: "Can't remove the city", message: "We need at least one city to show weather data", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     private func showSpinner() {
