@@ -201,10 +201,8 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if let city = viewModel.publicSavedCities[safe: indexPath.row], city != viewModel.currentCity {
+        if let city = viewModel.publicSavedCities[safe: indexPath.row] {
             delegate?.citiesSelectorGoingToClose(cityToUpdate: city)
-        } else {
-            delegate?.citiesSelectorGoingToClose(cityToUpdate: nil)
         }
         
         self.dismiss(animated: true, completion: nil)
