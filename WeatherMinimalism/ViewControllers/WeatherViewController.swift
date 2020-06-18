@@ -62,7 +62,7 @@ class WeatherViewController: UIViewController {
         return stackView
     }()
 
-    //MARK: - Setup
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -83,66 +83,7 @@ class WeatherViewController: UIViewController {
         selectRoadToMakeInitialCall()
     }
     
-    private func configureBottomToolBar() {
-        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let citiesButton = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: self, action: #selector(showCitiesSelectorView))
-        let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
-        
-        toolbarItems = [refreshButton, spacer, citiesButton]
-        
-        navigationController?.toolbar.barTintColor = .systemBackground
-        navigationController?.toolbar.isTranslucent = false
-        
-        toggleToolbarHidden(isHidden: false)
-    }
-    
-    func setupViews() {
-        configureMainView()
-        
-        contentMainStackView.addArrangedSubview(minMaxTempContainerView)
-        
-        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.dataSource = self
-        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.delegate = self
-        contentMainStackView.addArrangedSubview(todayHourlyWeatherCVContainer)
-        
-        contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
-        
-        contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
-        
-        contentMainStackView.addArrangedSubview(todayDetailedOverviewContainer)
-    }
-    
-    func configureMainView() {
-        view.addSubview(headerContainerView)
-        
-        view.addSubview(mainContentScrollView)
-        mainContentScrollView.delegate = self
-        
-        mainContentScrollView.addSubview(contentMainStackView)
-        
-        headerContainerViewHeight = headerContainerView.heightAnchor.constraint(equalToConstant: 250)
-        
-        let mainConstraints = [
-            headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            headerContainerViewHeight!,
-            
-            mainContentScrollView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
-            mainContentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            mainContentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            mainContentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            contentMainStackView.topAnchor.constraint(equalTo: mainContentScrollView.topAnchor, constant: 10),
-            contentMainStackView.leadingAnchor.constraint(equalTo: mainContentScrollView.leadingAnchor, constant: 0),
-            contentMainStackView.trailingAnchor.constraint(equalTo: mainContentScrollView.trailingAnchor, constant: 0),
-            contentMainStackView.bottomAnchor.constraint(equalTo: mainContentScrollView.bottomAnchor, constant: 0),
-            contentMainStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0)
-        ]
-        
-        NSLayoutConstraint.activate(mainConstraints)
-    }
-    
+    //MARK: - Actions
     private func selectRoadToMakeInitialCall() {
         if CLLocationManager.locationServicesEnabled() {
             switch CLLocationManager.authorizationStatus() {
@@ -163,7 +104,6 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    //MARK: - Actions
     func loadDataUsing(cityName: String) {
         showSpinner()
         
@@ -253,6 +193,66 @@ class WeatherViewController: UIViewController {
     }
     
     //MARK: - UI Actions
+    private func configureBottomToolBar() {
+        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        let citiesButton = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: self, action: #selector(showCitiesSelectorView))
+        let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
+        
+        toolbarItems = [refreshButton, spacer, citiesButton]
+        
+        navigationController?.toolbar.barTintColor = .systemBackground
+        navigationController?.toolbar.isTranslucent = false
+        
+        toggleToolbarHidden(isHidden: false)
+    }
+    
+    func setupViews() {
+        configureMainView()
+        
+        contentMainStackView.addArrangedSubview(minMaxTempContainerView)
+        
+        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.dataSource = self
+        todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.delegate = self
+        contentMainStackView.addArrangedSubview(todayHourlyWeatherCVContainer)
+        
+        contentMainStackView.addArrangedSubview(dailyForecastForWeekSVContainer)
+        
+        contentMainStackView.addArrangedSubview(currentDayOverviewContainer)
+        
+        contentMainStackView.addArrangedSubview(todayDetailedOverviewContainer)
+    }
+    
+    func configureMainView() {
+        view.addSubview(headerContainerView)
+        
+        view.addSubview(mainContentScrollView)
+        mainContentScrollView.delegate = self
+        
+        mainContentScrollView.addSubview(contentMainStackView)
+        
+        headerContainerViewHeight = headerContainerView.heightAnchor.constraint(equalToConstant: 250)
+        
+        let mainConstraints = [
+            headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            headerContainerViewHeight!,
+            
+            mainContentScrollView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
+            mainContentScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainContentScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            mainContentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            contentMainStackView.topAnchor.constraint(equalTo: mainContentScrollView.topAnchor, constant: 10),
+            contentMainStackView.leadingAnchor.constraint(equalTo: mainContentScrollView.leadingAnchor, constant: 0),
+            contentMainStackView.trailingAnchor.constraint(equalTo: mainContentScrollView.trailingAnchor, constant: 0),
+            contentMainStackView.bottomAnchor.constraint(equalTo: mainContentScrollView.bottomAnchor, constant: 0),
+            contentMainStackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: 0)
+        ]
+        
+        NSLayoutConstraint.activate(mainConstraints)
+    }
+    
     func updateUIWith(weather: Forecast) {
         DispatchQueue.main.async {
             self.fillUpHeaderContainerView(currentWeather: weather.currentWeather)

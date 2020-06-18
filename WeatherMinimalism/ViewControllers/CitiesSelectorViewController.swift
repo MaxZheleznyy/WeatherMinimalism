@@ -28,8 +28,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     weak var delegate: CitiesSelectorViewControllerDelegate?
     
-    
-    //MARK: - Setup
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,49 +47,6 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func onDidReceiveData(_ notification: Notification) {
-        if let data = notification.userInfo as? [Int: IndexPath], let correctIndexPath = data.first?.value {
-            tableView.deleteRows(at: [correctIndexPath], with: .automatic)
-        }
-    }
-    
-    func configureMainView() {
-        view.addSubview(tableView)
-        
-        let mainConstraints = [
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(mainConstraints)
-    }
-    
-    func configureFooterView() {
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
-        footerView.backgroundColor = .clear
-        
-        let addCityButton = UIButton()
-        let buttonImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
-        addCityButton.setImage(buttonImage, for: .normal)
-        addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
-        addCityButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        footerView.addSubview(addCityButton)
-        
-        let footerContraints = [
-            addCityButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
-            addCityButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -8),
-            addCityButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8),
-            addCityButton.widthAnchor.constraint(equalToConstant: 30)
-        ]
-
-        NSLayoutConstraint.activate(footerContraints)
-        
-        tableView.tableFooterView = footerView
     }
     
     //MARK: - Actions
@@ -138,7 +94,50 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    @objc func onDidReceiveData(_ notification: Notification) {
+        if let data = notification.userInfo as? [Int: IndexPath], let correctIndexPath = data.first?.value {
+            tableView.deleteRows(at: [correctIndexPath], with: .automatic)
+        }
+    }
+    
     //MARK: - UI Actions
+    func configureMainView() {
+        view.addSubview(tableView)
+        
+        let mainConstraints = [
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ]
+        
+        NSLayoutConstraint.activate(mainConstraints)
+    }
+    
+    func configureFooterView() {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
+        footerView.backgroundColor = .clear
+        
+        let addCityButton = UIButton()
+        let buttonImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        addCityButton.setImage(buttonImage, for: .normal)
+        addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
+        addCityButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        footerView.addSubview(addCityButton)
+        
+        let footerContraints = [
+            addCityButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
+            addCityButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -8),
+            addCityButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8),
+            addCityButton.widthAnchor.constraint(equalToConstant: 30)
+        ]
+
+        NSLayoutConstraint.activate(footerContraints)
+        
+        tableView.tableFooterView = footerView
+    }
+    
     private func showAlertForAddCity() {
         let titleToUse = "Add City"
         let actionTextToUse = "Add"
