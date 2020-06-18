@@ -86,10 +86,9 @@ class WeatherViewController: UIViewController {
     private func configureBottomToolBar() {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let citiesButton = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: self, action: #selector(showCitiesSelectorView))
-        let plusButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(handleAddPlaceButton))
         let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
         
-        toolbarItems = [plusButton, refreshButton, spacer, citiesButton]
+        toolbarItems = [refreshButton, spacer, citiesButton]
         
         navigationController?.toolbar.barTintColor = .systemBackground
         navigationController?.toolbar.isTranslucent = false
@@ -160,7 +159,7 @@ class WeatherViewController: UIViewController {
         if let city = viewModel.currentCity {
             loadDataUsing(lat: city.latitude, lon: city.longitude)
         } else {
-            showAlertForAddCity(title: "Add Your City", message: "In order to get weather conditions you need to type a city name", actionText: "Add")
+            showAlertForAddCity()
         }
     }
     
@@ -392,14 +391,10 @@ class WeatherViewController: UIViewController {
         spinnerView.removeFromSuperview()
     }
     
-    @objc func handleAddPlaceButton() {
-        showAlertForAddCity(title: nil, message: nil, actionText: nil)
-    }
-    
-    private func showAlertForAddCity(title: String?, message: String?, actionText: String?) {
-        let titleToUse = title ?? "Change City"
-        let messageToUse = message ?? ""
-        let actionTextToUse = actionText ?? "Change"
+    private func showAlertForAddCity() {
+        let titleToUse = "Add City"
+        let messageToUse = "In order to get weather conditions you need to type a city name"
+        let actionTextToUse = "Add"
         
         let alertController = UIAlertController(title: titleToUse, message: messageToUse, preferredStyle: .alert)
            alertController.addTextField { (textField : UITextField!) -> Void in
