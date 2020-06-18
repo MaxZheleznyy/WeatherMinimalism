@@ -317,6 +317,8 @@ class WeatherViewController: UIViewController {
     private func fillUpTodayDetailedOverview() {
         guard let nonEmptyWeather = viewModel.publicWeatherData?.currentWeather else { return }
         
+        todayDetailedOverviewContainer.todayDetailedOverviewMainStackView.removeAllArrangedSubviews()
+        
         //first row
         let sunriseView = TodayDetailedOverviewContentView()
         sunriseView.titleLabel.text = "Sunrise"
