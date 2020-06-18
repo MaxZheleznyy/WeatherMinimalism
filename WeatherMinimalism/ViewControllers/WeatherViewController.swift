@@ -410,10 +410,7 @@ class WeatherViewController: UIViewController {
             self.loadDataUsing(cityName: cityname)
         })
           
-       let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
-          print("Cancel")
-       })
-    
+       let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 
        alertController.addAction(saveAction)
        alertController.addAction(cancelAction)

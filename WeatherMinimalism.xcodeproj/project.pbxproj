@@ -19,6 +19,7 @@
 		50225158249404F3001DC0A7 /* SelectCityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50225157249404F3001DC0A7 /* SelectCityTableViewCell.swift */; };
 		5022515B2494107C001DC0A7 /* CitySelectorStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5022515A2494107C001DC0A7 /* CitySelectorStackView.swift */; };
 		50256141249AF41F00EEEC9D /* UIStackViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50256140249AF41F00EEEC9D /* UIStackViewExtension.swift */; };
+		50256143249AFA2000EEEC9D /* NotificationNamExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50256142249AFA2000EEEC9D /* NotificationNamExtension.swift */; };
 		503195502489B99B0070F663 /* City+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5031954C2489B99B0070F663 /* City+CoreDataClass.swift */; };
 		503195512489B99B0070F663 /* City+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5031954D2489B99B0070F663 /* City+CoreDataProperties.swift */; };
 		503195522489B99B0070F663 /* CurrentWeather+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5031954E2489B99B0070F663 /* CurrentWeather+CoreDataClass.swift */; };
@@ -64,6 +65,7 @@
 		50225157249404F3001DC0A7 /* SelectCityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCityTableViewCell.swift; sourceTree = "<group>"; };
 		5022515A2494107C001DC0A7 /* CitySelectorStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySelectorStackView.swift; sourceTree = "<group>"; };
 		50256140249AF41F00EEEC9D /* UIStackViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackViewExtension.swift; sourceTree = "<group>"; };
+		50256142249AFA2000EEEC9D /* NotificationNamExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNamExtension.swift; sourceTree = "<group>"; };
 		5031954C2489B99B0070F663 /* City+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "City+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5031954D2489B99B0070F663 /* City+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "City+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5031954E2489B99B0070F663 /* CurrentWeather+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CurrentWeather+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				50D2AF5A2465D873007638AF /* DateExtension.swift */,
 				50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */,
 				509E59BD244A3614000791C3 /* FloatExtension.swift */,
+				50256142249AFA2000EEEC9D /* NotificationNamExtension.swift */,
 				503195542489C7C70070F663 /* NSManagedObjectContextExtension.swift */,
 				50F13AD2249A8C75009385FF /* PersistentContainer.swift */,
 				50256140249AF41F00EEEC9D /* UIStackViewExtension.swift */,
@@ -391,6 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5022515B2494107C001DC0A7 /* CitySelectorStackView.swift in Sources */,
+				50256143249AFA2000EEEC9D /* NotificationNamExtension.swift in Sources */,
 				50039035246DF0AD00B13C5E /* DailyTemperature.swift in Sources */,
 				503195552489C7C70070F663 /* NSManagedObjectContextExtension.swift in Sources */,
 				50B8F5E6246F259400EA0BFD /* DoubleExtension.swift in Sources */,

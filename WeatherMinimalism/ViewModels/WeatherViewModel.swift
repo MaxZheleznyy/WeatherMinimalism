@@ -199,6 +199,23 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    func removeCityFromDB(cityAt: IndexPath) {
+        let cityToDelete = fetchedCitiesController.object(at: cityAt)
+        persistentContainer.viewContext.delete(cityToDelete)
+        
+        saveContext()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        if type == .delete {
+            guard let nonEmptyIndexPath = indexPath else { return }
+            let data = [0: nonEmptyIndexPath]
+
+            NotificationCenter.default.post(name: .readyToDeleteCityRow, object: self, userInfo: data)
+        }
+    }
+    
     private func checkFetchController() {
         if fetchedCitiesController == nil || fetchedCitiesController.fetchedObjects == nil {
             loadCitiesFromDB()

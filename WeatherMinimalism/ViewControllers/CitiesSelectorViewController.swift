@@ -42,6 +42,18 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         
         configureMainView()
         configureFooterView()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onDidReceiveData(_:)), name: .readyToDeleteCityRow, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func onDidReceiveData(_ notification: Notification) {
+        if let data = notification.userInfo as? [Int: IndexPath], let correctIndexPath = data.first?.value {
+            tableView.deleteRows(at: [correctIndexPath], with: .automatic)
+        }
     }
     
     func configureMainView() {
@@ -102,15 +114,21 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
             self.loadDataUsing(cityName: cityname)
         })
           
-       let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: { (action : UIAlertAction!) -> Void in
-          print("Cancel")
-       })
-    
+       let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 
        alertController.addAction(saveAction)
        alertController.addAction(cancelAction)
 
        present(alertController, animated: true, completion: nil)
+    }
+    
+    private func showCantRemoveCurrentCityAlert() {
+        let alertController = UIAlertController(title: "Can't remove the city", message: "We need at least one city to show weather data", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     func loadDataUsing(cityName: String) {
@@ -199,6 +217,9 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //in order to not crash after onDidReceiveData call
+        NotificationCenter.default.removeObserver(self)
+        
         tableView.deselectRow(at: indexPath, animated: true)
         
         if let city = viewModel.publicSavedCities[safe: indexPath.row] {
@@ -206,5 +227,15 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
         }
         
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if indexPath.row == 0 {
+                showCantRemoveCurrentCityAlert()
+            } else {
+                viewModel.removeCityFromDB(cityAt: indexPath)
+            }
+        }
     }
 }
