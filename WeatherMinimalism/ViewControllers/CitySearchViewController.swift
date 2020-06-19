@@ -8,6 +8,13 @@
 
 import UIKit
 
+enum SearchState: String {
+    case showingResults
+    case searching = "Validating city..."
+    case noResult = "No results found."
+    case empty = ""
+}
+
 class CitySearchViewController: UIViewController {
     
     //MARK: - UI
@@ -27,6 +34,11 @@ class CitySearchViewController: UIViewController {
     let viewModel = WeatherViewModel()
     var filteredLocations: [Location] = []
     var timer = Timer()
+    var searchState: SearchState = .empty {
+        didSet {
+            handleSearchStateChange()
+        }
+    }
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -40,6 +52,20 @@ class CitySearchViewController: UIViewController {
         searchController.searchResultsUpdater = self
         
         configureMainView()
+    }
+    
+    //MARK: - Actions
+    func handleSearchStateChange() {
+        switch searchState {
+        case .empty:
+            print("empty")
+        case .noResult:
+            print("no result")
+        case .searching:
+            print("searching")
+        case .showingResults:
+            print("showing results")
+        }
     }
     
     //MARK: - UI Actions
@@ -64,9 +90,12 @@ extension CitySearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             timer.invalidate()
+            
             if searchText.count > 1 {
+                searchState = .searching
                 timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(searchForCities(sender:)), userInfo: searchText, repeats: false)
             } else {
+                searchState = .empty
                 filteredLocations.removeAll()
                 
                 tableView.reloadData()
@@ -82,9 +111,10 @@ extension CitySearchViewController: UISearchResultsUpdating {
 
             DispatchQueue.main.async {
                 if self.searchController.searchBar.text?.count ?? 0 >= searchText.count {
+                    self.searchState = self.filteredLocations.isEmpty ? .noResult : .showingResults
                     self.tableView.reloadData()
                 } else {
-                    self.filteredLocations.removeAll()
+                    self.searchState = .empty
                 }
             }
         }
