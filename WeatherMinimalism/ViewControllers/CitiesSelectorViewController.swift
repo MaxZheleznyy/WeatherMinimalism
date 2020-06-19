@@ -51,7 +51,9 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Actions
     @objc func handleAddCity() {
-        showAlertForAddCity()
+//        showAlertForAddCity()
+        let citiesSearchVC = CitySearchViewController()
+        self.present(citiesSearchVC, animated: true, completion: nil)
     }
     
     func loadDataUsing(cityName: String) {
@@ -75,7 +77,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         }
         
         DispatchQueue.main.async {
-            if let location = self.viewModel.returnLocationFromJSONFile(cityName: cityName) {
+            if let location = self.viewModel.returnFirstLocationFromJSONFile(cityName: cityName) {
                 self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
                     self?.viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
                     

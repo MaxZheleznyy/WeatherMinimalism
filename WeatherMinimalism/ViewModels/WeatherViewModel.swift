@@ -73,7 +73,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     //MARK: - Local JSON
-    func returnLocationFromJSONFile(cityName: String) -> Location? {
+    func returnFirstLocationFromJSONFile(cityName: String) -> Location? {
         if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
             do {
                 let fileUrl = URL(fileURLWithPath: path)
@@ -89,6 +89,23 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
             }
         }
         return nil
+    }
+    
+    func returnLocationsFromJSONFile(cityName: String) -> [Location] {
+        if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
+            do {
+                let fileUrl = URL(fileURLWithPath: path)
+                // Getting data from JSON file using the file URL
+                let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
+                let availableLocationsArray = try JSONDecoder().decode([Location].self, from: data)
+                
+                return availableLocationsArray.filter({ $0.name.contains(cityName.capitalized)})
+            } catch {
+                print("Can't decode city.list.json file data: \(error)")
+                return []
+            }
+        }
+        return []
     }
     
     func returnLocationFromJSONFile(lat: Double, long: Double) -> Location? {
