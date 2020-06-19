@@ -30,9 +30,6 @@ class CitySearchViewController: UIViewController {
     
     var timer = Timer()
     
-    var one = 0
-    var two = 0
-    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +40,6 @@ class CitySearchViewController: UIViewController {
         tableView.dataSource = self
         
         searchController.searchResultsUpdater = self
-//        definesPresentationContext = true
         
         configureMainView()
     }
