@@ -99,7 +99,22 @@ extension CitySearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = filteredLocations[safe: indexPath.row]?.name
+        var finalCityString = ""
+        
+        if let location = filteredLocations[safe: indexPath.row] {
+            finalCityString = location.name
+            
+            if location.state != "" {
+                finalCityString += ", \(location.state)"
+            }
+            
+            if location.country != "" {
+                finalCityString += ", \(location.country)"
+            }
+        }
+        
+        cell.textLabel?.text = finalCityString
+        
         return cell
     }
 }
