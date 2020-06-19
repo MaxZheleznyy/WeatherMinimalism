@@ -25,9 +25,7 @@ class CitySearchViewController: UIViewController {
     
     //MARK: - Contants
     let viewModel = WeatherViewModel()
-    
     var filteredLocations: [Location] = []
-    
     var timer = Timer()
     
     //MARK: - Lifecycle
@@ -83,7 +81,11 @@ extension CitySearchViewController: UISearchResultsUpdating {
             self.filteredLocations = self.viewModel.returnLocationsFromJSONFile(cityName: searchText)
 
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                if self.searchController.searchBar.text?.count ?? 0 >= searchText.count {
+                    self.tableView.reloadData()
+                } else {
+                    self.filteredLocations.removeAll()
+                }
             }
         }
     }
