@@ -93,6 +93,9 @@ class CitySearchViewController: UIViewController {
         NSLayoutConstraint.activate(mainConstraints)
         
         tableView.tableHeaderView = searchController.searchBar
+        
+        let footerView = UIView()
+        tableView.tableFooterView = footerView
     }
 }
 
