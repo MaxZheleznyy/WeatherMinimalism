@@ -34,6 +34,7 @@ class CitySearchViewController: UIViewController {
     let viewModel = WeatherViewModel()
     var filteredLocations: [Location] = []
     var timer = Timer()
+    
     var searchState: SearchState = .empty {
         didSet {
             handleSearchStateChange()
@@ -92,12 +93,14 @@ extension CitySearchViewController: UISearchResultsUpdating {
             timer.invalidate()
             
             if searchText.count > 1 {
-                searchState = .searching
+                if filteredLocations.isEmpty {
+                    searchState = .searching
+                }
+                
                 timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(searchForCities(sender:)), userInfo: searchText, repeats: false)
             } else {
-                searchState = .empty
                 filteredLocations.removeAll()
-                
+                searchState = .empty
                 tableView.reloadData()
             }
         }
