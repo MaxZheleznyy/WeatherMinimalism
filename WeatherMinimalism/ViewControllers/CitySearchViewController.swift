@@ -21,6 +21,7 @@ class CitySearchViewController: UIViewController {
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .clear
         return tableView
     }()
     
@@ -51,7 +52,7 @@ class CitySearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.9)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -149,6 +150,7 @@ extension CitySearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
+        cell.backgroundColor = .clear
         
         if showPlaceholderText {
             cell.textLabel?.text = searchState.rawValue

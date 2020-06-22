@@ -51,7 +51,6 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Actions
     @objc func handleAddCity() {
-//        showAlertForAddCity()
         let citiesSearchVC = CitySearchViewController()
         self.present(citiesSearchVC, animated: true, completion: nil)
     }
