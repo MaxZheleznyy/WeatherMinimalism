@@ -41,6 +41,12 @@ class CitySearchViewController: UIViewController {
         }
     }
     
+    var showPlaceholderText = false {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+    
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,12 +66,16 @@ class CitySearchViewController: UIViewController {
         switch searchState {
         case .empty:
             print("empty")
+            showPlaceholderText = false
         case .noResult:
             print("no result")
+            showPlaceholderText = true
         case .searching:
             print("searching")
+            showPlaceholderText = true
         case .showingResults:
             print("showing results")
+            showPlaceholderText = false
         }
     }
     
@@ -127,26 +137,35 @@ extension CitySearchViewController: UISearchResultsUpdating {
 //MARK: - UITableView
 extension CitySearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredLocations.count
+        if showPlaceholderText {
+            return 1
+        } else {
+            return filteredLocations.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        var finalCityString = ""
         
-        if let location = filteredLocations[safe: indexPath.row] {
-            finalCityString = location.name
+        if showPlaceholderText {
+            cell.textLabel?.text = searchState.rawValue
+        } else {
+            var finalCityString = ""
             
-            if location.state != "" {
-                finalCityString += ", \(location.state)"
+            if let location = filteredLocations[safe: indexPath.row] {
+                finalCityString = location.name
+                
+                if location.state != "" {
+                    finalCityString += ", \(location.state)"
+                }
+                
+                if location.country != "" {
+                    finalCityString += ", \(location.country)"
+                }
             }
             
-            if location.country != "" {
-                finalCityString += ", \(location.country)"
-            }
+            cell.textLabel?.text = finalCityString
         }
-        
-        cell.textLabel?.text = finalCityString
         
         return cell
     }
