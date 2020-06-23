@@ -193,9 +193,13 @@ class WeatherViewController: UIViewController {
     
     //MARK: - UI Actions
     private func configureBottomToolBar() {
+        let refreshButtonImage = UIImage(systemName: "arrow.clockwise")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        let refreshButton = UIBarButtonItem(image: refreshButtonImage, style: .done, target: self, action: #selector(handleRefresh))
+        
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let citiesButton = UIBarButtonItem(image: UIImage(systemName: "text.justify"), style: .plain, target: self, action: #selector(showCitiesSelectorView))
-        let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(handleRefresh))
+        
+        let citiesButtonImage = UIImage(systemName: "text.justify")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        let citiesButton = UIBarButtonItem(image: citiesButtonImage, style: .plain, target: self, action: #selector(showCitiesSelectorView))
         
         toolbarItems = [refreshButton, spacer, citiesButton]
         
