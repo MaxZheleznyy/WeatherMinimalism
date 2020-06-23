@@ -25,7 +25,12 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Contants
     let viewModel = WeatherViewModel()
-    var userCities: [Location] = []
+    var userCities: [Location] = [] {
+        didSet {
+            print("🐶")
+            print(userCities.count)
+        }
+    }
     
     weak var delegate: CitiesSelectorViewControllerDelegate?
     
@@ -246,10 +251,12 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
 
 extension CitiesSelectorViewController: CitySearchViewControllerDelegate {
     func updateCitiesList(location: Location) {
-        viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
-        
-        userCities.append(location)
-        
-        tableView.reloadData()
+        if userCities.contains(where: {$0.id == location.id }) == false {
+            viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
+            userCities.append(location)
+            
+            let indexPath = IndexPath(row: userCities.count - 1, section: 0)
+            tableView.insertRows(at: [indexPath], with: .automatic)
+        }
     }
 }
