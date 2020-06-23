@@ -67,9 +67,17 @@ class CitySearchViewController: UIViewController {
         tableView.dataSource = self
         
         searchController.searchResultsUpdater = self
+        searchController.delegate = self
+        searchController.searchBar.delegate = self
         definesPresentationContext = true
         
         configureMainView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        searchController.isActive = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -112,8 +120,8 @@ class CitySearchViewController: UIViewController {
     }
 }
 
-//MARK: - UISearchResultsUpdating
-extension CitySearchViewController: UISearchResultsUpdating {
+//MARK: - SearchBar
+extension CitySearchViewController: UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             timer.invalidate()
@@ -130,6 +138,14 @@ extension CitySearchViewController: UISearchResultsUpdating {
                 tableView.reloadData()
             }
         }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func didPresentSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.becomeFirstResponder()
     }
     
     @objc func searchForCities(sender: Timer) {
