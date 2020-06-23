@@ -97,8 +97,8 @@ class WeatherViewController: UIViewController {
             }
         }
         
-        if let city = viewModel.currentCity {
-            loadDataUsing(lat: city.latitude, lon: city.longitude)
+        if let location = viewModel.getCurrentLocation() {
+            loadDataUsing(lat: location.lat, lon: location.long)
         } else {
             showAlertForAddCity()
         }
@@ -107,11 +107,10 @@ class WeatherViewController: UIViewController {
     func loadDataUsing(cityName: String) {
         showSpinner()
         
-        if let savedCity = viewModel.currentCity, cityName.capitalized == savedCity.name.capitalized {
-            viewModel.fetchWeatherUsing(lat: savedCity.latitude, lon: savedCity.longitude) { [weak self] weather in
+        if let savedCity = viewModel.getCurrentLocation(), cityName.capitalized == savedCity.name.capitalized {
+            viewModel.fetchWeatherUsing(lat: savedCity.lat, lon: savedCity.long) { [weak self] weather in
                 if let currentWeater = weather.currentWeather {
-                    let location = Location(id: savedCity.id, name: savedCity.name, state: savedCity.state, country: savedCity.country, lat: savedCity.latitude, long: savedCity.longitude)
-                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                    self?.viewModel.saveWeatherForCity(location: savedCity, weatherFromServer: currentWeater)
                 }
                 
                 self?.updateUIWith(weather: weather)
@@ -125,7 +124,7 @@ class WeatherViewController: UIViewController {
                     self?.viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
                     
                     if let currentWeater = weather.currentWeather {
-                        self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                        self?.viewModel.saveWeatherForCity(location: location, weatherFromServer: currentWeater)
                     }
                     
                     self?.updateUIWith(weather: weather)
@@ -139,11 +138,10 @@ class WeatherViewController: UIViewController {
     func loadDataUsing(lat: Double, lon: Double) {
         showSpinner()
         
-        if let savedCity = viewModel.currentCity, lat.returnAsOneDigitPrecision == savedCity.latitude.returnAsOneDigitPrecision && lon.returnAsOneDigitPrecision == savedCity.longitude.returnAsOneDigitPrecision {
+        if let savedCity = viewModel.getCurrentLocation(), lat.returnAsOneDigitPrecision == savedCity.lat.returnAsOneDigitPrecision && lon.returnAsOneDigitPrecision == savedCity.long.returnAsOneDigitPrecision {
             viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
                 if let currentWeater = weather.currentWeather {
-                    let location = Location(id: savedCity.id, name: savedCity.name, state: savedCity.state, country: savedCity.country, lat: savedCity.latitude, long: savedCity.longitude)
-                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                    self?.viewModel.saveWeatherForCity(location: savedCity, weatherFromServer: currentWeater)
                 }
                 
                 self?.updateUIWith(weather: weather)
@@ -161,7 +159,7 @@ class WeatherViewController: UIViewController {
             
             self.viewModel.fetchWeatherUsing(lat: lat, lon: lon) { [weak self] weather in
                 if let location = locationToUse, let currentWeater = weather.currentWeather {
-                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                    self?.viewModel.saveWeatherForCity(location: location, weatherFromServer: currentWeater)
                 }
                 
                 self?.updateUIWith(weather: weather)
@@ -169,16 +167,15 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    func loadDataUsing(city: City) {
+    func loadDataUsing(location: Location) {
         showSpinner()
         
         DispatchQueue.main.async {
-            self.viewModel.fetchWeatherUsing(lat: city.latitude, lon: city.longitude) { [weak self] weather in
-                self?.viewModel.saveCityToDB(locationToSave: nil, cityToSave: city)
+            self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
+                self?.viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
                 
                 if let currentWeater = weather.currentWeather {
-                    let locationFromCity = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
-                    self?.viewModel.saveWeatherForCity(cityForWeather: locationFromCity, weatherFromServer: currentWeater)
+                    self?.viewModel.saveWeatherForCity(location: location, weatherFromServer: currentWeater)
                 }
                 
                 self?.updateUIWith(weather: weather)
@@ -187,8 +184,8 @@ class WeatherViewController: UIViewController {
     }
     
     @objc func handleRefresh() {
-        if let savedCity = viewModel.currentCity {
-            loadDataUsing(lat: savedCity.latitude, lon: savedCity.longitude)
+        if let savedCity = viewModel.getCurrentLocation() {
+            loadDataUsing(lat: savedCity.lat, lon: savedCity.long)
         }
     }
     
@@ -272,7 +269,7 @@ class WeatherViewController: UIViewController {
     }
     
     private func fillUpHeaderContainerView(currentWeather: WeatherForTimeSlice?) {
-        if let savedCity = viewModel.currentCity {
+        if let savedCity = viewModel.getCurrentLocation() {
             headerContainerView.selectedLocation.text = savedCity.name.capitalized
         }
         
@@ -511,9 +508,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
 }
 
 extension WeatherViewController: CitiesSelectorViewControllerDelegate {
-    func citiesSelectorGoingToClose(cityToUpdate: City?) {
-        if let city = cityToUpdate {
-            loadDataUsing(city: city)
-        }
+    func selectedLocationForDetailedWeather(location: Location) {
+        loadDataUsing(location: location)
     }
 }

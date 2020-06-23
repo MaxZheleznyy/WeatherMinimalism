@@ -15,32 +15,13 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     private var privateWeatherData: Forecast?
     private var fetchedCitiesController: NSFetchedResultsController<City>!
+    
+    private var currenLocation: Location?
+    private var savedLocations: [Location] = []
         
     var publicWeatherData: Forecast? {
         get {
             return privateWeatherData
-        }
-    }
-    
-    var currentCity: City? {
-        get {
-            checkFetchController()
-            if let recentCity = fetchedCitiesController.fetchedObjects?.first {
-                return recentCity
-            } else {
-                return nil
-            }
-        }
-    }
-    
-    var publicSavedCities: [City] {
-        get {
-            checkFetchController()
-            if let cities = fetchedCitiesController.fetchedObjects {
-                return cities
-            } else {
-                return []
-            }
         }
     }
     
@@ -52,6 +33,41 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
             return returnConfigredContainer(container: container)
         }
     }()
+    
+    //MARK: - Main
+    func getCurrentLocation() -> Location? {
+        if let location = currenLocation {
+            return location
+        } else {
+            checkFetchController()
+            if let recentCity = fetchedCitiesController.fetchedObjects?.first {
+                let location = Location(id: recentCity.id, name: recentCity.name, state: recentCity.state, country: recentCity.country, lat: recentCity.latitude, long: recentCity.longitude)
+                return location
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    func getSavedLocations() -> [Location] {
+        if savedLocations.isEmpty == false {
+            return savedLocations
+        } else {
+            checkFetchController()
+            if let cities = fetchedCitiesController.fetchedObjects {
+                savedLocations.removeAll()
+                
+                for city in cities {
+                    let location = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
+                    savedLocations.append(location)
+                }
+                
+                return savedLocations
+            } else {
+                return []
+            }
+        }
+    }
     
     //MARK: - Network
     func fetchWeatherUsing(lat: Double, lon: Double, completion: @escaping (Forecast) -> ()) {
@@ -133,16 +149,10 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         guard locationToSave != nil || cityToSave != nil else { return }
         
         DispatchQueue.main.async { [unowned self] in
-            let city = City(context: self.persistentContainer.viewContext)
             if let nonEmptyLocation = locationToSave {
-                city.id = nonEmptyLocation.id
-                city.name = nonEmptyLocation.name
-                city.state = nonEmptyLocation.state
-                city.country = nonEmptyLocation.country
-                city.latitude = nonEmptyLocation.lat
-                city.longitude = nonEmptyLocation.long
-                city.addedDate = Date()
+                _ = self.decodeLocationIntoCity(location: nonEmptyLocation)
             } else if let nonEmptyCity = cityToSave {
+                let city = City(context: self.persistentContainer.viewContext)
                 city.id = nonEmptyCity.id
                 city.name = nonEmptyCity.name
                 city.state = nonEmptyCity.state
@@ -174,12 +184,12 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func saveWeatherForCity(cityForWeather: Location, weatherFromServer: WeatherForTimeSlice) {
+    func saveWeatherForCity(location: Location, weatherFromServer: WeatherForTimeSlice) {
         DispatchQueue.main.async { [unowned self] in
             var cityToUpdate: City?
             
             let cityRequest = City.createFetchRequest()
-            cityRequest.predicate = NSPredicate(format: "id == %d", cityForWeather.id)
+            cityRequest.predicate = NSPredicate(format: "id == %d", location.id)
             
             if let cities = try? self.persistentContainer.viewContext.fetch(cityRequest) {
                 if cities.count > 0 {
@@ -190,16 +200,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
             
             if cityToUpdate == nil {
                 // We need to create a new city in DB
-                let city = City(context: self.persistentContainer.viewContext)
-                city.id = cityForWeather.id
-                city.name = cityForWeather.name
-                city.state = cityForWeather.state
-                city.country = cityForWeather.country
-                city.latitude = cityForWeather.lat
-                city.longitude = cityForWeather.long
-                city.addedDate = Date()
-                
-                cityToUpdate = city
+                cityToUpdate = self.decodeLocationIntoCity(location: location)
             }
             
             guard let nonEmptyCityToUpdate = cityToUpdate else { return }
@@ -258,5 +259,25 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
         
         return container
+    }
+    
+    func decodeCityIntoLocation(city: City) -> Location {
+        let location = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
+        return location
+    }
+    
+    private func decodeLocationIntoCity(location: Location) -> City {
+        let city = City(context: self.persistentContainer.viewContext)
+        city.id = location.id
+        city.name = location.name
+        city.state = location.state
+        city.country = location.country
+        city.latitude = location.lat
+        city.longitude = location.long
+        city.addedDate = Date()
+        
+        self.saveContext()
+        
+        return city
     }
 }

@@ -15,12 +15,17 @@ enum SearchState: String {
     case empty = ""
 }
 
+protocol CitySearchViewControllerDelegate: AnyObject {
+    func updateCitiesList(location: Location)
+}
+
 class CitySearchViewController: UIViewController {
     
     //MARK: - UI
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.allowsMultipleSelection = false
         tableView.backgroundColor = .clear
         return tableView
     }()
@@ -28,6 +33,8 @@ class CitySearchViewController: UIViewController {
     let searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.sizeToFit()
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Cities"
         return searchController
     }()
     
@@ -35,6 +42,8 @@ class CitySearchViewController: UIViewController {
     let viewModel = WeatherViewModel()
     var filteredLocations: [Location] = []
     var timer = Timer()
+    
+    weak var delegate: CitySearchViewControllerDelegate?
     
     var searchState: SearchState = .empty {
         didSet {
@@ -58,24 +67,27 @@ class CitySearchViewController: UIViewController {
         tableView.dataSource = self
         
         searchController.searchResultsUpdater = self
+        definesPresentationContext = true
         
         configureMainView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        timer.invalidate()
     }
     
     //MARK: - Actions
     func handleSearchStateChange() {
         switch searchState {
         case .empty:
-            print("empty")
             showPlaceholderText = false
         case .noResult:
-            print("no result")
             showPlaceholderText = true
         case .searching:
-            print("searching")
             showPlaceholderText = true
         case .showingResults:
-            print("showing results")
             showPlaceholderText = false
         }
     }
@@ -173,5 +185,15 @@ extension CitySearchViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let location = filteredLocations[safe: indexPath.row] {
+            delegate?.updateCitiesList(location: location)
+            viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
+        }
+        
+        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 }
