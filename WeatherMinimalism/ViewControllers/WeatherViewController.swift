@@ -78,7 +78,9 @@ class WeatherViewController: UIViewController {
         
         self.viewModel.loadCitiesFromDB()
         
+        
         configureBottomToolBar()
+        addSpinner()
         setupViews()
         selectRoadToMakeInitialCall()
     }
@@ -372,29 +374,33 @@ class WeatherViewController: UIViewController {
         navigationController?.setToolbarHidden(isHidden, animated: false)
     }
     
-    private func showSpinner() {
-        toggleToolbarHidden(isHidden: true)
-        spinnerView.isHidden = false
-        spinnerView.spinner.startAnimating()
-        
-        view.addSubview(spinnerView)
+    private func addSpinner() {
+        if let navControllerView = navigationController?.view {
+            navControllerView.addSubview(spinnerView)
+        } else {
+            view.addSubview(spinnerView)
+        }
         
         let constraints = [
-            spinnerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            spinnerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            spinnerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            spinnerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            spinnerView.topAnchor.constraint(equalTo: navigationController?.view.topAnchor ?? view.safeAreaLayoutGuide.topAnchor),
+            spinnerView.leadingAnchor.constraint(equalTo: navigationController?.view.leadingAnchor ?? view.safeAreaLayoutGuide.leadingAnchor),
+            spinnerView.trailingAnchor.constraint(equalTo: navigationController?.view.trailingAnchor ?? view.safeAreaLayoutGuide.trailingAnchor),
+            spinnerView.bottomAnchor.constraint(equalTo: navigationController?.view.bottomAnchor ?? view.safeAreaLayoutGuide.bottomAnchor)
         ]
-        
+
         NSLayoutConstraint.activate(constraints)
+        
+        dismissSpinner()
+    }
+    
+    private func showSpinner() {
+        spinnerView.isHidden = false
+        spinnerView.spinner.startAnimating()
     }
     
     private func dismissSpinner() {
-        toggleToolbarHidden(isHidden: false)
-        
         spinnerView.isHidden = true
         spinnerView.spinner.stopAnimating()
-        spinnerView.removeFromSuperview()
     }
     
     private func showAlertForAddCity() {
