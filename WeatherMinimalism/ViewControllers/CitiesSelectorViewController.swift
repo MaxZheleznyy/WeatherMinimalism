@@ -265,6 +265,7 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
     }
 }
 
+//MARK: - CitySearchViewControllerDelegate
 extension CitiesSelectorViewController: CitySearchViewControllerDelegate {
     func updateCitiesList(location: Location) {
         if userCities.contains(where: {$0.id == location.id }) == false {

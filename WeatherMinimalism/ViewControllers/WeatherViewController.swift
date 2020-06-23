@@ -507,6 +507,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
     }
 }
 
+//MARK: - CitiesSelectorViewControllerDelegate
 extension WeatherViewController: CitiesSelectorViewControllerDelegate {
     func selectedLocationForDetailedWeather(location: Location) {
         loadDataUsing(location: location)
