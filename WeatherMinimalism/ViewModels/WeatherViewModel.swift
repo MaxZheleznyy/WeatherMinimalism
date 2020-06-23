@@ -15,32 +15,13 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     private let apiKey = "ce8d992066007b3a50a1597aca48cf97"
     private var privateWeatherData: Forecast?
     private var fetchedCitiesController: NSFetchedResultsController<City>!
+    
+    private var currenLocation: Location?
+    private var savedLocations: [Location] = []
         
     var publicWeatherData: Forecast? {
         get {
             return privateWeatherData
-        }
-    }
-    
-    var currentCity: City? {
-        get {
-            checkFetchController()
-            if let recentCity = fetchedCitiesController.fetchedObjects?.first {
-                return recentCity
-            } else {
-                return nil
-            }
-        }
-    }
-    
-    var publicSavedCities: [City] {
-        get {
-            checkFetchController()
-            if let cities = fetchedCitiesController.fetchedObjects {
-                return cities
-            } else {
-                return []
-            }
         }
     }
     
@@ -52,6 +33,46 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
             return returnConfigredContainer(container: container)
         }
     }()
+    
+    //MARK: - Main
+    func getCurrentLocation() -> Location? {
+        if let location = currenLocation {
+            return location
+        } else {
+            checkFetchController()
+            if let recentCity = fetchedCitiesController.fetchedObjects?.first {
+                var location = Location(id: recentCity.id, name: recentCity.name, state: recentCity.state, country: recentCity.country, lat: recentCity.latitude, long: recentCity.longitude)
+                location.weather = recentCity.currentWeather
+                
+                currenLocation = location
+                
+                return location
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    func getSavedLocations() -> [Location] {
+        if savedLocations.isEmpty == false {
+            return savedLocations
+        } else {
+            checkFetchController()
+            if let cities = fetchedCitiesController.fetchedObjects {
+                savedLocations.removeAll()
+                
+                for city in cities {
+                    var location = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
+                    location.weather = city.currentWeather
+                    savedLocations.append(location)
+                }
+                
+                return savedLocations
+            } else {
+                return []
+            }
+        }
+    }
     
     //MARK: - Network
     func fetchWeatherUsing(lat: Double, lon: Double, completion: @escaping (Forecast) -> ()) {
@@ -73,7 +94,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     //MARK: - Local JSON
-    func returnLocationFromJSONFile(cityName: String) -> Location? {
+    func returnFirstLocationFromJSONFile(cityName: String) -> Location? {
         if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
             do {
                 let fileUrl = URL(fileURLWithPath: path)
@@ -89,6 +110,23 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
             }
         }
         return nil
+    }
+    
+    func returnLocationsFromJSONFile(cityName: String) -> [Location] {
+        if let path = Bundle.main.path(forResource: "city.list", ofType: "json") {
+            do {
+                let fileUrl = URL(fileURLWithPath: path)
+                // Getting data from JSON file using the file URL
+                let data = try Data(contentsOf: fileUrl, options: .mappedIfSafe)
+                let availableLocationsArray = try JSONDecoder().decode([Location].self, from: data)
+                
+                return availableLocationsArray.filter({ $0.name.contains(cityName.capitalized)})
+            } catch {
+                print("Can't decode city.list.json file data: \(error)")
+                return []
+            }
+        }
+        return []
     }
     
     func returnLocationFromJSONFile(lat: Double, long: Double) -> Location? {
@@ -116,16 +154,16 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         guard locationToSave != nil || cityToSave != nil else { return }
         
         DispatchQueue.main.async { [unowned self] in
-            let city = City(context: self.persistentContainer.viewContext)
             if let nonEmptyLocation = locationToSave {
-                city.id = nonEmptyLocation.id
-                city.name = nonEmptyLocation.name
-                city.state = nonEmptyLocation.state
-                city.country = nonEmptyLocation.country
-                city.latitude = nonEmptyLocation.lat
-                city.longitude = nonEmptyLocation.long
-                city.addedDate = Date()
+                self.currenLocation = nonEmptyLocation
+                self.savedLocations.append(nonEmptyLocation)
+                _ = self.decodeLocationIntoCity(location: nonEmptyLocation)
             } else if let nonEmptyCity = cityToSave {
+                let location = self.decodeCityIntoLocation(city: nonEmptyCity)
+                self.currenLocation = location
+                self.savedLocations.append(location)
+                
+                let city = City(context: self.persistentContainer.viewContext)
                 city.id = nonEmptyCity.id
                 city.name = nonEmptyCity.name
                 city.state = nonEmptyCity.state
@@ -157,12 +195,12 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func saveWeatherForCity(cityForWeather: Location, weatherFromServer: WeatherForTimeSlice) {
+    func saveWeatherForCity(location: Location, weatherFromServer: WeatherForTimeSlice) {
         DispatchQueue.main.async { [unowned self] in
             var cityToUpdate: City?
             
             let cityRequest = City.createFetchRequest()
-            cityRequest.predicate = NSPredicate(format: "id == %d", cityForWeather.id)
+            cityRequest.predicate = NSPredicate(format: "id == %d", location.id)
             
             if let cities = try? self.persistentContainer.viewContext.fetch(cityRequest) {
                 if cities.count > 0 {
@@ -173,16 +211,7 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
             
             if cityToUpdate == nil {
                 // We need to create a new city in DB
-                let city = City(context: self.persistentContainer.viewContext)
-                city.id = cityForWeather.id
-                city.name = cityForWeather.name
-                city.state = cityForWeather.state
-                city.country = cityForWeather.country
-                city.latitude = cityForWeather.lat
-                city.longitude = cityForWeather.long
-                city.addedDate = Date()
-                
-                cityToUpdate = city
+                cityToUpdate = self.decodeLocationIntoCity(location: location)
             }
             
             guard let nonEmptyCityToUpdate = cityToUpdate else { return }
@@ -200,10 +229,20 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     func removeCityFromDB(cityAt: IndexPath) {
-        let cityToDelete = fetchedCitiesController.object(at: cityAt)
-        persistentContainer.viewContext.delete(cityToDelete)
+        removeLocation(index: cityAt.row)
         
-        saveContext()
+        if let fetchedObjects = fetchedCitiesController.fetchedObjects, (cityAt.row >= fetchedObjects.startIndex && cityAt.row < fetchedObjects.endIndex) {
+            let cityToDelete = fetchedCitiesController.object(at: cityAt)
+            persistentContainer.viewContext.delete(cityToDelete)
+            
+            saveContext()
+        }
+    }
+    
+    private func removeLocation(index: Int) {
+        if index >= savedLocations.startIndex && index < savedLocations.endIndex {
+            savedLocations.remove(at: index)
+        }
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -241,5 +280,25 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         }
         
         return container
+    }
+    
+    func decodeCityIntoLocation(city: City) -> Location {
+        let location = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
+        return location
+    }
+    
+    private func decodeLocationIntoCity(location: Location) -> City {
+        let city = City(context: self.persistentContainer.viewContext)
+        city.id = location.id
+        city.name = location.name
+        city.state = location.state
+        city.country = location.country
+        city.latitude = location.lat
+        city.longitude = location.long
+        city.addedDate = Date()
+        
+        self.saveContext()
+        
+        return city
     }
 }

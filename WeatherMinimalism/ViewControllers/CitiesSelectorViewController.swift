@@ -9,7 +9,7 @@
 import UIKit
 
 protocol CitiesSelectorViewControllerDelegate: AnyObject {
-    func citiesSelectorGoingToClose(cityToUpdate: City?)
+    func selectedLocationForDetailedWeather(location: Location)
 }
 
 class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
@@ -25,6 +25,12 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Contants
     let viewModel = WeatherViewModel()
+    var userCities: [Location] = [] {
+        didSet {
+            print("🐶")
+            print(userCities.count)
+        }
+    }
     
     weak var delegate: CitiesSelectorViewControllerDelegate?
     
@@ -33,6 +39,8 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
+        
+        userCities = viewModel.getSavedLocations()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -51,17 +59,19 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Actions
     @objc func handleAddCity() {
-        showAlertForAddCity()
+        let citiesSearchVC = CitySearchViewController()
+        citiesSearchVC.delegate = self
+        
+        self.present(citiesSearchVC, animated: true, completion: nil)
     }
     
     func loadDataUsing(cityName: String) {
         showSpinner()
         
-        if let savedCity = viewModel.currentCity, cityName.capitalized == savedCity.name.capitalized {
-            viewModel.fetchWeatherUsing(lat: savedCity.latitude, lon: savedCity.longitude) { [weak self] weather in
+        if let savedLocation = viewModel.getCurrentLocation(), cityName.capitalized == savedLocation.name.capitalized {
+            viewModel.fetchWeatherUsing(lat: savedLocation.lat, lon: savedLocation.long) { [weak self] weather in
                 if let currentWeater = weather.currentWeather {
-                    let location = Location(id: savedCity.id, name: savedCity.name, state: savedCity.state, country: savedCity.country, lat: savedCity.latitude, long: savedCity.longitude)
-                    self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                    self?.viewModel.saveWeatherForCity(location: savedLocation, weatherFromServer: currentWeater)
                     
                     DispatchQueue.main.async {
                         self?.tableView.reloadData()
@@ -75,12 +85,12 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         }
         
         DispatchQueue.main.async {
-            if let location = self.viewModel.returnLocationFromJSONFile(cityName: cityName) {
+            if let location = self.viewModel.returnFirstLocationFromJSONFile(cityName: cityName) {
                 self.viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
                     self?.viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
                     
                     if let currentWeater = weather.currentWeather {
-                        self?.viewModel.saveWeatherForCity(cityForWeather: location, weatherFromServer: currentWeater)
+                        self?.viewModel.saveWeatherForCity(location: location, weatherFromServer: currentWeater)
                         
                         DispatchQueue.main.async {
                             self?.tableView.reloadData()
@@ -96,6 +106,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func onDidReceiveData(_ notification: Notification) {
         if let data = notification.userInfo as? [Int: IndexPath], let correctIndexPath = data.first?.value {
+            userCities.remove(at: correctIndexPath.row)
             tableView.deleteRows(at: [correctIndexPath], with: .automatic)
         }
     }
@@ -197,16 +208,16 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
 //MARK: - UITableView
 extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.publicSavedCities.count
+        return userCities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: SelectCityTableViewCell.selectedCityCVIdentifier, for: indexPath) as? SelectCityTableViewCell, let city = viewModel.publicSavedCities[safe: indexPath.row] {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: SelectCityTableViewCell.selectedCityCVIdentifier, for: indexPath) as? SelectCityTableViewCell, let city = userCities[safe: indexPath.row] {
             
             cell.currentCityNameLabel.text = city.name
             
             //TODO make a network call if there is no weather data
-            let cityTemperature = city.currentWeather?.temperature ?? 0
+            let cityTemperature = city.weather?.temperature ?? 0
             cell.currentCityTemperatureLabel.text = String(format: "%.0f", cityTemperature) + "°"
             
             return cell
@@ -220,10 +231,8 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
         //in order to not crash after onDidReceiveData call
         NotificationCenter.default.removeObserver(self)
         
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        if let city = viewModel.publicSavedCities[safe: indexPath.row] {
-            delegate?.citiesSelectorGoingToClose(cityToUpdate: city)
+        if let location = userCities[safe: indexPath.row] {
+            delegate?.selectedLocationForDetailedWeather(location: location)
         }
         
         self.dismiss(animated: true, completion: nil)
@@ -236,6 +245,18 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
             } else {
                 viewModel.removeCityFromDB(cityAt: indexPath)
             }
+        }
+    }
+}
+
+extension CitiesSelectorViewController: CitySearchViewControllerDelegate {
+    func updateCitiesList(location: Location) {
+        if userCities.contains(where: {$0.id == location.id }) == false {
+            viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
+            userCities.append(location)
+            
+            let indexPath = IndexPath(row: userCities.count - 1, section: 0)
+            tableView.insertRows(at: [indexPath], with: .automatic)
         }
     }
 }

@@ -49,6 +49,7 @@
 		509E59C9244A66C2000791C3 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59C8244A66C2000791C3 /* SpinnerView.swift */; };
 		50B8F5E6246F259400EA0BFD /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */; };
 		50D2AF5B2465D873007638AF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D2AF5A2465D873007638AF /* DateExtension.swift */; };
+		50D4F87E249C325200F85AA6 /* CitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D4F87D249C325200F85AA6 /* CitySearchViewController.swift */; };
 		50F13AD3249A8C75009385FF /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F13AD2249A8C75009385FF /* PersistentContainer.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +98,7 @@
 		509E59C8244A66C2000791C3 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		50D2AF5A2465D873007638AF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		50D4F87D249C325200F85AA6 /* CitySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySearchViewController.swift; sourceTree = "<group>"; };
 		50F13AD2249A8C75009385FF /* PersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -280,6 +282,7 @@
 			children = (
 				5080A7592440FC5000003BF1 /* WeatherViewController.swift */,
 				5014412B249195CE003ED091 /* CitiesSelectorViewController.swift */,
+				50D4F87D249C325200F85AA6 /* CitySearchViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				509D923724882C7F00B059BC /* TodayDetailedOverviewHorizontalSVView.swift in Sources */,
 				509E59C7244A633A000791C3 /* CollectionExtension.swift in Sources */,
 				509D9231248810E900B059BC /* CurrentDayOverviewView.swift in Sources */,
+				50D4F87E249C325200F85AA6 /* CitySearchViewController.swift in Sources */,
 				509D9235248825FF00B059BC /* TodayDetailedOverviewView.swift in Sources */,
 				5080A7562440FC5000003BF1 /* AppDelegate.swift in Sources */,
 				509D92332488247A00B059BC /* TodayDetailedOverviewContentView.swift in Sources */,
