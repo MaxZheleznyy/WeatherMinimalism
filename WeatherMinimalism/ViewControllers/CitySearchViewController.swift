@@ -190,7 +190,6 @@ extension CitySearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let location = filteredLocations[safe: indexPath.row] {
             delegate?.updateCitiesList(location: location)
-            viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
         }
         
         self.dismiss(animated: true, completion: nil)

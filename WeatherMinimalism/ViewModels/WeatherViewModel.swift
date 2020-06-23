@@ -41,7 +41,11 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         } else {
             checkFetchController()
             if let recentCity = fetchedCitiesController.fetchedObjects?.first {
-                let location = Location(id: recentCity.id, name: recentCity.name, state: recentCity.state, country: recentCity.country, lat: recentCity.latitude, long: recentCity.longitude)
+                var location = Location(id: recentCity.id, name: recentCity.name, state: recentCity.state, country: recentCity.country, lat: recentCity.latitude, long: recentCity.longitude)
+                location.weather = recentCity.currentWeather
+                
+                currenLocation = location
+                
                 return location
             } else {
                 return nil
@@ -58,7 +62,8 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
                 savedLocations.removeAll()
                 
                 for city in cities {
-                    let location = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
+                    var location = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
+                    location.weather = city.currentWeather
                     savedLocations.append(location)
                 }
                 
@@ -150,8 +155,14 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         
         DispatchQueue.main.async { [unowned self] in
             if let nonEmptyLocation = locationToSave {
+                self.currenLocation = nonEmptyLocation
+                self.savedLocations.append(nonEmptyLocation)
                 _ = self.decodeLocationIntoCity(location: nonEmptyLocation)
             } else if let nonEmptyCity = cityToSave {
+                let location = self.decodeCityIntoLocation(city: nonEmptyCity)
+                self.currenLocation = location
+                self.savedLocations.append(location)
+                
                 let city = City(context: self.persistentContainer.viewContext)
                 city.id = nonEmptyCity.id
                 city.name = nonEmptyCity.name
@@ -218,10 +229,20 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
     }
     
     func removeCityFromDB(cityAt: IndexPath) {
-        let cityToDelete = fetchedCitiesController.object(at: cityAt)
-        persistentContainer.viewContext.delete(cityToDelete)
+        removeLocation(index: cityAt.row)
         
-        saveContext()
+        if let fetchedObjects = fetchedCitiesController.fetchedObjects, (cityAt.row >= fetchedObjects.startIndex && cityAt.row < fetchedObjects.endIndex) {
+            let cityToDelete = fetchedCitiesController.object(at: cityAt)
+            persistentContainer.viewContext.delete(cityToDelete)
+            
+            saveContext()
+        }
+    }
+    
+    private func removeLocation(index: Int) {
+        if index >= savedLocations.startIndex && index < savedLocations.endIndex {
+            savedLocations.remove(at: index)
+        }
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {

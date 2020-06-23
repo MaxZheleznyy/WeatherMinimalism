@@ -212,8 +212,7 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
             cell.currentCityNameLabel.text = city.name
             
             //TODO make a network call if there is no weather data
-//            let cityTemperature = city.currentWeather?.temperature ?? 0
-            let cityTemperature = 0
+            let cityTemperature = city.weather?.temperature ?? 0
             cell.currentCityTemperatureLabel.text = String(format: "%.0f", cityTemperature) + "°"
             
             return cell
@@ -247,7 +246,10 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
 
 extension CitiesSelectorViewController: CitySearchViewControllerDelegate {
     func updateCitiesList(location: Location) {
+        viewModel.saveCityToDB(locationToSave: location, cityToSave: nil)
+        
         userCities.append(location)
+        
         tableView.reloadData()
     }
 }
