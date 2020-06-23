@@ -260,7 +260,7 @@ class WeatherViewController: UIViewController {
         DispatchQueue.main.async {
             self.fillUpHeaderContainerView(currentWeather: weather.currentWeather)
             
-            self.fillUpMinMaxTempContainerView(dailyTemperature: weather.dailyWeather?.first?.dailyTemperature)
+            self.fillUpMinMaxTempContainerView(dailyTemperature: weather.publicDailyWeather?.first?.dailyTemperature)
             
             self.todayHourlyWeatherCVContainer.todayHourlyWeatherCollectionView.reloadData()
             
@@ -295,7 +295,9 @@ class WeatherViewController: UIViewController {
     }
     
     private func fillUpWeeklyForecastStackView() {
-        guard let nonEmptyDailyWeather = viewModel.publicWeatherData?.dailyWeather else { return }
+        guard let nonEmptyDailyWeather = viewModel.publicWeatherData?.publicDailyWeather else { return }
+        
+        dailyForecastForWeekSVContainer.dailyForecastForWeekStackView.removeAllArrangedSubviews()
         
         let weekdaysArray = Date().daysOfWeekArray()
         
@@ -314,7 +316,7 @@ class WeatherViewController: UIViewController {
     }
     
     private func fillUpCurrentDayOverview() {
-        guard let nonEmptyWeather = viewModel.publicWeatherData?.dailyWeather?.first else { return }
+        guard let nonEmptyWeather = viewModel.publicWeatherData?.publicDailyWeather?.first else { return }
         
         let maxTemp = nonEmptyWeather.dailyTemperature?.max ?? 0
         let minTemp = nonEmptyWeather.dailyTemperature?.min ?? 0

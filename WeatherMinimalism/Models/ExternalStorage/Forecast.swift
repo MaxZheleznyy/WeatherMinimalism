@@ -13,9 +13,20 @@ struct Forecast: Decodable {
     let lat: Double?
     let long: Double?
     let currentWeather: WeatherForTimeSlice?
-    let dailyWeather: [WeatherForDaily]?
     
+    private let dailyWeather: [WeatherForDaily]?
     private let hourlyWeather: [WeatherForTimeSlice]?
+    
+    var publicDailyWeather: [WeatherForDaily]? {
+        get {
+            //return weather for next 9 days
+            if let modifiedDailyWeather = dailyWeather?.prefix(11) {
+                return Array(modifiedDailyWeather)
+            } else {
+                return []
+            }
+        }
+    }
     
     var publicHourlyWeather: [WeatherForTimeSlice] {
         get {
