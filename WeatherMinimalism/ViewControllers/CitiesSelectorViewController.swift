@@ -20,6 +20,8 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.estimatedRowHeight = 52
+        tableView.rowHeight = UITableView.automaticDimension
         return tableView
     }()
     
@@ -116,7 +118,10 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
                         self?.viewModel.saveWeatherForCity(location: location, weatherFromServer: currentWeater)
                         
                         DispatchQueue.main.async {
-                            self?.tableView.reloadData()
+                            let indexPath = IndexPath(row: index, section: 0)
+                            self?.tableView.beginUpdates()
+                            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+                            self?.tableView.endUpdates()
                         }
                     }
                 }
