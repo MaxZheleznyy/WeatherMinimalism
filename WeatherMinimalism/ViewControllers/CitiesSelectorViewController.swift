@@ -25,12 +25,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Contants
     let viewModel = WeatherViewModel()
-    var userCities: [Location] = [] {
-        didSet {
-            print("🐶")
-            print(userCities.count)
-        }
-    }
+    var userCities: [Location] = []
     
     weak var delegate: CitiesSelectorViewControllerDelegate?
     
@@ -41,6 +36,7 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         view.backgroundColor = .systemBackground
         
         userCities = viewModel.getSavedLocations()
+        checkIfLocationsHaveWeather()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -108,6 +104,23 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         if let data = notification.userInfo as? [Int: IndexPath], let correctIndexPath = data.first?.value {
             userCities.remove(at: correctIndexPath.row)
             tableView.deleteRows(at: [correctIndexPath], with: .automatic)
+        }
+    }
+    
+    func checkIfLocationsHaveWeather() {
+        for (index, location) in userCities.enumerated() {
+            if location.weather == nil {
+                viewModel.fetchWeatherUsing(lat: location.lat, lon: location.long) { [weak self] weather in
+                    if let currentWeater = weather.currentWeather {
+                        self?.userCities[index].weather = currentWeater
+                        self?.viewModel.saveWeatherForCity(location: location, weatherFromServer: currentWeater)
+                        
+                        DispatchQueue.main.async {
+                            self?.tableView.reloadData()
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -216,9 +229,12 @@ extension CitiesSelectorViewController: UITableViewDelegate, UITableViewDataSour
             
             cell.currentCityNameLabel.text = city.name
             
-            //TODO make a network call if there is no weather data
-            let cityTemperature = city.weather?.temperature ?? 0
-            cell.currentCityTemperatureLabel.text = String(format: "%.0f", cityTemperature) + "°"
+            if let cityTemperature = city.weather?.temperature {
+                cell.toggleTemperatureVisibility(temperatureLoaded: true)
+                cell.currentCityTemperatureLabel.text = String(format: "%.0f", cityTemperature) + "°"
+            } else {
+                cell.toggleTemperatureVisibility(temperatureLoaded: false)
+            }
             
             return cell
         } else {
@@ -257,6 +273,8 @@ extension CitiesSelectorViewController: CitySearchViewControllerDelegate {
             
             let indexPath = IndexPath(row: userCities.count - 1, section: 0)
             tableView.insertRows(at: [indexPath], with: .automatic)
+            
+            checkIfLocationsHaveWeather()
         }
     }
 }

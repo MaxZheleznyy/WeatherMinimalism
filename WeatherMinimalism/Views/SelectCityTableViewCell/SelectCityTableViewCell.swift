@@ -32,6 +32,13 @@ class SelectCityTableViewCell: UITableViewCell {
         return label
     }()
     
+    let activityView: UIActivityIndicatorView = {
+        let activityView = UIActivityIndicatorView(style: .medium)
+        activityView.translatesAutoresizingMaskIntoConstraints = false
+        activityView.hidesWhenStopped = true
+        return activityView
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -60,6 +67,7 @@ class SelectCityTableViewCell: UITableViewCell {
             
         self.contentView.addSubview(currentCityNameLabel)
         self.contentView.addSubview(currentCityTemperatureLabel)
+        self.contentView.addSubview(activityView)
         
         let contentConstraints = [
             
@@ -71,6 +79,11 @@ class SelectCityTableViewCell: UITableViewCell {
             currentCityTemperatureLabel.leadingAnchor.constraint(equalTo: currentCityNameLabel.trailingAnchor, constant: 15),
             currentCityTemperatureLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
             currentCityTemperatureLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -15),
+            
+            activityView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 15),
+            activityView.leadingAnchor.constraint(equalTo: currentCityNameLabel.trailingAnchor, constant: 15),
+            activityView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
+            activityView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -15),
         ]
         
         currentCityNameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -80,6 +93,15 @@ class SelectCityTableViewCell: UITableViewCell {
         currentCityTemperatureLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
         NSLayoutConstraint.activate(contentConstraints)
+    }
+    
+    func toggleTemperatureVisibility(temperatureLoaded: Bool) {
+        currentCityTemperatureLabel.isHidden = !temperatureLoaded
+        activityView.isHidden = temperatureLoaded
+        
+        if temperatureLoaded == false {
+            activityView.startAnimating()
+        }
     }
 }
 

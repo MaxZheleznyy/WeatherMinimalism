@@ -16,7 +16,7 @@ struct Location: Codable {
     let lat: Double
     let long: Double
     
-    var weather: CurrentWeather?
+    var weather: WeatherForTimeSlice?
     
     enum CodingKeys: String, CodingKey {
         case id, name, state, country, lat, coord

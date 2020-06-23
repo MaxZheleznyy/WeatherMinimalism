@@ -41,8 +41,11 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         } else {
             checkFetchController()
             if let recentCity = fetchedCitiesController.fetchedObjects?.first {
-                var location = Location(id: recentCity.id, name: recentCity.name, state: recentCity.state, country: recentCity.country, lat: recentCity.latitude, long: recentCity.longitude)
-                location.weather = recentCity.currentWeather
+                var location = decodeCityIntoLocation(city: recentCity)
+                
+                if let weather = recentCity.currentWeather {
+                    location.weather = decodeCityWeatherIntoWeather(weather: weather)
+                }
                 
                 currenLocation = location
                 
@@ -62,8 +65,12 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
                 savedLocations.removeAll()
                 
                 for city in cities {
-                    var location = Location(id: city.id, name: city.name, state: city.state, country: city.country, lat: city.latitude, long: city.longitude)
-                    location.weather = city.currentWeather
+                    var location = decodeCityIntoLocation(city: city)
+                    
+                    if let weather = city.currentWeather {
+                        location.weather = decodeCityWeatherIntoWeather(weather: weather)
+                    }
+                    
                     savedLocations.append(location)
                 }
                 
@@ -300,5 +307,10 @@ class WeatherViewModel: NSObject, NSFetchedResultsControllerDelegate {
         self.saveContext()
         
         return city
+    }
+    
+    private func decodeCityWeatherIntoWeather(weather: CurrentWeather) -> WeatherForTimeSlice {
+        let weather = WeatherForTimeSlice(weatherTimestamp: weather.timestamp, temperature: weather.temperature, feelsLike: nil, sunriseTimestamp: nil, sunsetTimestamp: nil, humidity: nil, visibility: nil, uvIndex: nil, weatherDetails: nil, dailyTemperature: nil)
+        return weather
     }
 }
