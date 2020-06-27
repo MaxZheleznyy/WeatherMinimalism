@@ -63,6 +63,10 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         self.present(citiesSearchVC, animated: true, completion: nil)
     }
     
+    @objc func handleOpenSettings() {
+        print("Show settings view ⚙️")
+    }
+    
     func loadDataUsing(cityName: String) {
         showSpinner()
         
@@ -148,18 +152,30 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         footerView.backgroundColor = .clear
         
         let addCityButton = UIButton()
-        let buttonImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
-        addCityButton.setImage(buttonImage, for: .normal)
+        let plusImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        addCityButton.setImage(plusImage, for: .normal)
         addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
         addCityButton.translatesAutoresizingMaskIntoConstraints = false
         
+        let settingsButton = UIButton()
+        let settingsImage = UIImage(systemName: "gear")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        settingsButton.setImage(settingsImage, for: .normal)
+        settingsButton.addTarget(self, action: #selector(handleOpenSettings), for: .touchUpInside)
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
+        
         footerView.addSubview(addCityButton)
+        footerView.addSubview(settingsButton)
         
         let footerContraints = [
             addCityButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
-            addCityButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -8),
+            addCityButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 8),
             addCityButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8),
-            addCityButton.widthAnchor.constraint(equalToConstant: 30)
+            addCityButton.widthAnchor.constraint(equalToConstant: 30),
+            
+            settingsButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
+            settingsButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -8),
+            settingsButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8),
+            settingsButton.widthAnchor.constraint(equalToConstant: 30)
         ]
 
         NSLayoutConstraint.activate(footerContraints)
