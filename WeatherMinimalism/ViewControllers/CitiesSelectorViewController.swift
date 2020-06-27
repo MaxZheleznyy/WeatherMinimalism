@@ -25,6 +25,24 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         return tableView
     }()
     
+    let addCityButton: UIButton = {
+        let addCityButton = UIButton()
+        addCityButton.translatesAutoresizingMaskIntoConstraints = false
+        let plusImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        addCityButton.setImage(plusImage, for: .normal)
+        addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
+        return addCityButton
+    }()
+    
+    let settingsButton: UIButton = {
+        let settingsButton = UIButton()
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
+        let settingsImage = UIImage(systemName: "gear")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        settingsButton.setImage(settingsImage, for: .normal)
+        settingsButton.addTarget(self, action: #selector(handleOpenSettings), for: .touchUpInside)
+        return settingsButton
+    }()
+    
     //MARK: - Contants
     let viewModel = WeatherViewModel()
     var userCities: [Location] = []
@@ -150,18 +168,6 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     func configureFooterView() {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
         footerView.backgroundColor = .clear
-        
-        let addCityButton = UIButton()
-        let plusImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
-        addCityButton.setImage(plusImage, for: .normal)
-        addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
-        addCityButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        let settingsButton = UIButton()
-        let settingsImage = UIImage(systemName: "gear")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
-        settingsButton.setImage(settingsImage, for: .normal)
-        settingsButton.addTarget(self, action: #selector(handleOpenSettings), for: .touchUpInside)
-        settingsButton.translatesAutoresizingMaskIntoConstraints = false
         
         footerView.addSubview(addCityButton)
         footerView.addSubview(settingsButton)
