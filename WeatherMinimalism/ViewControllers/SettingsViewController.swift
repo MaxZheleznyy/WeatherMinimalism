@@ -36,6 +36,8 @@ class SettingsViewController: UIViewController {
         fillUpData()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(SettingsTableViewCell.self, forCellReuseIdentifier: SettingsTableViewCell.settingsTableViewCellIdentifier)
+        
         addTableView()
     }
     
@@ -91,48 +93,16 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        if let setting = settings[safe: indexPath.section]?.includedSettings[indexPath.row] {
-            let settingLabel = UILabel()
-            settingLabel.translatesAutoresizingMaskIntoConstraints = false
-            settingLabel.textAlignment = .left
+        if let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.settingsTableViewCellIdentifier, for: indexPath) as? SettingsTableViewCell, let setting = settings[safe: indexPath.section]?.includedSettings[indexPath.row] {
             
-            settingLabel.text = setting.name
-            
-            cell.contentView.addSubview(settingLabel)
-            
-            var constraints = [
-                settingLabel.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
-                settingLabel.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 8),
-                settingLabel.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
-                settingLabel.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
-            ]
-            
-            settingLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
-            settingLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            settingLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-            settingLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            cell.settingLabel.text = setting.name
             
             if setting.toggable {
-                let settingSwitch = UISwitch()
-                settingSwitch.isOn = setting.enabled ?? false
-                settingSwitch.setOn(setting.enabled ?? false, animated: true)
-                settingSwitch.translatesAutoresizingMaskIntoConstraints = false
-                cell.textLabel?.translatesAutoresizingMaskIntoConstraints = false
-                
-                cell.contentView.addSubview(settingSwitch)
-                
-                let additionalConstraints = [
-                    settingSwitch.leadingAnchor.constraint(equalTo: settingLabel.trailingAnchor, constant: 8),
-                    settingSwitch.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor),
-                    settingSwitch.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -8)
-                ]
-                
-                constraints.append(contentsOf: additionalConstraints)
-                
-                settingSwitch.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-                settingSwitch.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+                cell.isToggable = true
+                cell.settingSwitch.isOn = setting.enabled ?? false
+                cell.settingSwitch.setOn(setting.enabled ?? false, animated: true)
             } else {
+                cell.isToggable = false
                 if let enabled = setting.enabled, enabled == true {
                     cell.accessoryType = .checkmark
                 } else {
@@ -140,9 +110,9 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
             
-            NSLayoutConstraint.activate(constraints)
+            return cell
+        } else {
+            return UITableViewCell()
         }
-        
-        return cell
     }
 }

@@ -50,6 +50,7 @@
 		509E59C9244A66C2000791C3 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509E59C8244A66C2000791C3 /* SpinnerView.swift */; };
 		50B8F5E6246F259400EA0BFD /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */; };
 		50D2AF5B2465D873007638AF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D2AF5A2465D873007638AF /* DateExtension.swift */; };
+		50D4F05024AC1A0E006343B1 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D4F04F24AC1A0E006343B1 /* SettingsTableViewCell.swift */; };
 		50D4F87E249C325200F85AA6 /* CitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D4F87D249C325200F85AA6 /* CitySearchViewController.swift */; };
 		50F13AD3249A8C75009385FF /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F13AD2249A8C75009385FF /* PersistentContainer.swift */; };
 /* End PBXBuildFile section */
@@ -100,6 +101,7 @@
 		509E59C8244A66C2000791C3 /* SpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
 		50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		50D2AF5A2465D873007638AF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		50D4F04F24AC1A0E006343B1 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		50D4F87D249C325200F85AA6 /* CitySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySearchViewController.swift; sourceTree = "<group>"; };
 		50F13AD2249A8C75009385FF /* PersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -144,6 +146,7 @@
 				507A7615248B01BE0094A2E9 /* SpinnerView */,
 				5022515C2494113B001DC0A7 /* CitySelectorStackView */,
 				5022515924940D54001DC0A7 /* SelectCityTableViewCell */,
+				50D4F05124AC1E70006343B1 /* SettingsTableViewCell */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -303,6 +306,14 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
+		50D4F05124AC1E70006343B1 /* SettingsTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				50D4F04F24AC1A0E006343B1 /* SettingsTableViewCell.swift */,
+			);
+			path = SettingsTableViewCell;
+			sourceTree = "<group>";
+		};
 		50F7B8092489ACEF00352D01 /* ExternalStorage */ = {
 			isa = PBXGroup;
 			children = (
@@ -438,6 +449,7 @@
 				5006E99C246A2F1C00480341 /* WeatherForTimeSlice.swift in Sources */,
 				50256141249AF41F00EEEC9D /* UIStackViewExtension.swift in Sources */,
 				5080A7582440FC5000003BF1 /* SceneDelegate.swift in Sources */,
+				50D4F05024AC1A0E006343B1 /* SettingsTableViewCell.swift in Sources */,
 				507700792487333300CB1250 /* MinMaxContainerView.swift in Sources */,
 				50830CDB24787D3100E5CE1B /* DailyForecastForWeekView.swift in Sources */,
 				50225158249404F3001DC0A7 /* SelectCityTableViewCell.swift in Sources */,
