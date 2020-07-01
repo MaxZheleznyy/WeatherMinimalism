@@ -55,11 +55,11 @@ class SettingsViewController: UIViewController {
     }
     
     func fillUpData() {
-        let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true, enabled: true)
+        let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true, enabled: !UserDefaults.standard.preferManualTheme)
         let systemDefaultSettingSection = SettingSection(sectionName: "Automatic", includedSettings: [useSystemDefaultSetting])
         
-        let useLightSetting = Setting(name: "Light", toggable: false, enabled: true)
-        let useDarkSetting = Setting(name: "Dark", toggable: false, enabled: false)
+        let useLightSetting = Setting(name: "Light", toggable: false, enabled: !UserDefaults.standard.preferDarkTheme)
+        let useDarkSetting = Setting(name: "Dark", toggable: false, enabled: UserDefaults.standard.preferDarkTheme)
         let customThemeSelectionSection = SettingSection(sectionName: "Manual", includedSettings: [useLightSetting, useDarkSetting])
         
         settings = [systemDefaultSettingSection, customThemeSelectionSection]
