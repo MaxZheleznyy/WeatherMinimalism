@@ -22,6 +22,7 @@ struct Setting {
 class SettingsViewController: UIViewController {
     
     var settings: [SettingSection] = []
+    private let userDefaults = UserDefaults.standard
     
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -55,11 +56,20 @@ class SettingsViewController: UIViewController {
     }
     
     func fillUpData() {
-        let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true, enabled: !UserDefaults.standard.preferManualTheme)
+        if userDefaults.preferManualTheme == false {
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                userDefaults.preferDarkTheme = true
+            default:
+                userDefaults.preferDarkTheme = false
+            }
+        }
+        
+        let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true, enabled: !userDefaults.preferManualTheme)
         let systemDefaultSettingSection = SettingSection(sectionName: "Automatic", includedSettings: [useSystemDefaultSetting])
         
-        let useLightSetting = Setting(name: "Light", toggable: false, enabled: !UserDefaults.standard.preferDarkTheme)
-        let useDarkSetting = Setting(name: "Dark", toggable: false, enabled: UserDefaults.standard.preferDarkTheme)
+        let useLightSetting = Setting(name: "Light", toggable: false, enabled: !userDefaults.preferDarkTheme)
+        let useDarkSetting = Setting(name: "Dark", toggable: false, enabled: userDefaults.preferDarkTheme)
         let customThemeSelectionSection = SettingSection(sectionName: "Manual", includedSettings: [useLightSetting, useDarkSetting])
         
         settings = [systemDefaultSettingSection, customThemeSelectionSection]
