@@ -18,6 +18,12 @@ class SettingsTableViewCell: UITableViewCell {
         }
     }
     
+    var isEnabled = false {
+        didSet {
+            updateEnableState()
+        }
+    }
+    
     let settingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -72,5 +78,14 @@ class SettingsTableViewCell: UITableViewCell {
     private func setToggleVisibility() {
         settingSwitch.isHidden = !isToggable
         settingSwitch.isEnabled = isToggable
+    }
+    
+    private func updateEnableState() {
+        if isToggable {
+            self.settingSwitch.isOn = isEnabled
+            self.settingSwitch.setOn(isEnabled, animated: true)
+        } else {
+            self.accessoryType = isEnabled ? .checkmark : .none
+        }
     }
 }

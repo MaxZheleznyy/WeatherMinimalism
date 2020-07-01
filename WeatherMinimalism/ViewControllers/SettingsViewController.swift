@@ -16,7 +16,7 @@ struct SettingSection {
 struct Setting {
     let name: String
     let toggable: Bool
-    var enabled: Bool?
+    var enabled: Bool
 }
 
 class SettingsViewController: UIViewController {
@@ -96,23 +96,21 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
         if let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.settingsTableViewCellIdentifier, for: indexPath) as? SettingsTableViewCell, let setting = settings[safe: indexPath.section]?.includedSettings[indexPath.row] {
             
             cell.settingLabel.text = setting.name
-            
-            if setting.toggable {
-                cell.isToggable = true
-                cell.settingSwitch.isOn = setting.enabled ?? false
-                cell.settingSwitch.setOn(setting.enabled ?? false, animated: true)
-            } else {
-                cell.isToggable = false
-                if let enabled = setting.enabled, enabled == true {
-                    cell.accessoryType = .checkmark
-                } else {
-                    cell.accessoryType = .none
-                }
-            }
+            cell.isToggable = setting.toggable
+            cell.isEnabled = setting.enabled
             
             return cell
         } else {
             return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let enabled = settings[safe: indexPath.section]?.includedSettings[safe: indexPath.row]?.enabled {
+            settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabled
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 }
