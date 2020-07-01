@@ -50,6 +50,7 @@
 		50B8F5E6246F259400EA0BFD /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */; };
 		50D2AF5B2465D873007638AF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D2AF5A2465D873007638AF /* DateExtension.swift */; };
 		50D4F05024AC1A0E006343B1 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D4F04F24AC1A0E006343B1 /* SettingsTableViewCell.swift */; };
+		50D4F05724AC2568006343B1 /* UserDefaultsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D4F05624AC2568006343B1 /* UserDefaultsExtension.swift */; };
 		50D4F87E249C325200F85AA6 /* CitySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D4F87D249C325200F85AA6 /* CitySearchViewController.swift */; };
 		50F13AD3249A8C75009385FF /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F13AD2249A8C75009385FF /* PersistentContainer.swift */; };
 /* End PBXBuildFile section */
@@ -100,6 +101,7 @@
 		50B8F5E5246F259400EA0BFD /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		50D2AF5A2465D873007638AF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		50D4F04F24AC1A0E006343B1 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		50D4F05624AC2568006343B1 /* UserDefaultsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtension.swift; sourceTree = "<group>"; };
 		50D4F87D249C325200F85AA6 /* CitySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySearchViewController.swift; sourceTree = "<group>"; };
 		50F13AD2249A8C75009385FF /* PersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -243,6 +245,7 @@
 				50F13AD2249A8C75009385FF /* PersistentContainer.swift */,
 				50256140249AF41F00EEEC9D /* UIStackViewExtension.swift */,
 				5021854B24805AF500E64D30 /* UIViewExtension.swift */,
+				50D4F05624AC2568006343B1 /* UserDefaultsExtension.swift */,
 				509E59BF244A3699000791C3 /* WeatherIconImageViewExtension.swift */,
 			);
 			path = Extensions;
@@ -473,6 +476,7 @@
 				507700792487333300CB1250 /* MinMaxContainerView.swift in Sources */,
 				50830CDB24787D3100E5CE1B /* DailyForecastForWeekView.swift in Sources */,
 				50225158249404F3001DC0A7 /* SelectCityTableViewCell.swift in Sources */,
+				50D4F05724AC2568006343B1 /* UserDefaultsExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
