@@ -82,7 +82,8 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func handleOpenSettings() {
-        print("Show settings view ⚙️")
+        let settingsVC = SettingsViewController()
+        self.present(settingsVC, animated: true, completion: nil)
     }
     
     func loadDataUsing(cityName: String) {
