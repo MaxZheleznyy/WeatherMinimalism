@@ -42,19 +42,13 @@ class SelectCityTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.selectionStyle = .none
         configureUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
         print("Unexpected call to coder-based init")
         super.init(coder: aDecoder)
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        self.selectionStyle = .none
-        configureUI()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
