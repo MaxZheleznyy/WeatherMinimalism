@@ -25,6 +25,24 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         return tableView
     }()
     
+    let addCityButton: UIButton = {
+        let addCityButton = UIButton()
+        addCityButton.translatesAutoresizingMaskIntoConstraints = false
+        let plusImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        addCityButton.setImage(plusImage, for: .normal)
+        addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
+        return addCityButton
+    }()
+    
+    let settingsButton: UIButton = {
+        let settingsButton = UIButton()
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
+        let settingsImage = UIImage(systemName: "gear")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
+        settingsButton.setImage(settingsImage, for: .normal)
+        settingsButton.addTarget(self, action: #selector(handleOpenSettings), for: .touchUpInside)
+        return settingsButton
+    }()
+    
     //MARK: - Contants
     let viewModel = WeatherViewModel()
     var userCities: [Location] = []
@@ -61,6 +79,11 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         citiesSearchVC.delegate = self
         
         self.present(citiesSearchVC, animated: true, completion: nil)
+    }
+    
+    @objc func handleOpenSettings() {
+        let settingsVC = SettingsViewController()
+        self.present(settingsVC, animated: true, completion: nil)
     }
     
     func loadDataUsing(cityName: String) {
@@ -147,19 +170,19 @@ class CitiesSelectorViewController: UIViewController, UIScrollViewDelegate {
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
         footerView.backgroundColor = .clear
         
-        let addCityButton = UIButton()
-        let buttonImage = UIImage(systemName: "plus.circle")?.withTintColor(.orange, renderingMode: .alwaysOriginal)
-        addCityButton.setImage(buttonImage, for: .normal)
-        addCityButton.addTarget(self, action: #selector(handleAddCity), for: .touchUpInside)
-        addCityButton.translatesAutoresizingMaskIntoConstraints = false
-        
         footerView.addSubview(addCityButton)
+        footerView.addSubview(settingsButton)
         
         let footerContraints = [
             addCityButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
-            addCityButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -8),
+            addCityButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 8),
             addCityButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8),
-            addCityButton.widthAnchor.constraint(equalToConstant: 30)
+            addCityButton.widthAnchor.constraint(equalToConstant: 30),
+            
+            settingsButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 8),
+            settingsButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -8),
+            settingsButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -8),
+            settingsButton.widthAnchor.constraint(equalToConstant: 30)
         ]
 
         NSLayoutConstraint.activate(footerContraints)
