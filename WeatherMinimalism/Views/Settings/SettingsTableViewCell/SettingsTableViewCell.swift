@@ -8,9 +8,14 @@
 
 import UIKit
 
+protocol SettingsTableViewCellDelegate: AnyObject {
+    func settingSwitchToggled(isToggled: Bool)
+}
+
 class SettingsTableViewCell: UITableViewCell {
     
     static let settingsTableViewCellIdentifier = "SettingsTableViewCell"
+    weak var delegate: SettingsTableViewCellDelegate?
     
     var isToggable = false {
         didSet {
@@ -72,6 +77,8 @@ class SettingsTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate(constraints)
         
+        settingSwitch.addTarget(self, action: #selector(settingSwitchValueChanged), for: .valueChanged)
+        
         setToggleVisibility()
     }
     
@@ -87,5 +94,9 @@ class SettingsTableViewCell: UITableViewCell {
         } else {
             self.accessoryType = isEnabled ? .checkmark : .none
         }
+    }
+    
+    @objc private func settingSwitchValueChanged(mySwitch: UISwitch) {
+        delegate?.settingSwitchToggled(isToggled: settingSwitch.isOn)
     }
 }
