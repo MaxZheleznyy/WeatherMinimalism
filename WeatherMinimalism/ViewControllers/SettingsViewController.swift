@@ -113,6 +113,10 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             cell.isToggable = setting.toggable
             cell.isEnabled = setting.enabled
             
+            if setting.toggable {
+                cell.selectionStyle = .none
+            }
+            
             return cell
         } else {
             return UITableViewCell()
