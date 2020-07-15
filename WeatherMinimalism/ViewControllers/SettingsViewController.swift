@@ -16,7 +16,6 @@ struct SettingSection {
 struct Setting {
     let name: String
     let toggable: Bool
-    var enabled: Bool
 }
 
 class SettingsViewController: UIViewController {
@@ -64,11 +63,11 @@ class SettingsViewController: UIViewController {
             userDefaults.preferDarkTheme = false
         }
         
-        let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true, enabled: !userDefaults.preferManualTheme)
+        let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true)
         let systemDefaultSettingSection = SettingSection(sectionName: "Automatic", includedSettings: [useSystemDefaultSetting])
         
-        let useLightSetting = Setting(name: "Light", toggable: false, enabled: !userDefaults.preferDarkTheme)
-        let useDarkSetting = Setting(name: "Dark", toggable: false, enabled: userDefaults.preferDarkTheme)
+        let useLightSetting = Setting(name: "Light", toggable: false)
+        let useDarkSetting = Setting(name: "Dark", toggable: false)
         let customThemeSelectionSection = SettingSection(sectionName: "Manual", includedSettings: [useLightSetting, useDarkSetting])
         
         settings = [systemDefaultSettingSection, customThemeSelectionSection]
@@ -111,10 +110,14 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             cell.delegate = self
             cell.settingLabel.text = setting.name
             cell.isToggable = setting.toggable
-            cell.isEnabled = setting.enabled
             
             if setting.toggable {
                 cell.selectionStyle = .none
+                cell.isEnabled = !userDefaults.preferManualTheme
+            } else if indexPath.section == 1 && indexPath.row == 0 { //light theme
+                cell.isEnabled = !userDefaults.preferDarkTheme
+            } else if indexPath.section == 1 && indexPath.row == 1 { //dark theme
+                cell.isEnabled = userDefaults.preferDarkTheme
             }
             
             return cell
@@ -126,11 +129,12 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             return
-        } else if let enabledState = settings[safe: indexPath.section]?.includedSettings[safe: indexPath.row]?.enabled {
-            settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
-            tableView.reloadRows(at: [indexPath], with: .automatic)
-        } else {
-            tableView.deselectRow(at: indexPath, animated: true)
+        } else if indexPath.section == 1 && indexPath.row == 0 { //light theme
+            userDefaults.preferDarkTheme = false
+            tableView.reloadData()
+        } else if indexPath.section == 1 && indexPath.row == 1 { //dark theme
+            userDefaults.preferDarkTheme = true
+            tableView.reloadData()
         }
     }
 }
@@ -138,7 +142,6 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
 extension SettingsViewController: SettingsTableViewCellDelegate {
     func settingSwitchToggled(isToggled: Bool) {
         userDefaults.preferManualTheme = !isToggled
-        settings[0].includedSettings[0].enabled = isToggled
         tableView.reloadData()
     }
 }
