@@ -116,8 +116,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let enabled = settings[safe: indexPath.section]?.includedSettings[safe: indexPath.row]?.enabled {
-            settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabled
+        if let enabledState = settings[safe: indexPath.section]?.includedSettings[safe: indexPath.row]?.enabled {
+            settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
             tableView.reloadRows(at: [indexPath], with: .automatic)
         } else {
             tableView.deselectRow(at: indexPath, animated: true)
