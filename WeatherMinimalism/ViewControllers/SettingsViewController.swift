@@ -8,20 +8,19 @@
 
 import UIKit
 
-struct SettingSection {
-    let sectionName: String
-    var includedSettings: [Setting]
-}
-
-struct Setting {
-    let name: String
-    let toggable: Bool
-}
-
 class SettingsViewController: UIViewController {
     
     var settings: [SettingSection] = []
     private let userDefaults = UserDefaults.standard
+    
+    private var theme: Theme {
+        get {
+            return userDefaults.selectedTheme
+        } set {
+            userDefaults.selectedTheme = newValue
+            configureAppTheme(with: newValue)
+        }
+    }
     
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -55,14 +54,6 @@ class SettingsViewController: UIViewController {
     }
     
     func fillUpData() {
-        
-        switch traitCollection.userInterfaceStyle {
-        case .dark:
-            userDefaults.preferDarkTheme = true
-        default:
-            userDefaults.preferDarkTheme = false
-        }
-        
         let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true)
         let systemDefaultSettingSection = SettingSection(sectionName: "Automatic", includedSettings: [useSystemDefaultSetting])
         
@@ -71,6 +62,10 @@ class SettingsViewController: UIViewController {
         let customThemeSelectionSection = SettingSection(sectionName: "Manual", includedSettings: [useLightSetting, useDarkSetting])
         
         settings = [systemDefaultSettingSection, customThemeSelectionSection]
+    }
+    
+    private func configureAppTheme(with: Theme) {
+        view.window?.overrideUserInterfaceStyle = theme.userInterfaceStyle
     }
 }
 
@@ -81,11 +76,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if userDefaults.preferManualTheme {
-            return settings.count
-        } else {
-            return 1
-        }
+        return theme == .deviceDefault ? 1 : settings.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -113,11 +104,11 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
             
             if setting.toggable {
                 cell.selectionStyle = .none
-                cell.isEnabled = !userDefaults.preferManualTheme
+                cell.isEnabled = theme == .deviceDefault
             } else if indexPath.section == 1 && indexPath.row == 0 { //light theme
-                cell.isEnabled = !userDefaults.preferDarkTheme
+                cell.isEnabled = theme == .light
             } else if indexPath.section == 1 && indexPath.row == 1 { //dark theme
-                cell.isEnabled = userDefaults.preferDarkTheme
+                cell.isEnabled = theme == .dark
             }
             
             return cell
@@ -130,10 +121,10 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             return
         } else if indexPath.section == 1 && indexPath.row == 0 { //light theme
-            userDefaults.preferDarkTheme = false
+            theme = .light
             tableView.reloadData()
         } else if indexPath.section == 1 && indexPath.row == 1 { //dark theme
-            userDefaults.preferDarkTheme = true
+            theme = .dark
             tableView.reloadData()
         }
     }
@@ -141,7 +132,12 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension SettingsViewController: SettingsTableViewCellDelegate {
     func settingSwitchToggled(isToggled: Bool) {
-        userDefaults.preferManualTheme = !isToggled
+        if isToggled {
+            theme = .deviceDefault
+        } else {
+            theme = traitCollection.userInterfaceStyle == .dark ? .dark : .light
+        }
+        
         tableView.reloadData()
     }
 }

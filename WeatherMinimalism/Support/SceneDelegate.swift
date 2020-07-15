@@ -21,6 +21,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: winScene)
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
+        
+        let userDefaults = UserDefaults.standard
+        window?.overrideUserInterfaceStyle = userDefaults.selectedTheme.userInterfaceStyle
     }
 }
 

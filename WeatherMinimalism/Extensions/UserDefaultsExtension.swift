@@ -9,13 +9,13 @@
 import Foundation
 
 extension UserDefaults {
-    var preferManualTheme: Bool {
-        get { return bool(forKey: #function) }
-        set { set(newValue, forKey: #function) }
-    }
-    
-    var preferDarkTheme: Bool {
-        get { return bool(forKey: #function) }
-        set { set(newValue, forKey: #function) }
+    var selectedTheme: Theme {
+        get {
+            register(defaults: [#function: Theme.deviceDefault.rawValue])
+            return Theme(rawValue: integer(forKey: #function)) ?? .deviceDefault
+        }
+        set {
+            set(newValue.rawValue, forKey: #function)
+        }
     }
 }
