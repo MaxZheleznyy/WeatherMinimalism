@@ -82,7 +82,11 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return settings.count
+        if userDefaults.preferManualTheme {
+            return 1
+        } else {
+            return settings.count
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
