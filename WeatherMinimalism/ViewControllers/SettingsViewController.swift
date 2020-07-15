@@ -56,13 +56,12 @@ class SettingsViewController: UIViewController {
     }
     
     func fillUpData() {
-        if userDefaults.preferManualTheme == false {
-            switch traitCollection.userInterfaceStyle {
-            case .dark:
-                userDefaults.preferDarkTheme = true
-            default:
-                userDefaults.preferDarkTheme = false
-            }
+        
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            userDefaults.preferDarkTheme = true
+        default:
+            userDefaults.preferDarkTheme = false
         }
         
         let useSystemDefaultSetting = Setting(name: "Use System Light/Dark Mode", toggable: true, enabled: !userDefaults.preferManualTheme)
