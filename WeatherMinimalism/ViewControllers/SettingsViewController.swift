@@ -83,9 +83,9 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if userDefaults.preferManualTheme {
-            return 1
-        } else {
             return settings.count
+        } else {
+            return 1
         }
     }
     
@@ -120,8 +120,14 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let enabledState = settings[safe: indexPath.section]?.includedSettings[safe: indexPath.row]?.enabled {
-            settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+            if indexPath.section == 0 {
+                userDefaults.preferManualTheme = enabledState
+                settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
+                tableView.reloadData()
+            } else {
+                settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
         } else {
             tableView.deselectRow(at: indexPath, animated: true)
         }
