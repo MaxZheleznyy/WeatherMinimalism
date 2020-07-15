@@ -108,6 +108,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.settingsTableViewCellIdentifier, for: indexPath) as? SettingsTableViewCell, let setting = settings[safe: indexPath.section]?.includedSettings[indexPath.row] {
             
+            cell.delegate = self
             cell.settingLabel.text = setting.name
             cell.isToggable = setting.toggable
             cell.isEnabled = setting.enabled
@@ -119,17 +120,21 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let enabledState = settings[safe: indexPath.section]?.includedSettings[safe: indexPath.row]?.enabled {
-            if indexPath.section == 0 {
-                userDefaults.preferManualTheme = enabledState
-                settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
-                tableView.reloadData()
-            } else {
-                settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-            }
+        if indexPath.section == 0 {
+            return
+        } else if let enabledState = settings[safe: indexPath.section]?.includedSettings[safe: indexPath.row]?.enabled {
+            settings[indexPath.section].includedSettings[indexPath.row].enabled = !enabledState
+            tableView.reloadRows(at: [indexPath], with: .automatic)
         } else {
             tableView.deselectRow(at: indexPath, animated: true)
         }
+    }
+}
+
+extension SettingsViewController: SettingsTableViewCellDelegate {
+    func settingSwitchToggled(isToggled: Bool) {
+        userDefaults.preferManualTheme = !isToggled
+        settings[0].includedSettings[0].enabled = isToggled
+        tableView.reloadData()
     }
 }
