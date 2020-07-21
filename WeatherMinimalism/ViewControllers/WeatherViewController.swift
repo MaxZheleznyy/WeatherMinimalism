@@ -16,7 +16,13 @@ class WeatherViewController: UIViewController {
     
     var next24HoursArray: [String] = []
     
-    var locationManager = CLLocationManager()
+    fileprivate var locationManager: CLLocationManager = {
+        let locationManager = CLLocationManager()
+        locationManager.activityType = .other
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.distanceFilter = kCLLocationAccuracyKilometer
+        return locationManager
+    }()
     
     var headerHeightToUse: CGFloat = 250 {
         didSet {
@@ -70,42 +76,20 @@ class WeatherViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
         
         next24HoursArray = Date().next24Hours()
         
-        self.viewModel.loadCitiesFromDB()
-        
+        viewModel.loadCitiesFromDB()
         
         configureBottomToolBar()
         addSpinner()
         setupViews()
-        selectRoadToMakeInitialCall()
+        
+        showSpinner()
+        startUpdatingLocation()
     }
     
     //MARK: - Actions
-    private func selectRoadToMakeInitialCall() {
-        showSpinner()
-        if CLLocationManager.locationServicesEnabled() {
-            switch CLLocationManager.authorizationStatus() {
-            case .authorizedAlways, .authorizedWhenInUse:
-                //will get data from didUpdateLocations method
-                return
-            default:
-                //do not have location services, so let's check user defaults
-                break
-            }
-        }
-        
-        if let location = viewModel.getCurrentLocation() {
-            loadDataUsing(lat: location.lat, lon: location.long)
-        } else {
-            showAlertForAddCity()
-        }
-    }
-    
     func loadDataUsing(cityName: String) {
         showSpinner()
         
@@ -511,11 +495,23 @@ extension WeatherViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - CLLocationManagerDelegate
 extension WeatherViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        manager.stopUpdatingLocation()
-        manager.delegate = nil
-        
         guard let location = locations[safe: 0]?.coordinate else { return }
         loadDataUsing(lat: location.latitude, lon: location.longitude)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            startUpdatingLocation()
+        } else if let location = viewModel.getCurrentLocation() {
+            loadDataUsing(lat: location.lat, lon: location.long)
+        } else {
+            showAlertForAddCity()
+        }
+    }
+    
+    func startUpdatingLocation() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startMonitoringSignificantLocationChanges()
     }
 }
 
