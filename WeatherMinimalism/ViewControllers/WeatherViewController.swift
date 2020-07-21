@@ -87,11 +87,11 @@ class WeatherViewController: UIViewController {
     
     //MARK: - Actions
     private func selectRoadToMakeInitialCall() {
+        showSpinner()
         if CLLocationManager.locationServicesEnabled() {
             switch CLLocationManager.authorizationStatus() {
             case .authorizedAlways, .authorizedWhenInUse:
                 //will get data from didUpdateLocations method
-                showSpinner()
                 return
             default:
                 //do not have location services, so let's check user defaults
