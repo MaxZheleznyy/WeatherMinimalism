@@ -16,7 +16,14 @@ class WeatherViewController: UIViewController {
     
     var next24HoursArray: [String] = []
     
-    var locationManager = CLLocationManager()
+    fileprivate var locationManager: CLLocationManager = {
+        let locationManager = CLLocationManager()
+        locationManager.activityType = .other
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.distanceFilter = kCLLocationAccuracyKilometer
+        locationManager.allowsBackgroundLocationUpdates = true
+        return locationManager
+    }()
     
     var headerHeightToUse: CGFloat = 250 {
         didSet {
@@ -70,14 +77,12 @@ class WeatherViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
+        locationManager.startMonitoringSignificantLocationChanges()
         
         next24HoursArray = Date().next24Hours()
         
-        self.viewModel.loadCitiesFromDB()
-        
+        viewModel.loadCitiesFromDB()
         
         configureBottomToolBar()
         addSpinner()
